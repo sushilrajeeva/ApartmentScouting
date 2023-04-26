@@ -1,0 +1,31 @@
+{
+  "name": "apartment-scouting",
+  "version": "1.0.0",
+  "description": "Apartment Scouting Application - CS546 Project",
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  },
+  "author": "Sushil Bhandary 20015528",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.3.4",
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.6",
+    "express": "^4.18.2",
+    "express-handlebars": "^7.0.4",
+    "express-session": "^1.17.3",
+    "handlebars": "^4.7.7",
+    "mongodb": "^4.13.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sushilrajeeva/ApartmentScouting.git"
+  },
+  "bugs": {
+    "url": "https://github.com/sushilrajeeva/ApartmentScouting/issues"
+  },
+  "homepage": "https://github.com/sushilrajeeva/ApartmentScouting#readme"
+}
