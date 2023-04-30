@@ -28,6 +28,14 @@ Ensure that you have the following software installed on your local machine:
 
 - Node.js (version 14.x.x or higher)
 - NPM (version 6.x.x or higher)
+- axios (version 1.3.4 or higher)
+- bcryptjs (version 2.4.3 or higher)
+- cookie-parser (version 1.4.6 or higher)
+- express (version 4.18.2 or higher)
+- express-handlebars (version 7.0.4 or higher)
+- express-session (version 1.17.3 or higher)
+- handlebars (version 4.7.7 or higher)
+- mongodb (version 4.13.0 or higher)
 
 ### Installation
 
