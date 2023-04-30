@@ -61,6 +61,7 @@ const exportedMethods = {
     },
 
     checkEmptyInputString(str, type){
+    
         if(!str){
             throw `${type} can't be empty!`
         }else if(typeof str !== 'string'){
@@ -72,7 +73,7 @@ const exportedMethods = {
     },
 
     checkValidEmail(email){
-        //console.log("Check Email function called!!");
+    
         //took reference from https://www.simplilearn.com/tutorials/javascript-tutorial/email-validation-in-javascript
         //const emailRegEx = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
         //took reference from https://www.w3resource.com/javascript/form/email-validation.php#:~:text=To%20get%20a%20valid%20email,%5D%2B)*%24%2F. 
@@ -83,11 +84,12 @@ const exportedMethods = {
             throw `${email} is not of a valid email format! please make sure you have provided a valid email address format like -> example@example.com`
         }
     
+        console.log(`Valid Email -  ${email}`);
+    
         return isValid
     },
 
     checkValidPassword(password){
-        //console.log("Check password function is called!!");
         if(password.length < 8){
             throw `Error: Password too short! Length of password must be a minimum of 8 Charecters long and can't be empty spaces..`;
         }
@@ -110,16 +112,19 @@ const exportedMethods = {
         if(!containsSpecial){
             throw `Error: Password must contain atleast one Special Charecter!!`;
         }
-        //console.log("Valid password!");
+    
+        console.log(`Valid password - ${password} exist`);
     },
 
     checkNameInput(name, type){
         //console.log("Check name input function is called!!");
         let nameRegex = /^[A-Za-z]{2,25}$/.test(name);
-    
+
         if(!nameRegex){
             throw `Error: ${name} should be a valid ${type}!, should be 2 to 25 charecters long, non empty spaces containing only alphabets and no numbers..`
         }
+
+        console.log(`Valid ${name} of type ${type} exist`);
     
     },
 
@@ -127,6 +132,7 @@ const exportedMethods = {
         if(password!==confirmPassword){
             throw `Error: Password and Confirm Password don't match!!`
         }
+        console.log(`Passwords match!!`);
     },
 
     checkValiduserType(userType){
@@ -135,9 +141,88 @@ const exportedMethods = {
         if(!isValid){
             throw `The User Type - ${userType} you entered is invalid. Please make sure you select either "Primary User" or "Scout User" User Type only!!`
         }
+        console.log(`${userType} is a valid user type`);
       },
+      countryCodeExists(dial_code) {
+        for (let i = 0; i < this.countryCodes.length; i++) {
+          // If the current object's code key matches the provided code, return true
+          if (this.countryCodes[i].dial_code === dial_code) {
+            console.log(`Valid country code ${dial_code} exist`);
+            return true;
+          }
+        }
+        // If no match is found, return false
+        throw `Error: ${dial_code} is an Invalid Country Code!`;
+      },
+      validPhoneNumber(phoneNumber){
+        let phoneNumberRegex = /[0-9]{10}/.test(phoneNumber);
+        if(!phoneNumberRegex){
+            throw `Error: Phone Number ${phoneNumber} Entered by you is not a valid! Phone number should be a 10 digit number`;
+        }
+    },
+    validCountrySelected(country, codeCountry, countryCode){
+        console.log(country);
+        for (let i = 0; i < this.countryCodes.length; i++) {
+            // If the current object's code key matches the provided code, return true
+            if (this.countryCodes[i].name === country) {
+                console.log(`Valid Country name ${country} selected`);
+              return true;
+            }
+            
+    
+            if(country!==codeCountry){
+                throw `The country ${country} you selected doesn't match the country associated with the country code ${countryCode} ${codeCountry} you selected!`
+            }
+          }
+          // If no match is found, return false
+          throw `Error: ${country} is an Invalid Country Name!`;
+    },
+
+    findCountry(countryCode){
+        let country = "";
+        for(let i=0; i<this.countryCodes.length; i++){
+            if(countryCode === this.countryCodes[i].dial_code){
+                country = this.countryCodes[i].name;
+                return country;
+            }
+        }
+        return country;
+    },
+
+    countryCalculator(countryCode){
+        let countryList = [];
+        for(let i=0; i<countryCode.length; i++){
+            countryList.push(countryCode[i].name)
+        }
+        //console.log("CountryList, ", countryList);
+        return countryList;
+    },
+    checkValidAge(dob){
+        const dobInput = new Date(dob);
+        const currentDate = new Date();
+        //subtracting 18 years from current year so that i can directly see if the age difference is 18 or more
+        currentDate.setFullYear(currentDate.getFullYear() - 18);
+    
+        const age = new Date().getFullYear() - dobInput.getFullYear();
+        if (dobInput > currentDate) {
+            throw `Your current age is ${age}! You must be at least 18 years old to register in our application.`;
+        }
+        console.log(`Your age ${age} is valid`);
+    },
+
+    checkValidDate(date){
+
+        // referred this for dateRegex https://www.regextester.com/96683 to match yyyy-mm-dd format
+        dateRegex = /([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))/
+    
+        if(!dateRegex.text(date)){
+            throw `The date ${date} you entered is not of valid date format yyyy-mm-dd!`
+        }
+    },
 //USED THIS REPO FOR COUNTRY CODE https://gist.githubusercontent.com/DmytroLisitsyn/1c31186e5b66f1d6c52da6b5c70b12ad/raw/2bc71083a77106afec2ec37cf49d05ee54be1a22/country_dial_info.json
-    defaultCountry: {
+
+
+defaultCountry: {
         name: "United States",
         flag: "🇺🇸",
         code: "US",
@@ -1621,6 +1706,7 @@ const exportedMethods = {
         dial_code: "+263"
         }
         ]
+
    
   
     
