@@ -1,0 +1,86 @@
+{{!--
+
+registration handelbars
+
+--}}
+
+<div class="pageTitle">
+    <p>
+        {{title}}
+    </p>
+</div>
+
+{{!Took reference of this from w3 school link provided in lab8-> https://www.w3schools.com/html/tryit.asp?filename=tryhtml_form_submit}}
+    <form class="registration-form" method="post" id="registration-form">
+        <label for="firstNameInput">First Name <span class="mandatory">*</span></label><br>
+        <input type="text" id="firstNameInput" name="firstNameInput" placeholder="Please enter your First Name" required><br>
+
+
+        <label for="middleNameInput">Middle Name </label><br>
+        <input type="text" id="middleNameInput" name="middleNameInput" placeholder="Please enter your Middle Name"><br>
+
+        <label for="lastNameInput">Last Name </label><br>
+        <input type="text" id="lastNameInput" name="lastNameInput" placeholder="Please enter your Last Name"><br>
+
+        <label for="emailAddressInput">Email Address <span class="mandatory">*</span> </label><br>
+        <input type="email" id="emailAddressInput" name="emailAddressInput" placeholder="Please enter your email address"><br>
+
+        <label for="countryCodeInput">Country Code <span class="mandatory">* </span>:</label>
+        <input list="countryCodes" id="countryCodeInput" name="countryCodeInput" autocomplete="on" placeholder="{{defaultCountry.flag}} - {{defaultCountry.code}} - ({{defaultCountry.dial_code}}) {{defaultCountry.name}}" value="{{defaultCountry.flag}} {{defaultCountry.dial_code}}">
+        <datalist id="countryCodes">
+            {{#each countryCodes}}
+                <option value="{{flag}} {{dial_code}} {{name}}">{{flag}} - {{code}} - ({{dial_code}}) {{name}} </option>
+            {{/each}}
+        </datalist>
+
+        <label for="phoneNumberInput">Phone Number <span class="mandatory">* </span>:</label>
+        <input type="tel" id="phoneNumberInput" name="phoneNumberInput" pattern="[0-9]{10}" required> <br>
+
+
+        <label for="cityInput">City <span class="mandatory">*</span></label><br>
+        <input type="text" id="cityInput" name="cityInput" placeholder="Please enter your City"><br>
+
+        <label for="stateInput">State <span class="mandatory">*</span></label><br>
+        <input type="text" id="stateInput" name="stateInput" placeholder="Please enter your State"><br>
+
+        <label for="countryInput">Country <span class="mandatory">* </span>:</label>
+        <input list="countryList" id="countryInput" name="countryInput" autocomplete="on" placeholder="{{defaultCountry.name}}" value="{{defaultCountry.name}}">
+            <datalist id="countryList">
+                {{#each countryList}}
+                    <option value="{{this}}">{{this}}</option>
+                {{/each}}
+            </datalist>
+        <br>
+
+        <label for="dobInput">Date of Birth <span class="mandatory">* </span>:</label>
+        <input type="date" id="dobInput" name="dobInput" max="{{maxDate}}" >
+        <br>
+
+        <label for="passwordInput">Password <span class="mandatory">*</span></label><br>
+        <input type="password" id="passwordInput" name="passwordInput" placeholder="Please enter your password"><br>
+        <label for="confirmPasswordInput">Confirm Password <span class="mandatory">*</span></label><br>
+        <input type="password" id="confirmPasswordInput" name="confirmPasswordInput" placeholder="Please re-enter your password to confirm"><br>
+        
+        <label for="userTypeInput">User Type <span class="mandatory">*</span> :</label>
+        <select id="userTypeInput" name="userTypeInput" required>
+            <option value="primary user">Primary User</option>
+            <option value="scout user">Scout User</option>
+        </select>
+
+        <input type="submit" value="Submit">
+        <p>
+            <a href="/login">Already have an account? Click here to login!</a>
+        </p>
+    </form> 
+
+    <div id="error" class="error" hidden></div>
+    {{{error}}}
+
+
+<!--From professor's lecture code , modified according to requirement of lab9-->
+<!--Used type="module" to counter error thrown at console for importing helper.js inside lab10.js-->
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
+        crossorigin="anonymous"></script>
+    <script src="/public/js/main.js" ></script>
