@@ -42,7 +42,7 @@ Ensure that you have the following software installed on your local machine:
 1. Clone the repository:
 
 \```
-git clone https://github.com/sushilrajeeva/ApartmentScouting.git
+gh repo clone sushilrajeeva/ApartmentScouting
 \```
 
 2. Navigate to the project directory:
