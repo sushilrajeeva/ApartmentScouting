@@ -1,0 +1,40 @@
+{{!--
+
+login form handlebar template
+
+--}}
+
+<div class="pageTitle">
+    <p>
+        {{title}}
+    </p>
+</div>
+
+{{!Took reference of this from w3 school link provided in lab8-> https://www.w3schools.com/html/tryit.asp?filename=tryhtml_form_submit}}
+    <form class="login-form" method="post" id="login-form">
+        <label for="userTypeInput">User Type:</label>
+        <select id="userTypeInput" name="userTypeInput" required>
+            <option value="primary user">Primary User</option>
+            <option value="scout user">Scout User</option>
+        </select><br>
+        <label for="emailAddressInput">Email Address: </label><br>
+        <input type="email" id="emailAddressInput" name="emailAddressInput" placeholder="Please enter your email address"><br>
+        <label for="passwordInput">Password: </label><br>
+        <input type="password" id="passwordInput" name="passwordInput" placeholder="Please enter your password"><br>
+        <input type="submit" value="Submit">
+        <p>
+            Don't have an account? <a href="/registeruser"> Click here to register</a>
+        </p>
+    </form> 
+
+    <div id="error" class="error" hidden></div>
+    {{{error}}}
+
+
+<!--From professor's lecture code , modified according to requirement of lab9-->
+<!--Used type="module" to counter error thrown at console for importing helper.js inside lab10.js-->
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
+        crossorigin="anonymous"></script>
+    <script src="/public/js/main.js" ></script>
