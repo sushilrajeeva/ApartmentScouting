@@ -41,27 +41,27 @@ Ensure that you have the following software installed on your local machine:
 
 1. Clone the repository:
 
-\```
+`
 gh repo clone sushilrajeeva/ApartmentScouting
-\```
+`
 
 2. Navigate to the project directory:
 
-\```
+`
 cd ApartmentScouting
-\```
+`
 
 3. Install the required dependencies:
 
-\```
+`
 npm install
-\```
+`
 
 4. Start the development server:
 
-\```
+`
 npm start
-\```
+`
 
 5. Open your browser and navigate to `http://localhost:3000` to access the web application.
 
