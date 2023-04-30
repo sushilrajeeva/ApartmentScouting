@@ -5,7 +5,6 @@ const router = Router();
 import bcrypt from 'bcryptjs';
 import middlewareMethods from '../middleware.js';
 import helpers from '../helpers.js';
-import users from '../data/users.js';
 import primaryUsers from '../data/primaryUsers.js';
 import scoutUsers from '../data/scoutUsers.js';
 
