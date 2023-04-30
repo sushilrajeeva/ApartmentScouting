@@ -12,10 +12,10 @@ const middlewareMethods = {
           
           return res.redirect('/login');
         } else {
-          if (req.session.user.role.toLowerCase() === 'admin') {
-            return res.redirect('/admin');
-          } else if (req.session.user.role.toLowerCase() === 'user') {
-            return res.redirect('/protected');
+          if (req.session.user.role.toLowerCase() === 'primary user') {
+            return res.redirect('/primaryuser');
+          } else if (req.session.user.role.toLowerCase() === 'scout user') {
+            return res.redirect('/scoutuser');
           }
         }
         next();
@@ -26,10 +26,10 @@ const middlewareMethods = {
             //not authenticated so i am allowing it to reach the login route
             next();
         }else{
-            if(req.session.user.role.toLowerCase() === 'admin'){
-                return res.redirect('/admin')
-            }else if(req.session.user.role.toLowerCase() === 'user'){
-                return res.redirect('/protected')
+            if(req.session.user.role.toLowerCase() === 'primary user'){
+                return res.redirect('/primaryuser')
+            }else if(req.session.user.role.toLowerCase() === 'scout user'){
+                return res.redirect('/scoutuser')
             }
         }
       },
@@ -39,10 +39,10 @@ const middlewareMethods = {
             next();
         }else{
             //doing the same logic as above
-            if(req.session.user.role.toLowerCase() === 'admin'){
-                return res.redirect('/admin')
-            }else if(req.session.user.role.toLowerCase() === 'user'){
-                return res.redirect('/protected')
+            if(req.session.user.role.toLowerCase() === 'primary user'){
+                return res.redirect('/primaryuser')
+            }else if(req.session.user.role.toLowerCase() === 'scout user'){
+                return res.redirect('/scoutuser')
             }
         }
       },
@@ -58,8 +58,8 @@ const middlewareMethods = {
       adminMiddleware: (req, res, next)=>{
         if(!req.session.user){
             return res.redirect('/login');
-        }else if(req.session.user.role.toLowerCase() !== 'admin'){
-            let msg = `${req.session.user.firstName}, You do not have permission to view this page. only Admin can view this, your current role is of user`
+        }else if(req.session.user.role.toLowerCase() !== 'primary user'){
+            let msg = `${req.session.user.firstName}, You do not have permission to view this page. only primary user can view this, your current role is of user`
             return res.status(403).render('error', {title: "error", error: `<div id="error" class="error" > ${msg}</div>`});
         }else{
             next();
