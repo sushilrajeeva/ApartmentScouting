@@ -1,0 +1,118 @@
+/* You will create a CSS stylesheet in /public/css/lab10.css; this file should have at least 10 rulesets.  You will need to utilize all 10 rulesets on each of the pages (not every page has to use all 10 rulesets each but all 10 rulesets must be utilized by the various pages in your application).  So you can have some rulesets for one page, some for another page but there needs to be at least 10 total rulesets that are used between all the pages.  */
+
+.login-form{
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    padding: 20px;
+    width: 40%;
+    margin: 0 auto; 
+  }
+
+  .registration-form{
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    padding: 20px;
+    width: 40%;
+    margin: 0 auto; 
+  }
+
+  input[type=submit]:hover {
+    background-color: #45a049;
+  }
+
+  input[type=text] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+
+    background-position: 10px 10px;
+  }
+
+  input[type=email] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+
+    background-position: 10px 10px;
+  }
+
+  input[type=password] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+
+    background-position: 10px 10px;
+  }
+  
+  input[type=submit] {
+    width: 100%;
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  input[list] {
+    width: 20%;
+    box-sizing: border-box;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+  .error {
+    background-color: #ffe6e6; 
+    border: 1px solid red; 
+    padding: 10px; 
+    margin: 10px 0; 
+    color: red; 
+    font-weight: bold;
+  }
+
+  .success {
+    background-color: #e6ffe6;
+    border: 1px solid #00cc00;
+    padding: 10px;
+    margin: 10px 0;
+    color: #008000;
+    font-weight: bold;
+}
+.pageTitle {
+  font-size: 2em;
+  text-align: center;
+  font-weight: bold;
+}
+
+footer {
+    
+  bottom:0;
+  left:0;
+  width:100%;
+  height: 90px;
+  background-color: #D0DAEE;
+  text-align: center;
+}
+
+.mandatory {
+  color: red;
+}
