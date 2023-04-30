@@ -1,0 +1,21 @@
+{{!--
+
+If the user is logged in , and 'GET /protected' endpoint is called, you will render this view based on the specs.
+
+--}}
+
+<div class="pageTitle">
+    <p>
+        {{title}}
+    </p>
+</div>
+
+<p>
+    Welcome {{firstName}}, the time is now: {{currentTime}}. Your role in the system is: {{role}}.
+</p>
+
+{{{primaryuser}}}
+
+<p>
+    <a href="/logout">Logout</a>
+</p>
