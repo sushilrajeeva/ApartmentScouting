@@ -21,3 +21,4 @@ NOTE: YOU WILL NEED TO CHANGE THE CODE BELOW AND UNCOMMENT IT TO HAVE THE COLLEC
 //export const users = getCollectionFn('users');
 export const primaryUsers = getCollectionFn('primaryUsers');
 export const scoutUsers = getCollectionFn('scoutUsers');
+export const listings = getCollectionFn('listings');

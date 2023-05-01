@@ -281,4 +281,9 @@ router.route('/logout').get(middlewareMethods.logoutMiddleware, async (req, res)
   res.render('logout', {title: 'logout', firstName: firstName});
 });
 
+router.route('/addlisting').get(async(req, res)=>{
+  console.log("Get Method of Add Listing route is triggered!");
+  res.render('addListing', {title: 'Add Listings'})
+})
+
 export default router;
