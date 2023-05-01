@@ -13,7 +13,7 @@ router.route('/').get(middlewareMethods.checkAuthentication, async (req, res) =>
   //code here for GET THIS ROUTE SHOULD NEVER FIRE BECAUSE OF MIDDLEWARE #1 IN SPECS.
   return res.json({error: 'YOU SHOULD NOT BE HERE!'});
 });
-
+7
 router
   .route('/registeruser')
   .get(middlewareMethods.registerMiddleware, async (req, res) => {
@@ -115,6 +115,17 @@ router
       }else{
         console.log("Creating scout user DB!!");
         //do same as above for scout user!!
+        const createdUser = await scoutUsers.createUser(firstName, middleName, lastName, emailAddress, countryCode, phoneNumber, city, state, country, dob, password, confirmPassword, userType);
+        if(createdUser.insertedUser === true){
+          //if this condition is valid i will load my login page
+          //console.log("Created user validation hit");
+          
+          return res.redirect('/login');
+          
+        }else {
+          //console.log("Didn't blow up !!");
+          return res.status(500).json({error: 'Internal Server Error'});
+        }
       }
 
       // const createdUser = await users.createUser(firstName, lastName, emailAddress, password, role);
@@ -184,7 +195,7 @@ router
           listings: loginUser.listings,
           wallet: loginUser.wallet,
           role: loginUser.role,
-        };
+        }
   
         //redirecting based on the loginUser.role
   
@@ -197,6 +208,29 @@ router
       }else{
         console.log("scout user checkUser method will be triggered");
         const loginUser = await scoutUsers.checkUser(emailAddress, password);
+        req.session.user = {
+          firstName: loginUser.firstName,
+          middleName: loginUser.middleName,
+          lastName: loginUser.lastName,
+          emailAddress: loginUser.emailAddress,
+          countryCode: loginUser.countryCode, 
+          phoneNumber: loginUser.phoneNumber, 
+          city: loginUser.city, 
+          state: loginUser.state, 
+          country: loginUser.country, 
+          dob: loginUser.dob,
+          subscribedlistings: loginUser.subscribedlistings,
+          wallet: loginUser.wallet,
+          role: loginUser.role,
+        }
+  
+        //redirecting based on the loginUser.role
+  
+        if(loginUser.role.toLowerCase() === "primary user"){
+          return res.redirect('/primaryuser')
+        }else{
+          return res.redirect('/scoutuser')
+        }
       }
 
       //const loginUser = await users.checkUser(emailAddress, password);
