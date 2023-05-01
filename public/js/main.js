@@ -1603,14 +1603,12 @@ if(registrationForm){
             emailAddress = checkEmptyInputString(emailAddress,"Email Address");
             emailAddress = emailAddress.toLowerCase();
             countryCode = checkEmptyInputString(countryCode, "Country Code");
-            //console.log("Split country codes : -> ", countryCode.split(" ")[1]);
-            let ccArray = countryCode.split(" ");
-            countryCode = ccArray[1];
-            codeCountry = ccArray[2]
-            
-            countryCode = checkEmptyInputString(countryCode, "Country Code");
             countryCode = countryCode.trim();
+            let cArr = countryCode.split("-");
+            countryCode = cArr[0].trim();
             console.log("Country Code - ", countryCode);
+
+            codeCountry = cArr[1].trim();
             
 
             phoneNumber = checkEmptyInputString(phoneNumber, "Phone Number");
@@ -1621,7 +1619,6 @@ if(registrationForm){
             state = checkEmptyInputString(state, "State");
 
             country = checkEmptyInputString(country, "Country");
-            country = checkEmptyInputString(country, "Country Code");
             country = country.trim();
             console.log("Country Selected - ", country);
             userType = checkEmptyInputString(userType, "User Type");
@@ -1637,7 +1634,7 @@ if(registrationForm){
 
             countryCodeExists(countryCode);
             validPhoneNumber(phoneNumber)
-            validCountrySelected(country, codeCountry, countryCode);
+            validCountrySelected(country, codeCountry);
             checkEmptyInputString(password, "Password")
             //confirmPassword = checkEmptyInputString(confirmPassword,"Confirm Password");
             checkEmptyInputString(confirmPassword,"Confirm Password");
@@ -1806,20 +1803,29 @@ function countryCodeExists(dial_code) {
 
 function validCountrySelected(country, codeCountry, countryCode){
     console.log(country);
+    console.log(codeCountry);
+    let countryFound = false;
     for (let i = 0; i < countryCodes.length; i++) {
         // If the current object's code key matches the provided code, return true
-        if (countryCodes[i].name === country) {
+        if (countryCodes[i].name.toLowerCase().trim() === country.toLowerCase().trim()) {
             console.log(`Valid Country name ${country} selected`);
-          return true;
+            countryFound = true;
         }
         
 
-        if(country!==codeCountry){
-            throw `The country ${country} you selected doesn't match the country associated with the country code ${countryCode} ${codeCountry} you selected!`
-        }
-      }
-      // If no match is found, return false
+        
+    }
+
+    if(countryFound!==true){
+        // If no match is found, return false
       throw `Error: ${country} is an Invalid Country Name!`;
+    }
+
+    if(country.toLowerCase().trim()!==codeCountry.toLowerCase().trim()){
+        throw `The country ${country} you selected doesn't match the country associated with the country code ${countryCode} ${codeCountry} you selected!`
+    }
+
+      
 }
 
 function checkValidAge(dob){
@@ -1843,6 +1849,21 @@ function checkValidDate(date){
     if(!dateRegex.text(date)){
         throw `The date ${date} you entered is not of valid date format yyyy-mm-dd!`
     }
+}
+
+function findCountry(countryCode){
+    let country = "";
+    for(let i=0; i<countryCodes.length; i++){
+        if(countryCode === countryCodes[i].dial_code){
+            country = countryCodes[i].name;
+            return country;
+        }
+    }
+
+    if(country.trim() === ""){
+        throw `Invalid Country Code!!`
+    }
+    return country;
 }
 
   

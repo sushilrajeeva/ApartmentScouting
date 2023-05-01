@@ -162,20 +162,21 @@ const exportedMethods = {
     },
     validCountrySelected(country, codeCountry, countryCode){
         console.log(country);
+        let countryFound = false;
         for (let i = 0; i < this.countryCodes.length; i++) {
             // If the current object's code key matches the provided code, return true
             if (this.countryCodes[i].name === country) {
                 console.log(`Valid Country name ${country} selected`);
-              return true;
+                countryFound =  true;
             }
             
-    
-            if(country!==codeCountry){
-                throw `The country ${country} you selected doesn't match the country associated with the country code ${countryCode} ${codeCountry} you selected!`
-            }
           }
+
           // If no match is found, return false
-          throw `Error: ${country} is an Invalid Country Name!`;
+          if(countryFound!==true){
+            throw `Error: ${country} is an Invalid Country Name!`;
+          }
+          
     },
 
     findCountry(countryCode){
@@ -185,6 +186,9 @@ const exportedMethods = {
                 country = this.countryCodes[i].name;
                 return country;
             }
+        }
+        if(country.trim() === ""){
+            throw `Invalid Country Code!!`
         }
         return country;
     },

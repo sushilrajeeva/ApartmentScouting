@@ -29,7 +29,7 @@ registration handelbars
         <input list="countryCodes" id="countryCodeInput" name="countryCodeInput" autocomplete="on" placeholder="{{defaultCountry.flag}} - {{defaultCountry.code}} - ({{defaultCountry.dial_code}}) {{defaultCountry.name}}" value="{{defaultCountry.flag}} {{defaultCountry.dial_code}}">
         <datalist id="countryCodes">
             {{#each countryCodes}}
-                <option value="{{flag}} {{dial_code}} {{name}}">{{flag}} - {{code}} - ({{dial_code}}) {{name}} </option>
+                <option value="{{dial_code}}-{{name}}">{{flag}} - {{code}} - ({{dial_code}}) {{name}} </option>
             {{/each}}
         </datalist>
 
