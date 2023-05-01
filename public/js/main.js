@@ -1796,12 +1796,13 @@ function countryCodeExists(dial_code) {
     throw `Error: ${dial_code} is an Invalid Country Code!`;
   }
 
-function validPhoneNumber(phoneNumber){
-    let phoneNumberRegex = /[0-9]{10}/.test(phoneNumber);
-    if(!phoneNumberRegex){
-        throw `Error: Phone Number ${phoneNumber} Entered by you is not a valid! Phone number should be a 10 digit number`;
+  function validPhoneNumber(phoneNumber) {
+    let phoneNumberRegex = /^\d{10}$/;
+    if (!phoneNumberRegex.test(phoneNumber)) {
+      throw `Error: Phone Number ${phoneNumber} Entered by you is not valid! Phone number should be a 10 digit number`;
     }
-}
+  }
+  
 
 function validCountrySelected(country, codeCountry, countryCode){
     console.log(country);
