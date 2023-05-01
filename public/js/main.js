@@ -1598,8 +1598,8 @@ if(registrationForm){
             
             //checking input strings are empty or not
             firstName = checkEmptyInputString(firstName,"First Name");
-            middleName = checkEmptyInputString(middleName,"First Name");
-            lastName = checkEmptyInputString(lastName,"First Name");
+            middleName = checkEmptyInputString(middleName,"Middle Name");
+            lastName = checkEmptyInputString(lastName,"Last Name");
             emailAddress = checkEmptyInputString(emailAddress,"Email Address");
             emailAddress = emailAddress.toLowerCase();
             countryCode = checkEmptyInputString(countryCode, "Country Code");
