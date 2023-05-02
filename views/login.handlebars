@@ -1,9 +1,3 @@
-{{!--
-
-login form handlebar template
-
---}}
-
 <div class="pageTitle">
     <p>
         {{title}}
@@ -12,23 +6,25 @@ login form handlebar template
 
 {{!Took reference of this from w3 school link provided in lab8-> https://www.w3schools.com/html/tryit.asp?filename=tryhtml_form_submit}}
     <form class="login-form" method="post" id="login-form">
-        <label for="userTypeInput">User Type:</label>
-        <select id="userTypeInput" name="userTypeInput" required>
+    <label for="userTypeInput">User Type <span class="mandatory">*</span>:</label>
+    <select id="userTypeInput" name="userTypeInput" required>
+            <option value="">Select User Type</option>
             <option value="primary user">Primary User</option>
             <option value="scout user">Scout User</option>
-        </select><br>
-        <label for="emailAddressInput">Email Address: </label><br>
-        <input type="email" id="emailAddressInput" name="emailAddressInput" placeholder="Please enter your email address"><br>
-        <label for="passwordInput">Password: </label><br>
-        <input type="password" id="passwordInput" name="passwordInput" placeholder="Please enter your password"><br>
-        <input type="submit" value="Submit">
-        <p>
-            Don't have an account? <a href="/registeruser"> Click here to register</a>
-        </p>
-    </form> 
+    </select><br>
+    <label for="emailAddressInput">Email Address <span class="mandatory">*</span>:</label><br>
+    <input type="email" id="emailAddressInput" name="emailAddressInput" placeholder="Please enter your email address"><br>
+    <label for="passwordInput">Password <span class="mandatory">*</span>:</label><br>
+    <input type="password" id="passwordInput" name="passwordInput" placeholder="Please enter your password"><br>
+    <input type="submit" value="Submit">
+    <p>
+        Don't have an account? <a href="/registeruser"> Click here to register</a>
+    </p>
+</form> 
 
-    <div id="error" class="error" hidden></div>
-    {{{error}}}
+<div id="error" class="error" hidden></div>
+{{{error}}}
+
 
 
 <!--From professor's lecture code , modified according to requirement of lab9-->
