@@ -3,6 +3,7 @@
 //Referred to the logic from previous lab and lecture code 9 and modified to better fit the lab10 requirements
 let loginForm = document.getElementById('login-form');
 let registrationForm = document.getElementById('registration-form');
+let addListingForm = document.getElementById('addlisting-form');
 
 //USED THIS REPO FOR COUNTRY CODE https://gist.githubusercontent.com/DmytroLisitsyn/1c31186e5b66f1d6c52da6b5c70b12ad/raw/2bc71083a77106afec2ec37cf49d05ee54be1a22/country_dial_info.json
 const defaultCountry = {
@@ -1596,6 +1597,7 @@ if(registrationForm){
             console.log("Initial form elements are : ");
             console.log({firstName: firstName, middleName: middleName, lastName: lastName, emailAddress: emailAddress, countryCode: countryCode, phoneNumber: phoneNumber, city: city, state: state, country: country, dob: dob, password: password, confirmPassword: confirmPassword, userType: userType});
             
+            errorDiv.hidden = true;
             //checking input strings are empty or not
             firstName = checkEmptyInputString(firstName,"First Name");
             middleName = checkEmptyInputString(middleName,"Middle Name");
@@ -1632,6 +1634,7 @@ if(registrationForm){
             //validity condition
             //password = checkEmptyInputString(password,"Password");
 
+
             countryCodeExists(countryCode);
             validPhoneNumber(phoneNumber)
             validCountrySelected(country, codeCountry);
@@ -1639,9 +1642,10 @@ if(registrationForm){
             //confirmPassword = checkEmptyInputString(confirmPassword,"Confirm Password");
             checkEmptyInputString(confirmPassword,"Confirm Password");
 
-            errorDiv.hidden = true;
+            
 
             checkNameInput(firstName, "Name");
+
 
             checkValidEmail(emailAddress);
 
@@ -1664,7 +1668,7 @@ if(registrationForm){
             
             console.log(cityInput.value);
 
-            console.log("Wtf happen to my city!!", city);
+            //console.log("Wtf happen to my city!!", city);
             cityInput.value = city;
             stateInput.value = state;
             countryInput.value = country;
@@ -1696,6 +1700,101 @@ if(registrationForm){
 
     })
 }
+
+if (addListingForm) {
+    
+
+    addListingForm.addEventListener('submit', (event) => {
+        event.preventDefault()
+        console.log("Add Listing form main.js is triggered!!");
+
+        let errorDiv = document.getElementById('error');
+
+        try {
+             // Add a div with id 'errorDiv' to display error messages
+            errorDiv.hidden = true;
+            errorDiv.innerHTML = '';
+
+            let listingNameInput = document.getElementById('listingNameInput');
+            let listingName = checkEmptyInputString(listingNameInput.value, "Listing Name");
+
+            let listingLinkInput = document.getElementById('listingLinkInput');
+            let listingLink = checkEmptyInputString(listingLinkInput.value, "Listing Link");
+
+            let streetInput = document.getElementById('streetInput');
+            let street = checkEmptyInputString(streetInput.value, "Street");
+
+            let cityInput = document.getElementById('cityInput');
+            let city = checkEmptyInputString(cityInput.value, "City");
+
+            let stateInput = document.getElementById('stateInput');
+            let state = checkEmptyInputString(stateInput.value, "State");
+
+            let countryInput = document.getElementById('countryInput');
+            let country = checkEmptyInputString(countryInput.value, "Country");
+
+            let pincodeInput = document.getElementById('pincodeInput');
+            let pincode = checkEmptyInputString(pincodeInput.value, "Pincode");
+
+            let agentNumberInput = document.getElementById('agentNumberInput');
+            let agentNumber = checkEmptyInputString(agentNumberInput.value, "Agent Number");
+
+            let ownerNumberInput = document.getElementById('ownerNumberInput');
+            let ownerNumber = checkEmptyInputString(ownerNumberInput.value, "Owner Number");
+
+            let rewardInput = document.getElementById('rewardInput');
+            let reward = checkEmptyInputString(rewardInput.value, "Reward");
+
+            //validations
+
+            checkNameInput(listingName, "Listing Name");
+            isValidWebsiteLink(listingLink);
+            isValidCountry(country);
+            isValidPincode(pincode);
+            validPhoneNumber(agentNumber);
+            validPhoneNumber(ownerNumber);
+            validRewards(reward);
+
+
+
+            listingNameInput.value = listingName;
+            listingLinkInput.value = listingLink;
+            streetInput.value = street;
+            cityInput.value = city;
+            stateInput.value = state;
+            countryInput.value = country;
+            pincodeInput.value = pincode;
+            agentNumberInput.value = agentNumber;
+            ownerNumberInput.value = ownerNumber;
+            rewardInput.value = reward;
+
+
+            // Process the form data
+            console.log({
+                listingName: listingNameInput.value,
+                listingLink: listingLinkInput.value,
+                street: streetInput.value,
+                city: cityInput.value,
+                state: stateInput.value,
+                country: countryInput.value,
+                pincode: pincodeInput.value,
+                agentNumber: agentNumberInput.value,
+                ownerNumber: ownerNumberInput.value,
+                reward: rewardInput.value
+              });
+
+              event.target.submit();
+              
+
+        } catch (error) {
+            errorDiv.hidden = false;
+            errorDiv.innerHTML = error;
+            listingNameInput.focus();
+            listingNameInput.className = "inputClass";
+        }
+    })
+}
+
 
 function checkEmptyInputString(str, type){
     
@@ -1865,5 +1964,42 @@ function findCountry(countryCode){
     }
     return country;
 }
+
+function isValidCountry(country){
+
+    if(!country){
+        throw `Country can't be empty string`
+    }
+
+    for(let i=0; i<countryCodes.length; i++){
+        if(country.toLowerCase().trim() === countryCodes[i].name.toLowerCase().trim()){
+            return country;
+        }
+    }
+
+    throw `The Country Name ${country} you selected is not a valid country`
+}
+
+function isValidWebsiteLink(url) {
+    const regex = /^https:\/\/www\.[a-zA-Z-_]{5,}\.com(?:\/.*)?$/;
+    if(regex.test(url) !==true){
+        throw `The URL ${url} you entered is invalid. A valid URL must begin with 'https://www.' followed by at least 5 alphabetic characters, then '.com', and an optional URI.`
+    }
+}
+
+function isValidPincode(pincode) {
+    const pincodeRegex = /^\d{5}$/;
+    if(!pincodeRegex.test(pincode)){
+        throw `The pincode ${pincode} you entered is invalid! It should be 5 digits`
+    }
+  }
+
+  function validRewards(reward){
+    const rewardRegex = /^([1-9]\d?|100)$/
+
+    if(!rewardRegex.test(reward)){
+        throw `The reward amount ${reward} USD you entered is Invalid! Reward should be an Integer between 1 and 100 USD only!`
+    }
+  }
 
   
