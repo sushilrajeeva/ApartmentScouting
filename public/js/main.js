@@ -4,6 +4,7 @@
 let loginForm = document.getElementById('login-form');
 let registrationForm = document.getElementById('registration-form');
 let addListingForm = document.getElementById('addlisting-form');
+let searchForm = document.getElementById('search-form');
 
 //USED THIS REPO FOR COUNTRY CODE https://gist.githubusercontent.com/DmytroLisitsyn/1c31186e5b66f1d6c52da6b5c70b12ad/raw/2bc71083a77106afec2ec37cf49d05ee54be1a22/country_dial_info.json
 const defaultCountry = {
@@ -1793,6 +1794,29 @@ if (addListingForm) {
             listingNameInput.className = "inputClass";
         }
     })
+}
+
+if(searchForm){
+    searchForm.addEventListener('submit', (event)=>{
+        //adding this line because i don't want the form to be submitted without validation
+        event.preventDefault()
+        console.log("Search Form is triggered!!");
+        let searchInput = document.getElementById("searchInput");
+        
+        //console.log("Everything is OK");
+
+        try {
+            
+
+            event.target.submit();
+
+        } catch (error) {
+           throw error;
+        }
+
+        
+
+    }) 
 }
 
 

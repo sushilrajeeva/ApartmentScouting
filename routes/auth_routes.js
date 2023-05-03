@@ -428,7 +428,10 @@ router.route('/getAllListings').get(async (req, res) => {
 router.route('/searchListings').get(async (req, res) => {
   //This code let's users to search listings based on the following parameters - city, state, country and pincode
 
-  const searchedListings = await scoutUsers.searchListings("Kundapura");
+  console.log("Search Listing route is triggered");
+  let searchKey = xss(req.param.searchInput);
+  console.log("Search Key -> ", searchKey);
+  const searchedListings = await scoutUsers.searchListings(searchKey);
 
   let isEmptyListings = false;
   if(!searchedListings){

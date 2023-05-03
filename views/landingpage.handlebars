@@ -15,7 +15,12 @@
       <a class="nav-link" href="/login">Login</a>
     </li>
   </ul>
+  <form class="search-form" action="/searchListings" method="GET">
+    <input class="search-bar" type="text" name="searchInput" id="searchInput" placeholder="Search by postal code">
+    <button class="search-btn" type="submit">Search</button>
+  </form>
 </nav>
+
 
 {{#if isEmptyListings}}
   <p>No listings found.</p>
@@ -37,3 +42,11 @@
     </div>
   {{/each}}
 {{/if}}
+
+<!--From professor's lecture code , modified according to requirement of lab9-->
+<!--Used type="module" to counter error thrown at console for importing helper.js inside lab10.js-->
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
+        crossorigin="anonymous"></script>
+    <script src="/public/js/main.js" ></script>
