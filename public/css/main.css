@@ -1,109 +1,119 @@
 /* You will create a CSS stylesheet in /public/css/lab10.css; this file should have at least 10 rulesets.  You will need to utilize all 10 rulesets on each of the pages (not every page has to use all 10 rulesets each but all 10 rulesets must be utilized by the various pages in your application).  So you can have some rulesets for one page, some for another page but there needs to be at least 10 total rulesets that are used between all the pages.  */
 
 .login-form{
-    border-radius: 5px;
-    background-color: #f2f2f2;
-    padding: 20px;
-    width: 40%;
-    margin: 0 auto; 
-  }
-
-  .registration-form{
-    border-radius: 5px;
-    background-color: #f2f2f2;
-    padding: 20px;
-    width: 40%;
-    margin: 0 auto; 
-  }
-
-  .addlisting-form{
-    border-radius: 5px;
-    background-color: #f2f2f2;
-    padding: 20px;
-    width: 40%;
-    margin: 0 auto; 
-  }
-
-  input[type=submit]:hover {
-    background-color: #45a049;
-  }
-
-  input[type=text] {
-    width: 100%;
-    padding: 12px 20px;
-    margin: 8px 0;
-    display: inline-block;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-
-    background-position: 10px 10px;
-  }
-
-  input[type=email] {
-    width: 100%;
-    padding: 12px 20px;
-    margin: 8px 0;
-    display: inline-block;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-
-    background-position: 10px 10px;
-  }
-
-  input[type=password] {
-    width: 100%;
-    padding: 12px 20px;
-    margin: 8px 0;
-    display: inline-block;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-
-    background-position: 10px 10px;
-  }
-  
-  input[type=submit] {
-    width: 100%;
-    background-color: #4CAF50;
-    color: white;
-    padding: 14px 20px;
-    margin: 8px 0;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-
-  input[list] {
-    width: 20%;
-    box-sizing: border-box;
-    padding: 6px 12px;
-    font-size: 14px;
-    line-height: 1.42857143;
-    color: #555;
-    background-color: #fff;
-    background-image: none;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  padding: 15px;
+  width: 40%;
+  margin: 0 auto; 
 }
 
-  .error {
-    background-color: #ffe6e6; 
-    border: 1px solid red; 
-    padding: 10px; 
-    margin: 10px 0; 
-    color: red; 
-    font-weight: bold;
+.registration-form{
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  padding: 15px;
+  width: 40%;
+  margin: 0 auto; 
+}
+
+.addlisting-form{
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  padding: 15px;
+  width: 40%;
+  margin: 0 auto; 
+}
+
+label {
+  font-weight: bold;
+}
+
+input[type=submit] {
+  background-color: #4CAF50;
+  color: #f2f2f2;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+input[type=submit]:hover,
+input[type=submit]:focus {
+  background-color: #45a049;
+}
+
+input[type=submit]:focus,
+input[type=submit]:active {
+  outline: none;
+  box-shadow: 0 0 0 4px #90EE90;
+}
+
+input[type=submit][disabled] {
+  background-color: #f2f2f2;
+  cursor: not-allowed;
+}
+
+input[type=text],
+input[type=email],
+input[type=date],
+input[type=password] {
+  width: 100%;
+  padding: 10px 15px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #f2f2f2;
+  border-radius: 4px;
+  box-sizing: border-box;
+  background-position: 10px 10px;
+  font-size: 16px; 
+  line-height: 1.5;
+}
+  
+input[type=submit] {
+  width: 100%;
+  background-color: #000000;
+  color: #f2f2f2;
+  padding: 10px 15px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px; 
+  line-height: 1.5;
+  font-weight: bold;
+}
+
+input[list] {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 15px;
+  font-size: 16px; 
+  line-height: 1.5;
+  color: #555;
+  background-color: #ffffff;
+  background-image: none;
+  border: 1px solid #f2f2f2;
+  border-radius: 4px;
+  width: 100%;
+}
+
+.error {
+  background-color: #f2f2f2; 
+  border: 1px solid red; 
+  padding: 10px; 
+  margin: 10px 0; 
+  color: red; 
+  font-weight: bold;
   }
 
-  .success {
-    background-color: #e6ffe6;
-    border: 1px solid #00cc00;
-    padding: 10px;
-    margin: 10px 0;
-    color: #008000;
-    font-weight: bold;
+.success {
+  background-color: #f2f2f2;
+  border: 1px solid #00cc00;
+  padding: 10px;
+  margin: 10px 0;
+  color: #008000;
+  font-weight: bold;
 }
 .pageTitle {
   font-size: 2em;
@@ -112,17 +122,16 @@
 }
 
 footer {
-    
-  bottom:0;
-  left:0;
-  width:100%;
+  bottom: 0;
+  left: 0;
+  width: 100%;
   height: 90px;
   background-color: #ffffff;
   text-align: center;
 }
 
 .mandatory {
-  color: red;
+  color: #df0000;
 }
 
 .navbar {
@@ -130,8 +139,7 @@ footer {
   justify-content: space-between;
   align-items: center;
   background-color: #ffffff;
-  box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.1);
-  padding: 10px 20px;
+  padding: 10px 15px;
 }
 
 .navbar-logo {
@@ -162,6 +170,79 @@ footer {
   transition: all 0.2s ease-in-out;
 }
 
-.nav-link:hover {
+.nav-link:hover,
+.nav-link:focus { 
+  color: #7bade2;
+  outline: none;
+}
+
+/* for the cards */
+
+.listing-card {
+  width: 300px;
+  background-color: #f3f3f3;
+  padding: 16px;
+  margin: 16px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.listing-card h2 {
+  margin-top: 0;
+}
+
+.listing-card a {
   color: #007bff;
+  text-decoration: none;
+}
+
+.listing-card strong {
+  font-weight: bold;
+}
+
+.successMsg {
+  background-color: #e6ffe6;
+  border: 1px solid #00cc00;
+  padding: 10px;
+  margin: 10px 0;
+  color: #008000;
+  font-weight: bold;
+  text-align: center;
+}
+
+input[type=tel] {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+
+  background-position: 10px 10px;
+}
+
+input[type=url] {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+
+  background-position: 10px 10px;
+}
+
+
+.styled-input{
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+
+  background-position: 10px 10px;
 }
