@@ -7,6 +7,7 @@ import middlewareMethods from '../middleware.js';
 import helpers from '../helpers.js';
 import primaryUsers from '../data/primaryUsers.js';
 import scoutUsers from '../data/scoutUsers.js';
+import xss from 'xss';
 
 //refered https://www.youtube.com/watch?v=TDe7DRYK8vU this youtube video for passing the middlewear [timestamp - 26:30 ish ]
 router.route('/').get(middlewareMethods.checkAuthentication, async (req, res) => {
@@ -33,20 +34,19 @@ router
 
     
 
-    let firstName = req.body.firstNameInput;
-    let middleName = req.body.middleNameInput;
-    let lastName = req.body.lastNameInput;
-    let emailAddress = req.body.emailAddressInput;
-    let countryCode = req.body.countryCodeInput;
-    let phoneNumber = req.body.phoneNumberInput;
-    let city = req.body.cityInput;
-    let state = req.body.stateInput;
-    let country = req.body.countryInput;
-    let dob = req.body.dobInput;
-    let password = req.body.passwordInput;
-    let confirmPassword = req.body.confirmPasswordInput;
-    let userType = req.body.userTypeInput;
-    console.log(req.body);
+    let firstName = xss(req.body.firstNameInput);
+    let middleName = xss(req.body.middleNameInput);
+    let lastName = xss(req.body.lastNameInput);
+    let emailAddress = xss(req.body.emailAddressInput);
+    let countryCode = xss(req.body.countryCodeInput);
+    let phoneNumber = xss(req.body.phoneNumberInput);
+    let city = xss(req.body.cityInput);
+    let state = xss(req.body.stateInput);
+    let country = xss(req.body.countryInput);
+    let dob = xss(req.body.dobInput);
+    let password = xss(req.body.passwordInput);
+    let confirmPassword = xss(req.body.confirmPasswordInput);
+    let userType = xss(req.body.userTypeInput);
 
     console.log("ola");
 
@@ -159,9 +159,9 @@ router
 
     console.log(req.body);
 
-    let userType = req.body.userTypeInput;
-    let emailAddress = req.body.emailAddressInput;
-    let password = req.body.passwordInput;
+    let userType = xss(req.body.userTypeInput);
+    let emailAddress = xss(req.body.emailAddressInput);
+    let password = xss(req.body.passwordInput);
 
     try {
       userType = helpers.checkEmptyInputString(userType, "User Type");
@@ -254,19 +254,23 @@ router
 router.route('/scoutuser').get(middlewareMethods.protectedMiddleware, async (req, res) => {
   //code here for GET
   //console.log("Protected route is hit");
-  if(req.session.user.role.toLowerCase()==='primary user'){
+  let firstName = xss(req.session.user.firstName);
+  let role = xss(req.session.user.role);
+  
+  if(role.toLowerCase().trim()==='primary user'){
     let htmlCode = `<p><a href="/primaryuser">Click here to Access primary user Route</a></p>`
-    res.render('scoutuser', {title: 'scout user', firstName: req.session.user.firstName, currentTime: new Date().toUTCString(), role: req.session.user.role, primaryuser: htmlCode})
+    res.render('scoutuser', {title: 'scout user', firstName: firstName, currentTime: new Date().toUTCString(), role: role, primaryuser: htmlCode})
   }else{
-    res.render('scoutuser', {title: 'scout user', firstName: req.session.user.firstName, currentTime: new Date().toUTCString(), role: req.session.user.role})
+    res.render('scoutuser', {title: 'scout user', firstName: firstName, currentTime: new Date().toUTCString(), role: role})
   }
 });
 
 router.route('/primaryuser').get(middlewareMethods.adminMiddleware, async (req, res) => {
   //code here for GET
   console.log("Primary user route is hit");
+  let firstName = xss(req.session.user.firstName);
   
-  res.render('primaryuser', {title: 'primary user', firstName: req.session.user.firstName, currentTime: new Date().toUTCString()})
+  res.render('primaryuser', {title: 'primary user', firstName: firstName, currentTime: new Date().toUTCString()})
 });
 
 router.route('/error').get(async (req, res) => {
@@ -276,14 +280,15 @@ router.route('/error').get(async (req, res) => {
 
 router.route('/logout').get(middlewareMethods.logoutMiddleware, async (req, res) => {
   //code here for 
-  let firstName = req.session.user.firstName;
+  let firstName = xss(req.session.user.firstName);
   req.session.destroy();
   res.render('logout', {title: 'logout', firstName: firstName});
 });
 
 router.route('/addlisting').get(async(req, res)=>{
   console.log("Get Method of Add Listing route is triggered!");
-  res.render('addListing', {title: 'Add Listings'})
+  let countryList = helpers.countryCalculator(helpers.countryCodes)
+  res.render('addListing', {title: 'Add Listings' ,countryCodes: helpers.countryCodes, countryList: countryList})
 })
 
 export default router;

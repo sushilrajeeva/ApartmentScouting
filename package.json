@@ -18,7 +18,8 @@
     "express-handlebars": "^7.0.4",
     "express-session": "^1.17.3",
     "handlebars": "^4.7.7",
-    "mongodb": "^4.13.0"
+    "mongodb": "^4.13.0",
+    "xss": "^1.0.14"
   },
   "repository": {
     "type": "git",
