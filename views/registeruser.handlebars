@@ -12,54 +12,53 @@ registration handelbars
 
 {{!Took reference of this from w3 school link provided in lab8-> https://www.w3schools.com/html/tryit.asp?filename=tryhtml_form_submit}}
     <form class="registration-form" method="post" id="registration-form">
+        
         <label for="firstNameInput">First Name <span class="mandatory">*</span>:</label><br>
         <input type="text" id="firstNameInput" name="firstNameInput" placeholder="Please enter your First Name" required><br>
-
 
         <label for="middleNameInput">Middle Name :</label><br>
         <input type="text" id="middleNameInput" name="middleNameInput" placeholder="Please enter your Middle Name"><br>
 
         <label for="lastNameInput">Last Name <span class="mandatory">*</span>:</label><br>
-        <input type="text" id="lastNameInput" name="lastNameInput" placeholder="Please enter your Last Name"><br>
+        <input type="text" id="lastNameInput" name="lastNameInput" placeholder="Please enter your Last Name"required><br>
 
         <label for="emailAddressInput">Email Address <span class="mandatory">*</span>:</label><br>
-        <input type="email" id="emailAddressInput" name="emailAddressInput" placeholder="Please enter your email address"><br>
+        <input type="email" id="emailAddressInput" name="emailAddressInput" placeholder="Please enter your email address"required><br>
 
-        <label for="countryCodeInput">Country Code <span class="mandatory">*</span>:</label>
-        <input list="countryCodes" id="countryCodeInput" name="countryCodeInput" autocomplete="on" placeholder="{{defaultCountry.flag}} - {{defaultCountry.code}} - ({{defaultCountry.dial_code}}) {{defaultCountry.name}}" value="{{defaultCountry.flag}} {{defaultCountry.dial_code}}">
+        <label for="countryCodeInput">Country Code <span class="mandatory">*</span>:</label><br>
+        <input list="countryCodes" id="countryCodeInput" name="countryCodeInput" autocomplete="on" placeholder="{{defaultCountry.flag}} - {{defaultCountry.code}} - ({{defaultCountry.dial_code}}) {{defaultCountry.name}}" value="{{defaultCountry.flag}} {{defaultCountry.dial_code}}" "Please Select Your Country Dail Code">
         <datalist id="countryCodes">
             {{#each countryCodes}}
                 <option value="{{dial_code}}-{{name}}">{{flag}} - {{code}} - ({{dial_code}}) {{name}} </option>
             {{/each}}
-        </datalist>
+        </datalist><br>
 
-        <label for="phoneNumberInput">Phone Number <span class="mandatory">*</span>:</label>
-        <input type="tel" id="phoneNumberInput" name="phoneNumberInput" pattern="[0-9]{10}" required> <br>
+        <label for="phoneNumberInput">Phone Number <span class="mandatory">*</span>:</label><br>
+        <input type="tel" id="phoneNumberInput" name="phoneNumberInput" pattern="[0-9]{10}" placeholder="Please enter your Phone Number"required><br>
 
 
         <label for="cityInput">City <span class="mandatory">*</span>:</label><br>
-        <input type="text" id="cityInput" name="cityInput" placeholder="Please enter your City"><br>
+        <input type="text" id="cityInput" name="cityInput" placeholder="Please enter your City"required><br>
 
         <label for="stateInput">State <span class="mandatory">*</span>:</label><br>
-        <input type="text" id="stateInput" name="stateInput" placeholder="Please enter your State"><br>
+        <input type="text" id="stateInput" name="stateInput" placeholder="Please enter your State"required><br>
 
-        <label for="countryInput">Country <span class="mandatory">*</span>:</label>
+        <label for="countryInput">Country <span class="mandatory">*</span>:</label><br>
         <input list="countryList" id="countryInput" name="countryInput" autocomplete="on" placeholder="{{defaultCountry.name}}" value="{{defaultCountry.name}}">
             <datalist id="countryList">
                 {{#each countryList}}
                     <option value="{{this}}">{{this}}</option>
                 {{/each}}
-            </datalist>
-        <br>
+            </datalist><br>
 
-        <label for="dobInput">Date of Birth <span class="mandatory">*</span>:</label>
+        <label for="dobInput">Date of Birth <span class="mandatory">*</span>:</label><br>
         <input type="date" id="dobInput" name="dobInput" max="{{maxDate}}" >
         <br>
 
         <label for="passwordInput">Password <span class="mandatory">*</span>:</label><br>
-        <input type="password" id="passwordInput" name="passwordInput" placeholder="Please enter your password"><br>
+        <input type="password" id="passwordInput" name="passwordInput" placeholder="Please enter your password"required><br>
         <label for="confirmPasswordInput">Confirm Password <span class="mandatory">*</span>:</label><br>
-        <input type="password" id="confirmPasswordInput" name="confirmPasswordInput" placeholder="Please re-enter your password to confirm"><br>
+        <input type="password" id="confirmPasswordInput" name="confirmPasswordInput" placeholder="Please re-enter your password to confirm"required><br>
         
         <label for="userTypeInput">User Type <span class="mandatory">*</span>:</label>
         <select id="userTypeInput" name="userTypeInput" required>
@@ -69,9 +68,9 @@ registration handelbars
         </select>
 
 
-        <input type="submit" value="Submit">
+        <input type="submit" value="Submit" aria-label="Submit To Register">
         <p>
-            <a href="/login">Already have an account? Click here to login!</a>
+           If you already have an account, Please click here to <a href="/login">login</a>
         </p>
     </form> 
 
