@@ -440,42 +440,19 @@ router.route('/getAllListings').get(async (req, res) => {
   }
 });
 
-// router.route('/searchListings').get(async (req, res) => {
-//   //This code let's users to search listings based on the following parameters - city, state, country and pincode
+router.route('/getWalletBallance').get(async (req, res) => {
+  //code here for GET
+  //Added wallet functionality. This functionality allows primary user to fetch his/her wallet balance
 
-//   console.log("Req body", req.body);
-//   console.log("Req param", req.params);
-//   console.log("Search Listing route is triggered");
-//   let searchKey = xss(req.params.searchInput);
-//   console.log("Search Key -> ", searchKey);
-//   const searchedListings = await scoutUsers.searchListings(searchKey);
 
-//   let isEmptyListings = false;
-//   if(!searchedListings){
-//     isEmptyListings = true;
-//   }
+  let userID = req.session.user._id;
 
-//   let user = req.session.user
-//   if(!user){
-//     return res.render('landingpage', {title: 'Homepage', isEmptyListings: isEmptyListings, listings: searchedListings})
-//   }
+  const walletBalance = await primaryUsers.getWalletBalance(userID);
+
+  console.log("Wallet Balance -> ", walletBalance);
   
-// }).post(async (res,req)=>{
-//   console.log("Search Listing post route is triggered");
-//   let searchKey = xss(req.body.searchInput);
-//   console.log("Search Key -> ", searchKey);
-//   const searchedListings = await scoutUsers.searchListings(searchKey);
-
-//   let isEmptyListings = false;
-//   if(!searchedListings){
-//     isEmptyListings = true;
-//   }
-
-//   let user = req.session.user
-//   if(!user){
-//     return res.render('landingpage', {title: 'Homepage', isEmptyListings: isEmptyListings, listings: searchedListings})
-//   }
-// })
+  
+})
 
 
 export default router;

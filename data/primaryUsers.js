@@ -302,5 +302,35 @@ export const viewListings = async (userID
     }
 }
 
+export const getWalletBalance = async (userID
+    ) =>{
+
+        //Added wallet functionality. This functionality allows primary user to fetch his/her wallet balance
+
+    console.log("Get Wallet Balance Data is triggered!");
+    try {
+
+        helpers.isValidObjectID(userID, "User ID");
+
+        let userIDObj = new ObjectId(userID);
+
+        console.log("User ID -> ", userIDObj.toString());
+
+        const usersCollection = await primaryUsers();
+        const user = await usersCollection.findOne({ _id: userIDObj });
+
+        if(!user){
+            throw `Your Session has expired! Please try logging in again!!`
+        }
+
+        let walletBalance = user.wallet;
+
+        return walletBalance;
+
+    } catch (error) {
+        throw error;
+    }
+}
+
 //confirm with TAs if this additional code is required since we are already exporting functions individually
-export default {createUser,checkUser,addListing, viewListings}
+export default {createUser,checkUser,addListing, viewListings, getWalletBalance}
