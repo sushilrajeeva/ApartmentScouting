@@ -223,6 +223,45 @@ const exportedMethods = {
             throw `The date ${date} you entered is not of valid date format yyyy-mm-dd!`
         }
     },
+    isValidWebsiteLink(url) {
+        const regex = /^https:\/\/www\.[a-zA-Z-_]{5,}\.com(?:\/.*)?$/;
+        if(regex.test(url)){
+            return true
+        }else{
+            return "The URL entered is invalid. The URL must begin with 'https://www.' followed by at least 5 alphabetic characters, then '.com', and an optional URI."
+        };
+    },
+    isValidCountry(country){
+
+        if(!country){
+            throw `Country can't be empty string`
+        }
+    
+        for(let i=0; i<this.countryCodes.length; i++){
+            if(country.toLowerCase().trim() === this.countryCodes[i].name.toLowerCase().trim()){
+                return country;
+            }
+        }
+    
+        throw `The Country Name ${country} you selected is not a valid country`
+    },
+    isValidPincode(pincode) {
+        const pincodeRegex = /^\d{5}$/;
+        return pincodeRegex.test(pincode);
+      },
+      validRewards(reward){
+        const rewardRegex = /^([1-9]\d?|100)$/
+    
+        if(!rewardRegex.test(reward)){
+            throw `The reward amount ${reward} USD you entered is Invalid! Reward should be an Integer between 1 and 100 USD only!`
+        }
+      },
+
+      isValidObjectID(idString, type){
+        if (!ObjectId.isValid(idString)) {
+            throw `The ${type} is not a valid ObjectID type`;
+          }
+      },
 //USED THIS REPO FOR COUNTRY CODE https://gist.githubusercontent.com/DmytroLisitsyn/1c31186e5b66f1d6c52da6b5c70b12ad/raw/2bc71083a77106afec2ec37cf49d05ee54be1a22/country_dial_info.json
 
 
