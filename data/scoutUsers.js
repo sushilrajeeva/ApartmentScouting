@@ -182,5 +182,34 @@ export const getAllListings = async () => {
     }
   };
 
+  export const searchListings = async (searchKey) => {
+
+    console.log(" Search Key method is called! and our search key is -> ", searchKey);
+    
+    try {
+  
+        const listingsCollection = await listings();
+        //This code let's users to search listings based on the following parameters - city, state, country and pincode
+        //Reffered -> https://www.mongodb.com/docs/manual/reference/operator/query/or/ to do search using the $or keyword
+        //Reffered -> https://www.mongodb.com/docs/manual/reference/operator/query/regex/ to do search using the $regex pattern
+        const searchedListings = await listingsCollection.find({
+            $or: [
+              { street: { $regex: searchKey, $options: 'i' } },
+              { city: { $regex: searchKey, $options: 'i' } },
+              { state: { $regex: searchKey, $options: 'i' } },
+              { country: { $regex: searchKey, $options: 'i' } },
+              { pincode: { $regex: searchKey, $options: 'i' } }
+            ],
+          }).toArray()
+
+        return searchedListings;
+      
+  
+  
+    } catch (error) {
+      throw error;
+    }
+  };
+
 //confirm with TAs if this additional code is required since we are already exporting functions individually
-export default {createUser,checkUser,getAllListings}
+export default {createUser,checkUser,getAllListings,searchListings}

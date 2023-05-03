@@ -425,5 +425,22 @@ router.route('/getAllListings').get(async (req, res) => {
   
 });
 
+router.route('/searchListings').get(async (req, res) => {
+  //This code let's users to search listings based on the following parameters - city, state, country and pincode
+
+  const searchedListings = await scoutUsers.searchListings("Kundapura");
+
+  let isEmptyListings = false;
+  if(!searchedListings){
+    isEmptyListings = true;
+  }
+
+  let user = req.session.user
+  if(!user){
+    return res.render('landingpage', {title: 'Homepage', isEmptyListings: isEmptyListings, listings: searchedListings})
+  }
+  
+});
+
 
 export default router;
