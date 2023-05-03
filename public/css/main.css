@@ -246,3 +246,25 @@ input[type=url] {
 
   background-position: 10px 10px;
 }
+
+
+
+/* Styles for balance section */
+.wallet-balance {
+  background-color: #eee;
+}
+
+.wallet-balance p {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+/* Styles for rewards section */
+.wallet-rewards ul {
+  margin-left: 20px;
+}
+
+.wallet-rewards li {
+  font-size: 16px;
+  line-height: 1.5;
+}

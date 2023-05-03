@@ -450,6 +450,45 @@ router.route('/getWalletBallance').get(async (req, res) => {
   const walletBalance = await primaryUsers.getWalletBalance(userID);
 
   console.log("Wallet Balance -> ", walletBalance);
+
+  let isBalZero = false;
+  if(walletBalance === 0){
+    isBalZero = true;
+  }
+
+  if(req.session.user.role.toLowerCase() ==="primary user"){
+    const navBar = `<nav class="navbar">
+    <div class="navbar-logo">
+      <a href="#">
+        <img src="/public/image/unnamed.png" alt="Logo">
+      </a>
+    </div>
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" href="#">Home</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/addlisting">Add Listings</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/viewlistings">View Listings</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/getWalletBallance">Wallet</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Profile</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/logout">Logout</a>
+      </li>
+    </ul>
+  </nav>`;
+
+  return res.render('wallet', {title: 'Wallet Balance', walletBalance: walletBalance, isBalZero:isBalZero, navBar: navBar})
+  }
+
+  
   
   
 })
