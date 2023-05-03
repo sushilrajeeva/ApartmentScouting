@@ -182,6 +182,7 @@ router
         console.log("primary user checkUser method will be triggered");
         const loginUser = await primaryUsers.checkUser(emailAddress, password);
         req.session.user = {
+          _id: loginUser._id.toString(),
           firstName: loginUser.firstName,
           middleName: loginUser.middleName,
           lastName: loginUser.lastName,
@@ -209,6 +210,7 @@ router
         console.log("scout user checkUser method will be triggered");
         const loginUser = await scoutUsers.checkUser(emailAddress, password);
         req.session.user = {
+          _id: loginUser._id.toString(),
           firstName: loginUser.firstName,
           middleName: loginUser.middleName,
           lastName: loginUser.lastName,
@@ -289,6 +291,120 @@ router.route('/addlisting').get(async(req, res)=>{
   console.log("Get Method of Add Listing route is triggered!");
   let countryList = helpers.countryCalculator(helpers.countryCodes)
   res.render('addListing', {title: 'Add Listings' ,countryCodes: helpers.countryCodes, countryList: countryList})
-})
+}).post(async(req,res)=>{
+  console.log("Post Method of Add Listing route is triggered!!");
+  
+  let listingName = xss(req.body.listingNameInput);
+  let listingLink = xss(req.body.listingLinkInput);
+  let street = xss(req.body.streetInput);
+  let city = xss(req.body.cityInput);
+  let state = xss(req.body.stateInput);
+  let country = xss(req.body.countryInput);
+  let pincode = xss(req.body.pincodeInput);
+  let agentNumber = xss(req.body.agentNumberInput);
+  let ownerNumber = xss(req.body.ownerNumberInput);
+  let reward = xss(req.body.rewardInput);
+
+  const inputData = {
+    listingName: listingName,
+    listingLink: listingLink,
+    street: street,
+    city: city,
+    state: state,
+    country: country,
+    pincode: pincode,
+    agentNumber: agentNumber,
+    ownerNumber: ownerNumber,
+    reward: reward,
+  };
+
+
+  //validations
+
+  listingName = helpers.checkEmptyInputString(listingName, "Listing Name");
+  listingLink = helpers.checkEmptyInputString(listingLink, "Listing Link");
+  street = helpers.checkEmptyInputString(street, "Street");
+  city = helpers.checkEmptyInputString(city, "City");
+  state = helpers.checkEmptyInputString(state, "State");
+  country = helpers.checkEmptyInputString(country, "Country");
+  pincode = helpers.checkEmptyInputString(pincode, "Pincode");
+  agentNumber = helpers.checkEmptyInputString(agentNumber, "Agent Number");
+  ownerNumber = helpers.checkEmptyInputString(ownerNumber, "Owner Number");
+  reward = helpers.checkEmptyInputString(reward, "Reward");
+
+    helpers.checkNameInput(listingName, "Listing Name");
+    helpers.isValidWebsiteLink(listingLink);
+    helpers.isValidCountry(country);
+    helpers.isValidPincode(pincode);
+    helpers.validPhoneNumber(agentNumber);
+    helpers.validPhoneNumber(ownerNumber);
+    helpers.validRewards(reward);
+
+    let emailAddress = xss(req.session.user.emailAddress);
+
+    try {
+      helpers.checkValidEmail(emailAddress);
+    } catch (error) {
+      req.session.destroy();
+      return res.render('error', {title: 'Invalid Session', error: `Your login email is invalid!! Something went wrong!! Please try logging in!`})
+    }
+
+    console.log("Checking if i can access my cookies!!");
+    console.log(req.session.user);
+
+
+
+    const userListing = await primaryUsers.addListing(emailAddress, listingName, listingLink, street, city, state, country, pincode, agentNumber, ownerNumber, reward);
+
+    console.log("Updated User -> ", userListing.updatedUser);
+    console.log("listingID -> ", userListing.listingID);
+
+
+    let updatedUser = userListing.updatedUser;
+    let listingID = userListing.listingID;
+
+
+  let successMsg = `<div id="successMsg" class="successMsg" > Your Listing Details have been Successfully Recorded! Your Listing Ref ID is : ${listingID}</div>`
+
+  //updating our cookie
+  req.session.user = {
+    _id: xss(updatedUser._id.toString()),
+    firstName: xss(updatedUser.firstName),
+    middleName: xss(updatedUser.middleName),
+    lastName: xss(updatedUser.lastName),
+    emailAddress: xss(updatedUser.emailAddress),
+    countryCode: xss(updatedUser.countryCode), 
+    phoneNumber: xss(updatedUser.phoneNumber), 
+    city: xss(updatedUser.city), 
+    state: xss(updatedUser.state), 
+    country: xss(updatedUser.country), 
+    dob: updatedUser.dob,
+    listings: updatedUser.listings,
+    wallet: xss(updatedUser.wallet),
+    role: xss(updatedUser.role),
+  }
+
+  console.log("Updated user session cookie : ", req.session.user);
+
+
+  let countryList = helpers.countryCalculator(helpers.countryCodes)
+  return res.render('addListing', {title: 'Add Listings' ,countryCodes: helpers.countryCodes, countryList: countryList, success: successMsg})
+  
+
+
+});
+
+router.route('/viewlistings').get(async (req, res) => {
+  //code here for GET
+
+  let userID = req.session.user._id.toString()
+  const listings = await primaryUsers.viewListings(userID);
+  let isEmptyListings = false;
+  if(!listings){
+    isEmptyListings = true;
+  }
+
+  res.render('viewlistings', {title: 'View Listings', isEmptyListings: isEmptyListings, listings: listings})
+});
 
 export default router;
