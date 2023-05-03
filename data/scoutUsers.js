@@ -4,6 +4,7 @@
 import {Router} from 'express';
 import {ObjectId} from 'mongodb';
 import {scoutUsers} from '../config/mongoCollections.js'
+import { listings } from '../config/mongoCollections.js';
 import helpers from '../helpers.js'
 
 import bcrypt from 'bcryptjs';
@@ -163,5 +164,23 @@ export const checkUser = async (emailAddress, password) => {
   }
 };
 
+export const getAllListings = async () => {
+
+    console.log(" getAllListings method is called!");
+    
+    try {
+  
+        const listingsCollection = await listings();
+        const allListings = await listingsCollection.find({}).toArray();
+
+        return allListings;
+      
+  
+  
+    } catch (error) {
+      throw error;
+    }
+  };
+
 //confirm with TAs if this additional code is required since we are already exporting functions individually
-export default {createUser,checkUser}
+export default {createUser,checkUser,getAllListings}

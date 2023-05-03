@@ -407,4 +407,23 @@ router.route('/viewlistings').get(async (req, res) => {
   res.render('viewlistings', {title: 'View Listings', isEmptyListings: isEmptyListings, listings: listings})
 });
 
+router.route('/getAllListings').get(async (req, res) => {
+  //code here for GET
+
+  
+  const allListings = await scoutUsers.getAllListings();
+
+  let isEmptyListings = false;
+  if(!allListings){
+    isEmptyListings = true;
+  }
+
+  let user = req.session.user
+  if(!user){
+    return res.render('landingpage', {title: 'Homepage', isEmptyListings: isEmptyListings, listings: allListings})
+  }
+  
+});
+
+
 export default router;
