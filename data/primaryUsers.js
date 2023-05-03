@@ -2,7 +2,8 @@
 //took reference from lab6
 import {Router} from 'express';
 import {ObjectId} from 'mongodb';
-import {primaryUsers} from '../config/mongoCollections.js'
+import { primaryUsers} from '../config/mongoCollections.js'
+import { listings } from '../config/mongoCollections.js';
 import helpers from '../helpers.js'
 
 import bcrypt from 'bcryptjs';
@@ -149,7 +150,7 @@ export const checkUser = async (emailAddress, password) => {
 
     if (compareToMatch) {
       console.log('The passwords match.. this is good');
-      return {firstName: user.firstName, middleName: user.middleName, lastName: user.lastName, emailAddress: user.emailAddress, countryCode: user.countryCode, phoneNumber: user.phoneNumber, city: user.city, state: user.state, country: user.country, dob: user.dob, listings: user.listings, wallet: user.wallet, role: user.role}
+      return {_id: user._id.toString(), firstName: user.firstName, middleName: user.middleName, lastName: user.lastName, emailAddress: user.emailAddress, countryCode: user.countryCode, phoneNumber: user.phoneNumber, city: user.city, state: user.state, country: user.country, dob: user.dob, listings: user.listings, wallet: user.wallet, role: user.role}
     } else {
       //console.log('The passwords do not match, this is not good, they should match');
       throw `Either the email address or password is invalid`
@@ -165,5 +166,141 @@ export const checkUser = async (emailAddress, password) => {
 
 };
 
+//This is to enable users to add their listings to the db
+export const addListing = async (emailAddress,
+    listingName,
+    listingLink,
+    street,
+    city,
+    state,
+    country,
+    pincode,
+    agentNumber,
+    ownerNumber,
+    reward) => {
+
+    console.log("Add listing method of primary user : DATA is called!!");
+
+    try {
+
+        emailAddress = helpers.checkEmptyInputString(emailAddress, "Email Address");
+        emailAddress.toLowerCase();
+        helpers.checkValidEmail(emailAddress);
+
+        listingName = helpers.checkEmptyInputString(listingName, "Listing Name");
+        listingLink = helpers.checkEmptyInputString(listingLink, "Listing Link");
+        street = helpers.checkEmptyInputString(street, "Street");
+        city = helpers.checkEmptyInputString(city, "City");
+        state = helpers.checkEmptyInputString(state, "State");
+        country = helpers.checkEmptyInputString(country, "Country");
+        pincode = helpers.checkEmptyInputString(pincode, "Pincode");
+        agentNumber = helpers.checkEmptyInputString(agentNumber, "Agent Number");
+        ownerNumber = helpers.checkEmptyInputString(ownerNumber, "Owner Number");
+        reward = helpers.checkEmptyInputString(reward, "Reward");
+
+        helpers.checkNameInput(listingName, "Listing Name");
+        helpers.isValidWebsiteLink(listingLink);
+        helpers.isValidCountry(country);
+        helpers.isValidPincode(pincode);
+        helpers.validPhoneNumber(agentNumber);
+        helpers.validPhoneNumber(ownerNumber);
+        helpers.validRewards(reward);
+
+        const usersCollection = await primaryUsers();
+        const user = await usersCollection.findOne({emailAddress});
+
+        const userID = user._id.toString();
+
+        if(!user){
+            throw `Logged In user's email address is invalid, please try logging into the application`
+        }
+
+        const listingData = {
+            _id: new ObjectId(),
+            userID: user._id,
+            listingName: listingName,
+            listingLink: listingLink,
+            street: street,
+            city: city,
+            state: state,
+            country: country,
+            pincode: pincode,
+            agentNumber: agentNumber,
+            ownerNumber: ownerNumber,
+            reward: reward,
+          };
+
+
+          const listingCollection = await listings();
+          const listing = await listingCollection.insertOne(listingData)
+
+
+        if (!listing.acknowledged || !listing.insertedId){
+            throw 'Could not add listing';
+        }
+
+        console.log("Checking listing IDS ");
+        console.log("listing.insertedID -> ", listing.insertedId);
+
+        const updateResult = await usersCollection.findOneAndUpdate(
+            { _id: user._id },
+            {
+              $push: {
+                listings: {
+                  _id: listingData._id
+                }
+              }
+            },
+            { returnDocument: 'after' } 
+          );
+        
+
+          if (updateResult.value) {
+            console.log('Listings updated successfully');
+            console.log('Updated document:', updateResult.value);
+          } else {
+            throw `Unable to update listing details in primary user collection!`
+          }
+        
+          let updatedUser = updateResult.value;
+
+
+          return {updatedUser: updatedUser, listingID: listing.insertedId.toString() }
+   
+    } catch (error) {
+        throw error;
+    }
+
+
+    
+  
+};
+
+export const viewListings = async (userID
+    ) =>{
+
+    console.log("View Listings Data is triggered!");
+    try {
+
+        helpers.isValidObjectID(userID, "User ID");
+
+        let userIDObj = new ObjectId(userID);
+
+        const query = { userID: userIDObj };
+
+        const listingCollection = await listings();
+        const userListings = await listingCollection.find(query).toArray();
+
+        if(!userListings){
+            return []
+        }else {
+            return userListings;
+        }
+
+    } catch (error) {
+        throw error;
+    }
+}
+
 //confirm with TAs if this additional code is required since we are already exporting functions individually
-export default {createUser,checkUser}
+export default {createUser,checkUser,addListing, viewListings}

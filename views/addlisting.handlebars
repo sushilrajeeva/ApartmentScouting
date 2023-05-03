@@ -9,7 +9,7 @@
       <a class="nav-link" href="#">Home</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="#">Add Listings</a>
+      <a class="nav-link" href="/addlisting">Add Listings</a>
     </li>
     <li class="nav-item">
       <a class="nav-link" href="#">View Listings</a>
@@ -25,43 +25,65 @@
     </li>
   </ul>
 </nav>
+<br>
+
+<div>
+  {{{success}}}
+</div>
 
 <div>
     <form class="addlisting-form" method="post" id="addlisting-form">
 
-  <label for="listingName">Listing Name:</label>
-  <input type="text" id="listingName" name="listingName"><br>
+      <label for="listingNameInput">Listing Name <span class="mandatory">*</span>:</label>
+      <input type="text" id="listingNameInput" name="listingNameInput" placeholder="Please add your Listing property Name" required><br>
 
-  <label for="listingUserID">Listing User ID:</label>
-  <input type="text" id="listingUserID" name="listingUserID"><br>
 
-  <label for="actualListingLink">Actual Listing Link:</label>
-  <input type="text" id="actualListingLink" name="actualListingLink"><br>
+      <label for="listingLinkInput">Listing Link <span class="mandatory">*</span>:</label><br>
+      <input type="url" id="listingLinkInput" name="listingLinkInput" placeholder="Please enter your listing link" required><br>
 
-  <label for="street">Street:</label>
-  <input type="text" id="street" name="street"><br>
+      <label for="streetInput">Street <span class="mandatory">*</span>:</label>
+      <input type="text" id="streetInput" name="streetInput" placeholder="Please enter the street where listing is located" required><br>
 
-  <label for="city">City:</label>
-  <input type="text" id="city" name="city"><br>
+      <label for="cityInput">City <span class="mandatory">*</span>:</label>
+      <input type="text" id="cityInput" name="cityInput" placeholder="Please enter the city where listing is located" required><br>
 
-  <label for="state">State:</label>
-  <input type="text" id="state" name="state"><br>
+      <label for="stateInput">State <span class="mandatory">*</span>:</label>
+      <input type="text" id="stateInput" name="stateInput" placeholder="Please enter the city where listing is located" required><br>
 
-  <label for="pincode">Pincode:</label>
-  <input type="number" id="pincode" name="pincode" min="10000" max="99999"><br>
+      <label for="countryInput">Country <span class="mandatory">*</span>:</label>
+      <input class="styled-input" list="countryList" id="countryInput" name="countryInput" autocomplete="on" placeholder="Please enter the country where listing is located" required>
+        <datalist id="countryList">
+          {{#each countryList}}
+            <option value="{{this}}">{{this}}</option>
+          {{/each}}
+        </datalist>
+  <br>
 
-  <label for="country">Country:</label>
-  <input type="text" id="country" name="country"><br>
+      <label for="pincodeInput">Pincode <span class="mandatory">*</span>:</label>
+      <input type="text" id="pincodeInput" name="pincodeInput" pattern="^\d{5}$" placeholder="Please enter the pincode where listing is located" required><br>
 
-  <label for="agentNumber">Agent Number:</label>
-  <input type="number" id="agentNumber" name="agentNumber"><br>
+  
 
-  <label for="ownerNumber">Owner Number:</label>
-  <input type="number" id="ownerNumber" name="ownerNumber"><br>
+      <label for="agentNumberInput">Agent Number <span class="mandatory">*</span>:</label><br>
+      <input type="tel" id="agentNumberInput" name="agentNumberInput" pattern="[0-9]{10}" required placeholder="Please enter the listing's Agent number" ><br>
 
-  <label for="reward">Reward:</label>
-  <input type="number" id="reward" name="reward"><br><br>
+      <label for="ownerNumberInput">Owner Number <span class="mandatory">*</span>:</label><br>
+      <input type="tel" id="ownerNumberInput" name="ownerNumberInput" pattern="[0-9]{10}" required placeholder="Please enter the listing's Owner number "><br>
 
-  <input type="submit" value="Submit">
-</form>
+      <label for="rewardInput">Reward <span class="mandatory">*</span>:</label><br>
+      <input type="text" id="rewardInput" name="rewardInput" placeholder="Please enter the reward you'd like to payout, between 1 and 100 USD" pattern="^([1-9]\d?|100)$" required><br><br>
+
+      <input type="submit" value="Submit">
+    </form>
 </div>
+
+<div id="error" class="error" hidden></div>
+    {{{error}}}
+
+<!--From professor's lecture code , modified according to requirement of lab9-->
+<!--Used type="module" to counter error thrown at console for importing helper.js inside lab10.js-->
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
+        crossorigin="anonymous"></script>
+    <script src="/public/js/main.js" ></script>

@@ -150,7 +150,7 @@ export const checkUser = async (emailAddress, password) => {
 
     if (compareToMatch) {
       console.log('The passwords match.. this is good');
-      return {firstName: user.firstName, middleName: user.middleName, lastName: user.lastName, emailAddress: user.emailAddress, countryCode: user.countryCode, phoneNumber: user.phoneNumber, city: user.city, state: user.state, country: user.country, dob: user.dob, listings: user.listings, wallet: user.wallet, role: user.role}
+      return {_id: user._id.toString(), firstName: user.firstName, middleName: user.middleName, lastName: user.lastName, emailAddress: user.emailAddress, countryCode: user.countryCode, phoneNumber: user.phoneNumber, city: user.city, state: user.state, country: user.country, dob: user.dob, listings: user.listings, wallet: user.wallet, role: user.role}
     } else {
       //console.log('The passwords do not match, this is not good, they should match');
       throw `Either the email address or password is invalid`
