@@ -15,11 +15,14 @@
       <a class="nav-link" href="/login">Login</a>
     </li>
   </ul>
-  <form class="search-form" action="/searchListings" method="GET">
-    <input class="search-bar" type="text" name="searchInput" id="searchInput" placeholder="Search by postal code">
-    <button class="search-btn" type="submit">Search</button>
-  </form>
+  
 </nav>
+
+<form id="search-form"  method="post">
+  <label for="searchInput">Search: </label><br>
+    <input class="search-bar" type="text" name="searchInput" id="searchInput" placeholder="Search by postal code | Address | City | State | Country">
+    <input type="submit" value="Search" aria-label="Submit To search" ></input>
+  </form>
 
 
 {{#if isEmptyListings}}

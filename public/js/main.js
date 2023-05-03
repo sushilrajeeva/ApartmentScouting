@@ -1802,6 +1802,9 @@ if(searchForm){
         event.preventDefault()
         console.log("Search Form is triggered!!");
         let searchInput = document.getElementById("searchInput");
+        let search = searchInput.value;
+        console.log("**********************");
+        console.log("Search Key -> ", search);
         
         //console.log("Everything is OK");
 

@@ -423,13 +423,9 @@ router.route('/getAllListings').get(async (req, res) => {
     return res.render('landingpage', {title: 'Homepage', isEmptyListings: isEmptyListings, listings: allListings})
   }
   
-});
-
-router.route('/searchListings').get(async (req, res) => {
-  //This code let's users to search listings based on the following parameters - city, state, country and pincode
-
-  console.log("Search Listing route is triggered");
-  let searchKey = xss(req.param.searchInput);
+}).post(async (req,res)=>{
+  console.log("Search Listing post route is triggered");
+  let searchKey = xss(req.body.searchInput);
   console.log("Search Key -> ", searchKey);
   const searchedListings = await scoutUsers.searchListings(searchKey);
 
@@ -442,8 +438,44 @@ router.route('/searchListings').get(async (req, res) => {
   if(!user){
     return res.render('landingpage', {title: 'Homepage', isEmptyListings: isEmptyListings, listings: searchedListings})
   }
-  
 });
+
+// router.route('/searchListings').get(async (req, res) => {
+//   //This code let's users to search listings based on the following parameters - city, state, country and pincode
+
+//   console.log("Req body", req.body);
+//   console.log("Req param", req.params);
+//   console.log("Search Listing route is triggered");
+//   let searchKey = xss(req.params.searchInput);
+//   console.log("Search Key -> ", searchKey);
+//   const searchedListings = await scoutUsers.searchListings(searchKey);
+
+//   let isEmptyListings = false;
+//   if(!searchedListings){
+//     isEmptyListings = true;
+//   }
+
+//   let user = req.session.user
+//   if(!user){
+//     return res.render('landingpage', {title: 'Homepage', isEmptyListings: isEmptyListings, listings: searchedListings})
+//   }
+  
+// }).post(async (res,req)=>{
+//   console.log("Search Listing post route is triggered");
+//   let searchKey = xss(req.body.searchInput);
+//   console.log("Search Key -> ", searchKey);
+//   const searchedListings = await scoutUsers.searchListings(searchKey);
+
+//   let isEmptyListings = false;
+//   if(!searchedListings){
+//     isEmptyListings = true;
+//   }
+
+//   let user = req.session.user
+//   if(!user){
+//     return res.render('landingpage', {title: 'Homepage', isEmptyListings: isEmptyListings, listings: searchedListings})
+//   }
+// })
 
 
 export default router;
