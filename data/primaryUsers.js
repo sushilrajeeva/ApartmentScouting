@@ -3,6 +3,7 @@ import {Router} from 'express';
 import {ObjectId} from 'mongodb';
 import { primaryUsers} from '../config/mongoCollections.js'
 import { listings } from '../config/mongoCollections.js';
+import { scoutUsers } from '../config/mongoCollections.js';
 import helpers from '../helpers.js'
 
 import bcrypt from 'bcryptjs';
@@ -37,7 +38,7 @@ export const createUser = async (
   try {
 
     firstName = helpers.checkEmptyInputString(firstName,"First Name");
-    middleName = helpers.checkEmptyInputString(middleName,"First Name");
+    //middleName = helpers.checkEmptyInputString(middleName,"First Name");
     lastName = helpers.checkEmptyInputString(lastName,"First Name");
     emailAddress = helpers.checkEmptyInputString(emailAddress,"Email Address");
     emailAddress = emailAddress.toLowerCase();
@@ -124,6 +125,23 @@ export const createUser = async (
 
 };
 
+export const getuser = async (
+  emailAddress, role
+  ) => {
+    if(role.toLowerCase() === 'primary user'){
+      const primaryUsersCollection = await primaryUsers();
+    const primary = await primaryUsersCollection.findOne({emailAddress});
+    primary._id = primary._id.toString();
+    return primary;
+    }else{
+      const scoutUsersCollection = await scoutUsers();
+    const scout = await scoutUsersCollection.findOne({emailAddress});
+    scout._id = scout._id.toString(); 
+    return scout;
+    }
+  };
+
+
 export const checkUser = async (emailAddress, password) => {
 
   try {
@@ -197,7 +215,8 @@ export const addListing = async (emailAddress,
         ownerNumber = helpers.checkEmptyInputString(ownerNumber, "Owner Number");
         reward = helpers.checkEmptyInputString(reward, "Reward");
 
-        helpers.checkNameInput(listingName, "Listing Name");
+        //helpers.checkNameInput(listingName, "Listing Name");
+        helpers.checkPropertyNameInput(listingName, "Listing Name");
         helpers.isValidWebsiteLink(listingLink);
         helpers.isValidCountry(country);
         helpers.isValidPincode(pincode);
@@ -275,6 +294,111 @@ export const addListing = async (emailAddress,
   
 };
 
+
+export const updateListing = async ( listingID,
+  emailAddress,
+  listingName,
+  listingLink,
+  street,
+  city,
+  state,
+  country,
+  pincode,
+  agentNumber,
+  ownerNumber,
+  reward) => {
+
+  console.log("Add listing method of primary user : DATA is called!!");
+
+  try {
+
+      listingID = helpers.checkEmptyInputString(listingID, "Listing ID");
+      emailAddress = helpers.checkEmptyInputString(emailAddress, "Email Address");
+      emailAddress.toLowerCase();
+      helpers.checkValidEmail(emailAddress);
+
+      listingName = helpers.checkEmptyInputString(listingName, "Listing Name");
+      listingLink = helpers.checkEmptyInputString(listingLink, "Listing Link");
+      street = helpers.checkEmptyInputString(street, "Street");
+      city = helpers.checkEmptyInputString(city, "City");
+      state = helpers.checkEmptyInputString(state, "State");
+      country = helpers.checkEmptyInputString(country, "Country");
+      pincode = helpers.checkEmptyInputString(pincode, "Pincode");
+      agentNumber = helpers.checkEmptyInputString(agentNumber, "Agent Number");
+      ownerNumber = helpers.checkEmptyInputString(ownerNumber, "Owner Number");
+      reward = helpers.checkEmptyInputString(reward, "Reward");
+
+      helpers.checkPropertyNameInput(listingName, "Listing Name");
+      helpers.isValidWebsiteLink(listingLink);
+      helpers.isValidCountry(country);
+      helpers.isValidPincode(pincode);
+      helpers.validPhoneNumber(agentNumber);
+      helpers.validPhoneNumber(ownerNumber);
+      helpers.validRewards(reward);
+
+      const usersCollection = await primaryUsers();
+      const user = await usersCollection.findOne({emailAddress});
+
+      const userID = user._id.toString();
+
+      if(!user){
+          throw `Logged In user's email address is invalid, please try logging into the application`
+      }
+
+      const listingData = {
+          userID: user._id,
+          listingName: listingName,
+          listingLink: listingLink,
+          street: street,
+          city: city,
+          state: state,
+          country: country,
+          pincode: pincode,
+          agentNumber: agentNumber,
+          ownerNumber: ownerNumber,
+          reward: reward,
+        };
+
+
+        const listingCollection = await listings();
+        // const listing = await listingCollection.insertOne(listingData)
+        const listing = await listingCollection.findOneAndReplace({_id:  new ObjectId(listingID)}, listingData, {returnOriginal: false})
+          
+
+
+      if (!listing.value){
+          throw 'Could not add listing';
+      }
+
+      console.log("Checking listing IDS ");
+      console.log("listing.insertedID -> ", listing.insertedId);
+
+      const updateResult = await usersCollection.findOne({ _id: user._id },);
+      
+
+        if (updateResult) {
+          console.log('Listings updated successfully');
+          console.log('Updated document:', updateResult);
+        } else {
+          throw `Unable to update listing details in primary user collection!`
+        }
+      
+        let updatedUser = updateResult;
+
+
+        return {updatedUser: updatedUser, listingID: listing.value._id.toString()}
+ 
+  } catch (error) {
+      throw error;
+  }
+
+
+  
+
+};
+
+
+
 export const viewListings = async (userID
     ) =>{
 
@@ -332,4 +456,4 @@ export const getWalletBalance = async (userID
 }
 
 //confirm with TAs if this additional code is required since we are already exporting functions individually
-export default {createUser,checkUser,addListing, viewListings, getWalletBalance}
+export default {createUser,checkUser,addListing, viewListings, getWalletBalance, getuser, updateListing}

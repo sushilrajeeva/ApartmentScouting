@@ -1601,7 +1601,13 @@ if(registrationForm){
             errorDiv.hidden = true;
             //checking input strings are empty or not
             firstName = checkEmptyInputString(firstName,"First Name");
-            middleName = checkEmptyInputString(middleName,"Middle Name");
+            // middleName = checkEmptyInputString(middleName,"Middle Name");
+             // check if middle name is empty or not
+             if (middleName == "") {
+                middleName = "";
+            }
+            // middleName = checkEmptyInputString(middleName,"Middle Name");
+
             lastName = checkEmptyInputString(lastName,"Last Name");
             emailAddress = checkEmptyInputString(emailAddress,"Email Address");
             emailAddress = emailAddress.toLowerCase();
@@ -1643,10 +1649,15 @@ if(registrationForm){
             //confirmPassword = checkEmptyInputString(confirmPassword,"Confirm Password");
             checkEmptyInputString(confirmPassword,"Confirm Password");
 
+            checkNameInput(firstName, "First Name");
+
+            checkMidNameInput(middleName, "Middle Name");
+
+            checkNameInput(lastName, "Last Name");
             
 
             checkNameInput(firstName, "Name");
-
+            
 
             checkValidEmail(emailAddress);
 
@@ -1748,7 +1759,7 @@ if (addListingForm) {
 
             //validations
 
-            checkNameInput(listingName, "Listing Name");
+            checkPropertyNameInput(listingName, "Listing Name");
             isValidWebsiteLink(listingLink);
             isValidCountry(country);
             isValidPincode(pincode);
@@ -1880,6 +1891,20 @@ function checkValidPassword(password){
 }
 
 
+function checkMidNameInput(name, type){
+    let nameRegex = /^[A-Za-z]{0,25}$/.test(name);
+
+    if(!nameRegex){
+        throw `Error: ${name} should be a valid ${type}!, should be 2 to 25 charecters long, non empty spaces containing only alphabets and no numbers..`
+    }
+
+    console.log(`Valid ${name} of type ${type} exist`);
+
+}
+
+
+
+
 function checkNameInput(name, type){
     let nameRegex = /^[A-Za-z]{2,25}$/.test(name);
 
@@ -1890,6 +1915,18 @@ function checkNameInput(name, type){
     console.log(`Valid ${name} of type ${type} exist`);
 
 }
+
+function checkPropertyNameInput(name, type){
+    let nameRegex = /^[A-Za-z0-9 - , -]{2,50}$/.test(name);
+
+    if(!nameRegex){
+        throw `Error: ${name} should be a valid ${type}!, should be 2 to 25 charecters long, can contain alphabets, numbers, spaces, commas and hyphens..`
+    }
+
+    console.log(`Valid ${name} of type ${type} exist`);
+
+}
+
 
 function checkPasswordsMatch(password, confirmPassword){
     if(password!==confirmPassword){

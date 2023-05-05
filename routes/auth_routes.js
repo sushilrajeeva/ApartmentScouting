@@ -59,7 +59,7 @@ router
 
       //checking input strings are empty or not
       firstName = helpers.checkEmptyInputString(firstName,"First Name");
-      middleName = helpers.checkEmptyInputString(middleName,"First Name");
+      // middleName = helpers.checkEmptyInputString(middleName,"First Name");
       lastName = helpers.checkEmptyInputString(lastName,"First Name");
       emailAddress = helpers.checkEmptyInputString(emailAddress,"Email Address");
       emailAddress = emailAddress.toLowerCase();
@@ -82,7 +82,9 @@ router
       helpers.validPhoneNumber(phoneNumber)
       helpers.validCountrySelected(country, codeCountry, countryCode);
 
-      helpers.checkNameInput(firstName, "Name");
+      helpers.checkNameInput(firstName, "First name");
+      helpers.checkMidNameInput(middleName, "Middle name");
+      helpers.checkNameInput(lastName, "Last name");
 
       helpers.checkValidEmail(emailAddress);
 
@@ -253,6 +255,18 @@ router
 
   });
 
+
+  router.route('/profile').get(async (req, res) =>{
+    //code here for GET
+  
+    let emailAddress = req.session.user.emailAddress
+    let role = req.session.user.role
+    const user = await primaryUsers.getuser(emailAddress, role);
+    
+    res.render('profile',{title: 'profile',user:user})
+  });
+
+
 router.route('/scoutuser').get(middlewareMethods.protectedMiddleware, async (req, res) => {
   //code here for GET
   //console.log("Protected route is hit");
@@ -332,7 +346,7 @@ router.route('/addlisting').get(async(req, res)=>{
   ownerNumber = helpers.checkEmptyInputString(ownerNumber, "Owner Number");
   reward = helpers.checkEmptyInputString(reward, "Reward");
 
-    helpers.checkNameInput(listingName, "Listing Name");
+    helpers.checkPropertyNameInput(listingName, "Listing Name");
     helpers.isValidWebsiteLink(listingLink);
     helpers.isValidCountry(country);
     helpers.isValidPincode(pincode);
@@ -452,6 +466,113 @@ router.route('/getAllListings').get(async (req, res) => {
     return res.render('landingpage', {title: 'Homepage', isEmptyListings: isEmptyListings, listings: searchedListings})
   }
 });
+
+
+
+router.route('/updateListing/:listingID').post(async (req, res) => {
+  //code here for POST
+  console.log("Update Listing post route is triggered");
+
+  // let listingID = xss(req.body.listingIDInput);
+  let listingID = xss(req.params.listingID);
+  let listingName = xss(req.body.listingNameInput);
+  let listingLink = xss(req.body.listingLinkInput);
+  let street = xss(req.body.streetInput);
+  let city = xss(req.body.cityInput);
+  let state = xss(req.body.stateInput);
+  let country = xss(req.body.countryInput);
+  let pincode = xss(req.body.pincodeInput);
+  let agentNumber = xss(req.body.agentNumberInput);
+  let ownerNumber = xss(req.body.ownerNumberInput);
+  let reward = xss(req.body.rewardInput);
+
+  const inputData = {
+    listingName: listingName,
+    listingLink: listingLink,
+    street: street,
+    city: city,
+    state: state,
+    country: country,
+    pincode: pincode,
+    agentNumber: agentNumber,
+    ownerNumber: ownerNumber,
+    reward: reward,
+  };
+
+
+  //validations
+  listingName = helpers.checkEmptyInputString(listingName, "Listing Name");
+  listingLink = helpers.checkEmptyInputString(listingLink, "Listing Link");
+  street = helpers.checkEmptyInputString(street, "Street");
+  city = helpers.checkEmptyInputString(city, "City");
+  state = helpers.checkEmptyInputString(state, "State");
+  country = helpers.checkEmptyInputString(country, "Country");
+  pincode = helpers.checkEmptyInputString(pincode, "Pincode");
+  agentNumber = helpers.checkEmptyInputString(agentNumber, "Agent Number");
+  ownerNumber = helpers.checkEmptyInputString(ownerNumber, "Owner Number");
+  reward = helpers.checkEmptyInputString(reward, "Reward");
+
+    helpers.checkPropertyNameInput(listingName, "Listing Name");
+    helpers.isValidWebsiteLink(listingLink);
+    helpers.isValidCountry(country);
+    helpers.isValidPincode(pincode);
+    helpers.validPhoneNumber(agentNumber);
+    helpers.validPhoneNumber(ownerNumber);
+    helpers.validRewards(reward);
+
+    let emailAddress = xss(req.session.user.emailAddress);
+
+    try {
+      helpers.checkValidEmail(emailAddress);
+    } catch (error) {
+      req.session.destroy();
+      return res.render('error', {title: 'Invalid Session', error: `Your login email is invalid!! Something went wrong!! Please try logging in!`})
+    }
+
+    console.log("Checking if i can access my cookies!!");
+    console.log(req.session.user);
+
+
+
+    const userListing = await primaryUsers.updateListing(listingID, emailAddress, listingName, listingLink, street, city, state, country, pincode, agentNumber, ownerNumber, reward);
+
+    console.log("Updated User -> ", userListing.updatedUser);
+    console.log("listingID -> ", userListing.listingID);
+
+
+    let updatedUser = userListing.updatedUser;
+
+
+  let successMsg = `<div id="successMsg" class="successMsg" > Your Listing Details have been Successfully Updated! Your Listing Ref ID is : ${listingID}</div>`
+
+  //updating our cookie
+  req.session.user = {
+    _id: xss(updatedUser._id.toString()),
+    firstName: xss(updatedUser.firstName),
+    middleName: xss(updatedUser.middleName),
+    lastName: xss(updatedUser.lastName),
+    emailAddress: xss(updatedUser.emailAddress),
+    countryCode: xss(updatedUser.countryCode), 
+    phoneNumber: xss(updatedUser.phoneNumber), 
+    city: xss(updatedUser.city), 
+    state: xss(updatedUser.state), 
+    country: xss(updatedUser.country), 
+    dob: updatedUser.dob,
+    listings: updatedUser.listings,
+    wallet: xss(updatedUser.wallet),
+    role: xss(updatedUser.role),
+  }
+
+  console.log("Updated user session cookie : ", req.session.user);
+
+
+  let countryList = helpers.countryCalculator(helpers.countryCodes)
+  return res.render('viewlistings', {title: 'Views Listings' ,countryCodes: helpers.countryCodes, countryList: countryList})
+  
+
+
+});
+
 
 router.route('/primaryWallet').get(async (req, res) => {
   //code here for GET

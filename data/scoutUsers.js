@@ -37,7 +37,7 @@ export const createUser = async (
   try {
 
     firstName = helpers.checkEmptyInputString(firstName,"First Name");
-    middleName = helpers.checkEmptyInputString(middleName,"First Name");
+    // middleName = helpers.checkEmptyInputString(middleName,"First Name");
     lastName = helpers.checkEmptyInputString(lastName,"First Name");
     emailAddress = helpers.checkEmptyInputString(emailAddress,"Email Address");
     emailAddress = emailAddress.toLowerCase();

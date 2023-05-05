@@ -115,6 +115,29 @@ const exportedMethods = {
         console.log(`Valid password - ${password} exist`);
     },
 
+
+    checkPropertyNameInput(name, type){
+        let nameRegex = /^[A-Za-z0-9 - , -]{2,50}$/.test(name);
+    
+        if(!nameRegex){
+            throw `Error: ${name} should be a valid ${type}!, should be 2 to 25 charecters long, can contain alphabets, numbers, spaces, commas and hyphens..`
+        }
+    
+        console.log(`Valid ${name} of type ${type} exist`);
+    
+    },
+
+    checkMidNameInput(name, type){
+        //console.log("Check name input function is called!!");
+        let nameRegex = /^[A-Za-z]{0,25}$/.test(name);
+
+        if(!nameRegex){
+            throw `Error: ${name} should be a valid ${type}!, should be 0 to 25 charecters long, non empty spaces containing only alphabets and no numbers..`
+        }
+
+        console.log(`Valid ${name} of type ${type} exist`);
+    
+    },  
     checkNameInput(name, type){
         //console.log("Check name input function is called!!");
         let nameRegex = /^[A-Za-z]{2,25}$/.test(name);
