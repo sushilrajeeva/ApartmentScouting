@@ -1,4 +1,3 @@
-//import mongo collections, bcrypt and implement the following data functions
 //took reference from lab6
 import {Router} from 'express';
 import {ObjectId} from 'mongodb';
