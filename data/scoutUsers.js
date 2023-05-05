@@ -1,4 +1,3 @@
-//import mongo collections, bcrypt and implement the following data functions
 //took reference from lab6'
 //use users.js to complete this
 import {Router} from 'express';

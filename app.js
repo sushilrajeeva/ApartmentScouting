@@ -1,7 +1,4 @@
 // Setup server, session and middleware here.
-
-
-
 //referred professor's lecture code 8, my lab8 and professor's lecture code 10
 import express from 'express';
 const app = express();
