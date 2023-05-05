@@ -397,14 +397,27 @@ router.route('/addlisting').get(async(req, res)=>{
 router.route('/viewlistings').get(async (req, res) => {
   //code here for GET
 
-  let userID = req.session.user._id.toString()
+  
+  if(req.session.user.role.toLowerCase() === 'primary user'){
+    let isPrimary = true;
+
+    let userID = req.session.user._id.toString()
   const listings = await primaryUsers.viewListings(userID);
   let isEmptyListings = false;
   if(!listings){
     isEmptyListings = true;
   }
 
-  res.render('viewlistings', {title: 'View Listings', isEmptyListings: isEmptyListings, listings: listings})
+  res.render('viewListings', {title: 'View Listings', isEmptyListings: isEmptyListings, listings: listings, isPrimary: isPrimary})
+  }else{
+    let isPrimary = false;
+    const listings = await scoutUsers.viewListings();
+    let isEmptyListings = false;
+  if(!listings){
+    isEmptyListings = true;
+  }
+  res.render('viewlistings', {title: 'View Listings', isEmptyListings: isEmptyListings, listings: listings, isPrimary: isPrimary})
+  }
 });
 
 router.route('/getAllListings').get(async (req, res) => {
@@ -440,7 +453,7 @@ router.route('/getAllListings').get(async (req, res) => {
   }
 });
 
-router.route('/getWalletBallance').get(async (req, res) => {
+router.route('/primaryWallet').get(async (req, res) => {
   //code here for GET
   //Added wallet functionality. This functionality allows primary user to fetch his/her wallet balance
 
@@ -485,13 +498,10 @@ router.route('/getWalletBallance').get(async (req, res) => {
     </ul>
   </nav>`;
 
-  return res.render('wallet', {title: 'Wallet Balance', walletBalance: walletBalance, isBalZero:isBalZero, navBar: navBar})
+  let name = ` ${req.session.user.firstName} ${req.session.user.middleName} ${req.session.user.lastName}`;
+
+  return res.render('primarywallet', {title: 'Wallet Balance', name: name,  walletBalance: walletBalance, isBalZero:isBalZero})
   }
-
-  
-  
-  
 })
-
 
 export default router;

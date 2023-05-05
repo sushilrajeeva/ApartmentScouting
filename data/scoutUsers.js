@@ -210,5 +210,24 @@ export const getAllListings = async () => {
     }
   };
 
+  export const viewListings = async (
+    ) =>{
+
+    console.log("View Listings Data is triggered!");
+    try {
+        const listingCollection = await listings();
+        const userListings = await listingCollection.find({}).toArray();
+
+        if(!userListings){
+            return []
+        }else {
+            return userListings;
+        }
+
+    } catch (error) {
+        throw error;
+    }
+}
+
 //confirm with TAs if this additional code is required since we are already exporting functions individually
-export default {createUser,checkUser,getAllListings,searchListings}
+export default {createUser,checkUser,getAllListings,searchListings, viewListings}
