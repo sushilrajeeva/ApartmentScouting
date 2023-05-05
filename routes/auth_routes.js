@@ -632,7 +632,7 @@ router.route('/scoutWallet').get(async (req, res) => {
 
   let userID = req.session.user._id;
 
-  const walletBalance = await primaryUsers.getWalletBalance(userID);
+  const walletBalance = await scoutUsers.getWalletBalance(userID);
 
   console.log("Wallet Balance -> ", walletBalance);
 
@@ -645,7 +645,7 @@ router.route('/scoutWallet').get(async (req, res) => {
 
   let name = ` ${req.session.user.firstName} ${req.session.user.middleName} ${req.session.user.lastName}`;
 
-  return res.render('scoutuser', {title: 'Wallet Balance', name: name,  walletBalance: walletBalance, isBalZero:isBalZero})
+  return res.render('scoutwallet', {title: 'Wallet Balance', name: name,  walletBalance: walletBalance, isBalZero:isBalZero})
   }
 })
 
