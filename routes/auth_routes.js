@@ -625,4 +625,28 @@ router.route('/primaryWallet').get(async (req, res) => {
   }
 })
 
+router.route('/scoutWallet').get(async (req, res) => {
+  //code here for GET
+  //Added wallet functionality. This functionality allows primary user to fetch his/her wallet balance
+
+
+  let userID = req.session.user._id;
+
+  const walletBalance = await primaryUsers.getWalletBalance(userID);
+
+  console.log("Wallet Balance -> ", walletBalance);
+
+  let isBalZero = false;
+  if(walletBalance === 0){
+    isBalZero = true;
+  }
+
+  if(req.session.user.role.toLowerCase() ==="scout user"){
+
+  let name = ` ${req.session.user.firstName} ${req.session.user.middleName} ${req.session.user.lastName}`;
+
+  return res.render('scoutuser', {title: 'Wallet Balance', name: name,  walletBalance: walletBalance, isBalZero:isBalZero})
+  }
+})
+
 export default router;

@@ -425,8 +425,7 @@ export const viewListings = async (userID
     }
 }
 
-export const getWalletBalance = async (userID
-    ) =>{
+export const getWalletBalance = async (userID) =>{
 
         //Added wallet functionality. This functionality allows primary user to fetch his/her wallet balance
 
