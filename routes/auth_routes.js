@@ -272,14 +272,46 @@ router.route('/scoutuser').get(middlewareMethods.protectedMiddleware, async (req
   //console.log("Protected route is hit");
   let firstName = xss(req.session.user.firstName);
   let role = xss(req.session.user.role);
+
+  const allListings = await scoutUsers.getAllListings();
+
+  let isEmptyListings = false;
+  if(allListings.length===0){
+    isEmptyListings = true;
+  }
+
+  let reset = false
   
   if(role.toLowerCase().trim()==='primary user'){
     let htmlCode = `<p><a href="/primaryuser">Click here to Access primary user Route</a></p>`
-    res.render('scoutuser', {title: 'scout user', firstName: firstName, currentTime: new Date().toUTCString(), role: role, primaryuser: htmlCode})
+    res.render('primaryuser', {title: 'scout user', firstName: firstName, currentTime: new Date().toUTCString(), role: role, primaryuser: htmlCode})
   }else{
-    res.render('scoutuser', {title: 'scout user', firstName: firstName, currentTime: new Date().toUTCString(), role: role})
+    res.render('scoutuser', {title: 'scout user', reset: reset, isEmptyListings: isEmptyListings, listings: allListings, firstName: firstName, currentTime: new Date().toUTCString(), role: role})
   }
-});
+}).post(async (req,res)=>{
+  let firstName = xss(req.session.user.firstName);
+  let role = xss(req.session.user.role);
+  console.log("Search Listing post route is triggered");
+  let searchKey = xss(req.body.searchInput);
+  console.log("Search Key -> ", searchKey);
+  const searchedListings = await scoutUsers.searchListings(searchKey);
+
+  
+
+
+  let reset = false;
+  let isEmptyListings = false;
+  if(searchedListings.length===0){
+    isEmptyListings = true;
+    reset = true;
+  }
+
+
+  console.log("isEmpty -> ",isEmptyListings);
+  console.log("Reset -> ", reset);
+
+  res.render('scoutuser', {title: 'scout user', reset: reset, isEmptyListings: isEmptyListings, listings: searchedListings, firstName: firstName, currentTime: new Date().toUTCString(), role: role})
+});;
 
 router.route('/primaryuser').get(middlewareMethods.adminMiddleware, async (req, res) => {
   //code here for GET
