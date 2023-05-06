@@ -5,6 +5,7 @@ let loginForm = document.getElementById('login-form');
 let registrationForm = document.getElementById('registration-form');
 let addListingForm = document.getElementById('addlisting-form');
 let searchForm = document.getElementById('search-form');
+let updateForm = document.getElementById('update-form');
 
 //USED THIS REPO FOR COUNTRY CODE https://gist.githubusercontent.com/DmytroLisitsyn/1c31186e5b66f1d6c52da6b5c70b12ad/raw/2bc71083a77106afec2ec37cf49d05ee54be1a22/country_dial_info.json
 const defaultCountry = {
@@ -1589,15 +1590,19 @@ if(registrationForm){
         let confirmPassword = confirmPasswordInput.value;
         let userTypeInput = document.getElementById('userTypeInput');
         let userType = userTypeInput.value;
-        let codeCountry = "";
+
+        let datastoragepermissionInput = document.getElementById('datastoragepermissionInput');
+        let datastoragepermission = datastoragepermissionInput.checked;
         
         let errorDiv = document.getElementById("error");
 
         try {
 
             console.log("Initial form elements are : ");
-            console.log({firstName: firstName, middleName: middleName, lastName: lastName, emailAddress: emailAddress, countryCode: countryCode, phoneNumber: phoneNumber, city: city, state: state, country: country, dob: dob, password: password, confirmPassword: confirmPassword, userType: userType});
+            console.log({firstName: firstName, middleName: middleName, lastName: lastName, emailAddress: emailAddress, countryCode: countryCode, phoneNumber: phoneNumber, city: city, state: state, country: country, dob: dob, password: password, confirmPassword: confirmPassword, userType: userType, datastoragepermission: datastoragepermission});
             
+
+
             errorDiv.hidden = true;
             //checking input strings are empty or not
             firstName = checkEmptyInputString(firstName,"First Name");
@@ -1613,11 +1618,7 @@ if(registrationForm){
             emailAddress = emailAddress.toLowerCase();
             countryCode = checkEmptyInputString(countryCode, "Country Code");
             countryCode = countryCode.trim();
-            let cArr = countryCode.split("-");
-            countryCode = cArr[0].trim();
-            console.log("Country Code - ", countryCode);
-
-            codeCountry = cArr[1].trim();
+            
             
 
             phoneNumber = checkEmptyInputString(phoneNumber, "Phone Number");
@@ -1643,8 +1644,9 @@ if(registrationForm){
 
 
             countryCodeExists(countryCode);
+            ValidityState
             validPhoneNumber(phoneNumber)
-            validCountrySelected(country, codeCountry);
+            validCountrySelected(country);
             checkEmptyInputString(password, "Password")
             //confirmPassword = checkEmptyInputString(confirmPassword,"Confirm Password");
             checkEmptyInputString(confirmPassword,"Confirm Password");
@@ -1657,7 +1659,8 @@ if(registrationForm){
             
 
             checkNameInput(firstName, "Name");
-            
+            checkStateNameInput(state, "State");
+            checkStateNameInput(city, "City");
 
             checkValidEmail(emailAddress);
 
@@ -1693,6 +1696,148 @@ if(registrationForm){
 
             console.log("Final form elements are : ");
             console.log({firstNameInput: firstNameInput.value, middleNameInput: middleNameInput.value, lastNameInput: lastNameInput.value, emailAddressInput: emailAddressInput.value, countryCodeInput: countryCodeInput.value, phoneNumberInput: phoneNumberInput.value, cityInput: cityInput.value, stateInput: stateInput.value, countryInput: countryInput.value, dobInput: dobInput.value, passwordInput: passwordInput.value, confirmPasswordInput: confirmPasswordInput.value, userTypeInput: userTypeInput.value});
+            
+            
+            event.target.submit();
+
+        } catch (error) {
+            errorDiv.hidden = false;
+            console.log(error);
+            errorDiv.innerHTML = error;
+            firstNameInput.focus();
+            firstName.className = "inputClass";
+        }
+
+        
+
+
+
+
+    })
+}
+
+if(updateForm){
+    updateForm.addEventListener('submit', (event)=>{
+
+        //adding this line because i don't want the form to be submitted without validation
+        event.preventDefault()
+        //console.log("Registration Form is triggered!!");
+
+        let firstNameInput = document.getElementById('firstNameInput');
+        let firstName = firstNameInput.value;
+        let middleNameInput = document.getElementById('middleNameInput');
+        let middleName = middleNameInput.value;
+        let lastNameInput = document.getElementById('lastNameInput');
+        let lastName = lastNameInput.value;
+        let emailAddressInput = document.getElementById('emailAddressInput');
+        let emailAddress = emailAddressInput.value;
+        let countryCodeInput = document.getElementById('countryCodeInput');
+        let countryCode = countryCodeInput.value;
+        let phoneNumberInput = document.getElementById('phoneNumberInput');
+        let phoneNumber = phoneNumberInput.value;
+        let cityInput = document.getElementById('cityInput');
+        let city = cityInput.value;
+        let stateInput = document.getElementById('stateInput');
+        let state = stateInput.value;
+        let countryInput = document.getElementById('countryInput');
+        let country = countryInput.value;
+        let dobInput = document.getElementById('dobInput');
+        let dob = dobInput.value;
+        let passwordInput = document.getElementById('passwordInput');
+        let password = passwordInput.value;
+        
+        
+        let errorDiv = document.getElementById("error");
+
+        try {
+
+            console.log("Initial form elements are : ");
+            console.log({firstName: firstName, middleName: middleName, lastName: lastName, emailAddress: emailAddress, countryCode: countryCode, phoneNumber: phoneNumber, city: city, state: state, country: country, dob: dob, password: password});
+            
+            errorDiv.hidden = true;
+            //checking input strings are empty or not
+            firstName = checkEmptyInputString(firstName,"First Name");
+            // middleName = checkEmptyInputString(middleName,"Middle Name");
+             // check if middle name is empty or not
+             if (middleName == "") {
+                middleName = "";
+            }
+            // middleName = checkEmptyInputString(middleName,"Middle Name");
+
+            lastName = checkEmptyInputString(lastName,"Last Name");
+            emailAddress = checkEmptyInputString(emailAddress,"Email Address");
+            emailAddress = emailAddress.toLowerCase();
+            countryCode = checkEmptyInputString(countryCode, "Country Code");
+            countryCode = countryCode.trim();
+
+            
+
+            phoneNumber = checkEmptyInputString(phoneNumber, "Phone Number");
+            
+
+            city = checkEmptyInputString(city, "City");
+
+            state = checkEmptyInputString(state, "State");
+
+            country = checkEmptyInputString(country, "Country");
+            country = country.trim();
+            console.log("Country Selected - ", country);
+
+            dob = checkEmptyInputString(dob);
+
+            
+            
+
+            //validity condition
+            //password = checkEmptyInputString(password,"Password");
+
+
+            countryCodeExists(countryCode);
+            validPhoneNumber(phoneNumber)
+            validCountrySelected(country);
+            checkEmptyInputString(password, "Password")
+            //confirmPassword = checkEmptyInputString(confirmPassword,"Confirm Password");
+            checkNameInput(firstName, "First Name");
+
+            checkMidNameInput(middleName, "Middle Name");
+
+            checkNameInput(lastName, "Last Name");
+            
+            
+            checkNameInput(firstName, "Name");
+            checkStateNameInput(state, "State");
+            checkStateNameInput(city, "City");
+
+            checkValidEmail(emailAddress);
+
+            checkValidAge(dob)
+
+            checkValidPassword(password);
+
+            //role = "manager"
+
+            //giving error input
+            firstNameInput.value = firstName;
+            middleNameInput.value = middleName;
+            lastNameInput.value = lastName;
+            emailAddressInput.value = emailAddress;
+            countryCodeInput.value = countryCode;
+            phoneNumberInput.value = phoneNumber;
+            
+            console.log(cityInput.value);
+
+            //console.log("Wtf happen to my city!!", city);
+            cityInput.value = city;
+            stateInput.value = state;
+            countryInput.value = country;
+            dobInput.value = dob;
+            passwordInput.value = password;
+
+
+            //console.log({firstName: firstName, lastName: lastName, emailAddress: emailAddress, password: password, confirmPassword: confirmPassword, role: role});
+
+            console.log("Final form elements are : ");
+            console.log({firstNameInput: firstNameInput.value, middleNameInput: middleNameInput.value, lastNameInput: lastNameInput.value, emailAddressInput: emailAddressInput.value, countryCodeInput: countryCodeInput.value, phoneNumberInput: phoneNumberInput.value, cityInput: cityInput.value, stateInput: stateInput.value, countryInput: countryInput.value, dobInput: dobInput.value, passwordInput: passwordInput.value});
             
             
             event.target.submit();
@@ -1928,6 +2073,17 @@ function checkPropertyNameInput(name, type){
 }
 
 
+function checkStateNameInput(name, type){
+    let nameRegex = /^[A-Za-z ]{2,}$/.test(name);
+
+    if(!nameRegex){
+        throw `Error: ${name} should be a valid ${type}!, should be more than 2  charecters long, can contain alphabets, spaces.`
+    }
+
+    console.log(`Valid ${name} of type ${type} exist`);
+
+}
+
 function checkPasswordsMatch(password, confirmPassword){
     if(password!==confirmPassword){
         throw `Error: Password and Confirm Password don't match!!`
@@ -1964,9 +2120,9 @@ function countryCodeExists(dial_code) {
   }
   
 
-function validCountrySelected(country, codeCountry, countryCode){
+function validCountrySelected(country){
     console.log(country);
-    console.log(codeCountry);
+    
     let countryFound = false;
     for (let i = 0; i < countryCodes.length; i++) {
         // If the current object's code key matches the provided code, return true
@@ -1982,10 +2138,6 @@ function validCountrySelected(country, codeCountry, countryCode){
     if(countryFound!==true){
         // If no match is found, return false
       throw `Error: ${country} is an Invalid Country Name!`;
-    }
-
-    if(country.toLowerCase().trim()!==codeCountry.toLowerCase().trim()){
-        throw `The country ${country} you selected doesn't match the country associated with the country code ${countryCode} ${codeCountry} you selected!`
     }
 
       

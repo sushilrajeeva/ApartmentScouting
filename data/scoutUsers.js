@@ -56,9 +56,8 @@ export const createUser = async (
       //confirmPassword = checkEmptyInputString(confirmPassword,"Confirm Password");
     helpers.checkEmptyInputString(confirmPassword,"Confirm Password");
     helpers.countryCodeExists(countryCode);
-    codeCountry = helpers.findCountry(countryCode);
     helpers.validPhoneNumber(phoneNumber)
-    helpers.validCountrySelected(country, codeCountry, countryCode);
+    helpers.validCountrySelected(country);
 
     helpers.checkNameInput(firstName, "Name");
 

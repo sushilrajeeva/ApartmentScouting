@@ -182,7 +182,7 @@ const exportedMethods = {
             throw `Error: Phone Number ${phoneNumber} Entered by you is not a valid! Phone number should be a 10 digit number`;
         }
     },
-    validCountrySelected(country, codeCountry, countryCode){
+    validCountrySelected(country){
         console.log(country);
         let countryFound = false;
         for (let i = 0; i < this.countryCodes.length; i++) {
@@ -235,6 +235,17 @@ const exportedMethods = {
         }
         console.log(`Your age ${age} is valid`);
     },
+
+    checkStateNameInput(name, type){
+    let nameRegex = /^[A-Za-z ]{2,}$/.test(name);
+
+    if(!nameRegex){
+        throw `Error: ${name} should be a valid ${type}!, should be more than 2  charecters long, can contain alphabets, spaces.`
+    }
+
+    console.log(`Valid ${name} of type ${type} exist`);
+    },
+
 
     checkValidDate(date){
 

@@ -26,10 +26,10 @@ registration handelbars
         <input type="email" id="emailAddressInput" name="emailAddressInput" placeholder="Please enter your email address"required><br>
 
         <label for="countryCodeInput">Country Code <span class="mandatory">*</span>:</label><br>
-        <input list="countryCodes" id="countryCodeInput" name="countryCodeInput" autocomplete="on" placeholder="{{defaultCountry.flag}} - {{defaultCountry.code}} - ({{defaultCountry.dial_code}}) {{defaultCountry.name}}" value="{{defaultCountry.flag}} {{defaultCountry.dial_code}}" "Please Select Your Country Dail Code">
+        <input list="countryCodes" id="countryCodeInput" name="countryCodeInput" autocomplete="on" placeholder="{{defaultCountry.flag}} - {{defaultCountry.code}} - ({{defaultCountry.dial_code}}) {{defaultCountry.name}}" value="{{defaultCountry.dial_code}}" "Please Select Your Country Dail Code">
         <datalist id="countryCodes">
             {{#each countryCodes}}
-                <option value="{{dial_code}}-{{name}}">{{flag}} - {{code}} - ({{dial_code}}) {{name}} </option>
+                <option value="{{dial_code}}"> {{flag}} - {{code}} - ({{dial_code}}) {{name}}</option>
             {{/each}}
         </datalist><br>
 
@@ -66,7 +66,12 @@ registration handelbars
             <option value="primary user">Primary User</option>
             <option value="scout user">Scout User</option>
         </select>
+        <br>
+        <br>
 
+        <input type="checkbox" id="datastoragepermissionInput" name="datastoragepermissionInput" value="yes" required aria-label="By Chechk this box, I agree to allow my data to be stored according to US laws." aria-describedby="datastoragepermissionDesc">
+        <label for="datastoragepermissionInput">I agree to allow my data to be stored according to US laws.</label><br>
+        <span id="datastoragepermissionDesc" class="visually-hidden">By checking this box, you agree to our privacy policy and terms of service.</span><br>
 
         <input type="submit" value="Submit" aria-label="Submit To Register">
         <p>
