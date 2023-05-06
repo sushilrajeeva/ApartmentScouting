@@ -26,7 +26,7 @@ router
 
     let countryList = helpers.countryCalculator(helpers.countryCodes)
     console.log("Primary User Regester GET Route is called!!");
-    res.render('registeruser', {title: 'Primary User Register', countryCodes: helpers.countryCodes, countryList: countryList, defaultCountry: helpers.defaultCountry, maxDate: maxDate})
+    res.render('registeruser', {title: 'New User Register', countryCodes: helpers.countryCodes, countryList: countryList, defaultCountry: helpers.defaultCountry, maxDate: maxDate})
   })
   .post(async (req, res) => {
     //code here for POST
@@ -52,7 +52,6 @@ router
 
     console.log({firstName: firstName, middleName: middleName, lastName: lastName, emailAddress: emailAddress, countryCode: countryCode, phoneNumber: phoneNumber, city: city, state: state, country: country, dob: dob, password: password, confirmPassword: confirmPassword, userType: userType});
             
-    let codeCountry = "";
     
 
     try {
@@ -78,10 +77,10 @@ router
       //confirmPassword = checkEmptyInputString(confirmPassword,"Confirm Password");
       helpers.checkEmptyInputString(confirmPassword,"Confirm Password");
       helpers.countryCodeExists(countryCode);
-      codeCountry = helpers.findCountry(countryCode);
       helpers.validPhoneNumber(phoneNumber)
-      helpers.validCountrySelected(country, codeCountry, countryCode);
-
+      helpers.validCountrySelected(country);
+      helpers.checkStateNameInput(state, "State");
+      helpers.checkStateNameInput(city, "City");
       helpers.checkNameInput(firstName, "First name");
       helpers.checkMidNameInput(middleName, "Middle name");
       helpers.checkNameInput(lastName, "Last name");
@@ -153,7 +152,7 @@ router
   .get(middlewareMethods.loginMiddleware, async (req, res) => {
     //code here for GET
     //console.log("GET Login Route is called");
-    res.render('login', {title: 'login'})
+    res.render('login', {title: 'Login'})
   })
   .post(async (req, res) => {
     //code here for POST
@@ -258,16 +257,129 @@ router
   });
 
 
-  router.route('/profile').get(async (req, res) =>{
+  router.route('/profile').get(middlewareMethods.protectedMiddleware, async (req, res) =>{
     //code here for GET
   
+
     let emailAddress = req.session.user.emailAddress
     let role = req.session.user.role
     const user = await primaryUsers.getuser(emailAddress, role);
-    
-    res.render('profile',{title: 'profile',user:user})
+    let countryList = helpers.countryCalculator(helpers.countryCodes)
+
+    res.render('profile',{title: 'profile',user:user, countryCodes: helpers.countryCodes, countryList: countryList})
+  }).post(middlewareMethods.protectedMiddleware, async (req, res)=>{
+
+    console.log("Post profile route is triggered!!");
+        let user = req.session.user;
+    // Get updated user information from the form
+    let firstName = xss(req.body.firstNameInput);
+    let middleName = xss(req.body.middleNameInput);
+    let lastName = xss(req.body.lastNameInput);
+    let emailAddress = xss(req.body.emailAddressInput);
+    let countryCode = xss(req.body.countryCodeInput);
+    let phoneNumber = xss(req.body.phoneNumberInput);
+    let city = xss(req.body.cityInput);
+    let state = xss(req.body.stateInput);
+    let country = xss(req.body.countryInput);
+    let dob = xss(req.body.dobInput);
+    let password = xss(req.body.passwordInput);
+
+
+    // Perform necessary validations on the updated user information
+try {
+  firstName = helpers.checkEmptyInputString(firstName, "First Name");
+  lastName = helpers.checkEmptyInputString(lastName, "Last Name");
+  emailAddress = helpers.checkEmptyInputString(emailAddress, "Email Address");
+  countryCode = helpers.checkEmptyInputString(countryCode, "Country Code");
+  phoneNumber = helpers.checkEmptyInputString(phoneNumber, "Phone Number");
+  city = helpers.checkEmptyInputString(city, "City");
+  state = helpers.checkEmptyInputString(state, "State");
+  country = helpers.checkEmptyInputString(country, "Country");
+  dob = helpers.checkEmptyInputString(dob, "Date of Birth");
+  password = helpers.checkEmptyInputString(password, "Password");
+
+  helpers.checkNameInput(firstName, "First name");
+  helpers.checkMidNameInput(middleName, "Middle name");
+  helpers.checkNameInput(lastName, "Last name");
+  helpers.checkValidEmail(emailAddress);
+  helpers.checkValidAge(dob);
+  helpers.checkValidPassword(password);
+  helpers.checkStateNameInput(state, "State");
+  helpers.checkStateNameInput(city, "City");
+  helpers.countryCodeExists(countryCode);
+  helpers.validPhoneNumber(phoneNumber);
+  helpers.validCountrySelected(country);
+
+      // Update the user in the database
+      const updatedUser = await primaryUsers.updateUser(
+        user._id,
+        firstName,
+        middleName,
+        lastName,
+        emailAddress,
+        countryCode,
+        phoneNumber,
+        city,
+        state,
+        country,
+        dob,
+        password
+      );
+
+      console.log({"Updated User": updatedUser});
+
+      // // Update the user information in the session
+      // req.session.user = {
+      //   ...req.session.user,
+      //   firstName,
+      //   middleName,
+      //   lastName,
+      //   emailAddress,
+      //   countryCode,
+      //   phoneNumber,
+      //   city,
+      //   state,
+      //   country,
+      //   dob,
+      // };
+      
+
+        req.session.user = {
+          _id: xss(updatedUser._id.toString()),
+          firstName: xss(updatedUser.firstName),
+          middleName: xss(updatedUser.middleName),
+          lastName: xss(updatedUser.lastName),
+          emailAddress: xss(updatedUser.emailAddress),
+          countryCode: xss(updatedUser.countryCode),
+          phoneNumber: xss(updatedUser.phoneNumber),
+          city: xss(updatedUser.city),
+          state: xss(updatedUser.state),
+          country: xss(updatedUser.country),
+          dob: xss(updatedUser.dob),
+          listings: updatedUser.listings,
+          wallet: xss(updatedUser.wallet),
+          role: xss(updatedUser.role),
+        };
+
+
+        console.log("Updated User in session is -> ", req.session.user);
+        let successMsg = `<div id="successMsg" class="successMsg" > Your Profile Details have been Successfully Updated!</div>`
+
+      // Redirect to the profile page with a success message
+      // req.flash('success', 'Profile updated successfully.');
+      // res.redirect('/profile');
+      let countryList  = helpers.countryCalculator(helpers.countryCodes);
+      res.status(200).render('profile',{title: 'profile',user:updatedUser, countryCodes: helpers.countryCodes, countryList: countryList, success: successMsg})
+    } catch (error) {
+       console.log("Error caugth");
+      console.log(error);
+        let countryList = helpers.countryCalculator(helpers.countryCodes)
+      // res.render('profile',{title: 'profile',user:user, countryCodes: helpers.countryCodes, countryList: countryList})
+      res.status(400).render('profile',{title: 'profile',user:user, countryCodes: helpers.countryCodes, countryList: countryList, error: error});
+    }
   });
 
+  
 
 router.route('/scoutuser').get(middlewareMethods.protectedMiddleware, async (req, res) => {
   //code here for GET
@@ -313,7 +425,7 @@ router.route('/scoutuser').get(middlewareMethods.protectedMiddleware, async (req
   console.log("Reset -> ", reset);
 
   res.render('scoutuser', {title: 'scout user', reset: reset, isEmptyListings: isEmptyListings, listings: searchedListings, firstName: firstName, currentTime: new Date().toUTCString(), role: role})
-});;
+});
 
 router.route('/primaryuser').get(middlewareMethods.adminMiddleware, async (req, res) => {
   //code here for GET
@@ -384,6 +496,8 @@ router.route('/addlisting').get(async(req, res)=>{
     helpers.isValidWebsiteLink(listingLink);
     helpers.isValidCountry(country);
     helpers.isValidPincode(pincode);
+    helpers.checkStateNameInput(state, "State");
+    helpers.checkStateNameInput(city, "City");
     helpers.validPhoneNumber(agentNumber);
     helpers.validPhoneNumber(ownerNumber);
     helpers.validRewards(reward);
@@ -478,7 +592,7 @@ router.route('/viewactivesubscribes').get(async (req, res) => {
 });
 
 //This route retrieves all the listings that is subscribed by the user that is in inactive state / active = false
-router.route('/viewScoutSubscribedListingsHistory').get(async (req, res) => {
+router.route('/viewScoutSubscribedListingHistory').get(async (req, res) => {
   //code here for GET
 
 
@@ -617,6 +731,8 @@ router.route('/updateListing/:listingID').post(async (req, res) => {
   ownerNumber = helpers.checkEmptyInputString(ownerNumber, "Owner Number");
   reward = helpers.checkEmptyInputString(reward, "Reward");
 
+    helpers.checkStateNameInput(state, "State");
+    helpers.checkStateNameInput(city, "City");
     helpers.checkPropertyNameInput(listingName, "Listing Name");
     helpers.isValidWebsiteLink(listingLink);
     helpers.isValidCountry(country);
@@ -754,5 +870,7 @@ router.route('/scoutWallet').get(async (req, res) => {
   return res.render('scoutwallet', {title: 'Wallet Balance', name: name,  walletBalance: walletBalance, isBalZero:isBalZero})
   }
 })
+
+
 
 export default router;
