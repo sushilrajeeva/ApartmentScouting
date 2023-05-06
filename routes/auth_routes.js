@@ -499,6 +499,49 @@ router.route('/getAllListings').get(async (req, res) => {
   }
 });
 
+//route for scout user to subscribe to a listing
+router.route('/subscribelisting/:listingID').post(async (req, res) => {
+  console.log("Subscribe route event is triggered for scout user");
+  let listingID = xss(req.params.listingID);
+  console.log("Listing id -> ", listingID);
+  let userID = xss(req.session.user._id);
+
+  try {
+    const subscribe = await scoutUsers.subscribe(listingID, userID)
+    
+    // Sending a success response if the subscription is successful
+    if (subscribe) {
+      res.status(200).json({ message: 'Subscription successful' });
+    } else {
+      // sending an error message if the subscription fails
+      res.status(400).json({ message: 'Failed to subscribe' });
+    }
+  } catch (error) {
+    console.error('Error subscribing to listing:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+//route for scout user to unsubscribe to a listing
+router.route('/unsubscribelisting/:listingID').post(async (req, res) => {
+  console.log("Unsubscribe route event is triggered for scout user");
+  let listingID = xss(req.params.listingID);
+  console.log("Listing id -> ", listingID);
+
+  try {
+    const unsubscribe = await users.unsubscribe(listingID);
+    
+    if (unsubscribe) {
+      res.status(200).json({ message: 'Unsubscription successful' });
+    } else {
+      res.status(400).json({ message: 'Failed to unsubscribe' });
+    }
+  } catch (error) {
+    console.error('Error unsubscribing from listing:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
 
 
 router.route('/updateListing/:listingID').post(async (req, res) => {

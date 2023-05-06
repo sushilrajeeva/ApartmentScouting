@@ -260,5 +260,61 @@ try {
 }
 }
 
+//This function is used to subscribe to a listing that the scout user has clicked.
+export const subscribe = async (listingID, userID) =>{
+
+  console.log("subscribe Listings Data is triggered!");
+  helpers.isValidObjectID(listingID, "Listing ID");
+  helpers.isValidObjectID(userID, "Listing ID");
+  let listingIDObj = new ObjectId(listingID)
+  let userIDObj = new ObjectId(userID)
+  try {
+      const listingCollection = await listings();
+      const userListing = await listingCollection.findOne({_id: listingIDObj});
+
+
+      if(!userListing){
+        console.log("No listing found!!");
+          throw `The listing you are trying to subscribe doesn't exist!!`
+      }else {
+        console.log('Listing found!!');
+          
+      }
+
+      const scoutUserCollection = await scoutUsers();
+      //referred https://www.mongodb.com/docs/manual/reference/method/db.collection.updateOne/ for update one logic
+      //reffered https://www.mongodb.com/docs/manual/reference/operator/update/addToSet/ for $addToSet logic
+      const updatedScout = await scoutUserCollection.updateOne(
+        { _id: userIDObj },
+        {
+          $addToSet: {
+            subscribedlistings: {
+              _id: listingIDObj,
+              active: true,
+            },
+          },
+        }
+      );
+
+
+      //refered https://www.mongodb.com/docs/manual/reference/method/db.collection.updateOne/
+      //i am using matchedcount because if i use the modifiedcount , it doesn't return updated count because i am using $addToSet, as the listing is already present, so found this solution to fix the bug
+      if (updatedScout.matchedCount === 0) {
+        
+        throw 'Failed to subscribe to the listing.';
+      }
+  
+      return true;
+  
+
+
+
+  } catch (error) {
+      throw error;
+  }
+};
+
+
+
 //confirm with TAs if this additional code is required since we are already exporting functions individually
-export default {createUser,checkUser,getAllListings,searchListings, viewListings, getWalletBalance}
+export default {createUser,checkUser,getAllListings,searchListings, viewListings, getWalletBalance, subscribe}
