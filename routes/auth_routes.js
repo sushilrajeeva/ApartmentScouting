@@ -184,21 +184,22 @@ router
         console.log("primary user checkUser method will be triggered");
         const loginUser = await primaryUsers.checkUser(emailAddress, password);
         req.session.user = {
-          _id: loginUser._id.toString(),
-          firstName: loginUser.firstName,
-          middleName: loginUser.middleName,
-          lastName: loginUser.lastName,
-          emailAddress: loginUser.emailAddress,
-          countryCode: loginUser.countryCode, 
-          phoneNumber: loginUser.phoneNumber, 
-          city: loginUser.city, 
-          state: loginUser.state, 
-          country: loginUser.country, 
-          dob: loginUser.dob,
+          _id: xss(loginUser._id.toString()),
+          firstName: xss(loginUser.firstName),
+          middleName: xss(loginUser.middleName),
+          lastName: xss(loginUser.lastName),
+          emailAddress: xss(loginUser.emailAddress),
+          countryCode: xss(loginUser.countryCode),
+          phoneNumber: xss(loginUser.phoneNumber),
+          city: xss(loginUser.city),
+          state: xss(loginUser.state),
+          country: xss(loginUser.country),
+          dob: xss(loginUser.dob),
           listings: loginUser.listings,
-          wallet: loginUser.wallet,
-          role: loginUser.role,
-        }
+          wallet: xss(loginUser.wallet),
+          role: xss(loginUser.role),
+        };
+        
   
         //redirecting based on the loginUser.role
   
@@ -212,21 +213,22 @@ router
         console.log("scout user checkUser method will be triggered");
         const loginUser = await scoutUsers.checkUser(emailAddress, password);
         req.session.user = {
-          _id: loginUser._id.toString(),
-          firstName: loginUser.firstName,
-          middleName: loginUser.middleName,
-          lastName: loginUser.lastName,
-          emailAddress: loginUser.emailAddress,
-          countryCode: loginUser.countryCode, 
-          phoneNumber: loginUser.phoneNumber, 
-          city: loginUser.city, 
-          state: loginUser.state, 
-          country: loginUser.country, 
-          dob: loginUser.dob,
+          _id: xss(loginUser._id.toString()),
+          firstName: xss(loginUser.firstName),
+          middleName: xss(loginUser.middleName),
+          lastName: xss(loginUser.lastName),
+          emailAddress: xss(loginUser.emailAddress),
+          countryCode: xss(loginUser.countryCode),
+          phoneNumber: xss(loginUser.phoneNumber),
+          city: xss(loginUser.city),
+          state: xss(loginUser.state),
+          country: xss(loginUser.country),
+          dob: xss(loginUser.dob),
           subscribedlistings: loginUser.subscribedlistings,
-          wallet: loginUser.wallet,
-          role: loginUser.role,
-        }
+          wallet: xss(loginUser.wallet),
+          role: xss(loginUser.role),
+        };
+        
   
         //redirecting based on the loginUser.role
   
@@ -419,16 +421,17 @@ router.route('/addlisting').get(async(req, res)=>{
     middleName: xss(updatedUser.middleName),
     lastName: xss(updatedUser.lastName),
     emailAddress: xss(updatedUser.emailAddress),
-    countryCode: xss(updatedUser.countryCode), 
-    phoneNumber: xss(updatedUser.phoneNumber), 
-    city: xss(updatedUser.city), 
-    state: xss(updatedUser.state), 
-    country: xss(updatedUser.country), 
-    dob: updatedUser.dob,
+    countryCode: xss(updatedUser.countryCode),
+    phoneNumber: xss(updatedUser.phoneNumber),
+    city: xss(updatedUser.city),
+    state: xss(updatedUser.state),
+    country: xss(updatedUser.country),
+    dob: xss(updatedUser.dob),
     listings: updatedUser.listings,
     wallet: xss(updatedUser.wallet),
     role: xss(updatedUser.role),
-  }
+  };
+  
 
   console.log("Updated user session cookie : ", req.session.user);
 
@@ -440,30 +443,37 @@ router.route('/addlisting').get(async(req, res)=>{
 
 });
 
-router.route('/viewlistings').get(async (req, res) => {
+router.route('/viewprimarylistings').get(async (req, res) => {
   //code here for GET
 
-  
-  if(req.session.user.role.toLowerCase() === 'primary user'){
-    let isPrimary = true;
 
-    let userID = req.session.user._id.toString()
+  let userID = req.session.user._id.toString()
   const listings = await primaryUsers.viewListings(userID);
   let isEmptyListings = false;
   if(!listings){
     isEmptyListings = true;
   }
 
-  res.render('viewListings', {title: 'View Listings', isEmptyListings: isEmptyListings, listings: listings, isPrimary: isPrimary})
-  }else{
-    let isPrimary = false;
-    const listings = await scoutUsers.viewListings();
-    let isEmptyListings = false;
-  if(!listings){
-    isEmptyListings = true;
+  res.render('viewListings', {title: 'View Listings', isEmptyListings: isEmptyListings, listings: listings})
+  
+});
+
+router.route('/viewactivesubscribes').get(async (req, res) => {
+  //code here for GET
+
+
+  let userID = xss(req.session.user._id.toString());
+  const activeSubscribes = await scoutUsers.getScoutActiveSubscribedListings(userID)
+  let isEmptySubscribes = false;
+  if(!activeSubscribes){
+    isEmptySubscribes = true;
   }
-  res.render('viewlistings', {title: 'View Listings', isEmptyListings: isEmptyListings, listings: listings, isPrimary: isPrimary})
-  }
+
+  console.log("ActiveSubs -> from auth : ", activeSubscribes);
+  console.log("is Empty ->", isEmptySubscribes);
+
+  res.render('viewactivescoutsubscribes', {title: 'Active Subscribes ', activeSubscribes: activeSubscribes, isEmptySubscribes: isEmptySubscribes})
+  
 });
 
 router.route('/getAllListings').get(async (req, res) => {
@@ -627,16 +637,17 @@ router.route('/updateListing/:listingID').post(async (req, res) => {
     middleName: xss(updatedUser.middleName),
     lastName: xss(updatedUser.lastName),
     emailAddress: xss(updatedUser.emailAddress),
-    countryCode: xss(updatedUser.countryCode), 
-    phoneNumber: xss(updatedUser.phoneNumber), 
-    city: xss(updatedUser.city), 
-    state: xss(updatedUser.state), 
-    country: xss(updatedUser.country), 
-    dob: updatedUser.dob,
+    countryCode: xss(updatedUser.countryCode),
+    phoneNumber: xss(updatedUser.phoneNumber),
+    city: xss(updatedUser.city),
+    state: xss(updatedUser.state),
+    country: xss(updatedUser.country),
+    dob: xss(updatedUser.dob),
     listings: updatedUser.listings,
     wallet: xss(updatedUser.wallet),
     role: xss(updatedUser.role),
-  }
+  };
+  
 
   console.log("Updated user session cookie : ", req.session.user);
 
@@ -680,7 +691,7 @@ router.route('/primaryWallet').get(async (req, res) => {
         <a class="nav-link" href="/addlisting">Add Listings</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="/viewlistings">View Listings</a>
+        <a class="nav-link" href="/viewprimarylistings">View Listings</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="/getWalletBallance">Wallet</a>

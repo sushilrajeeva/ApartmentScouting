@@ -289,7 +289,7 @@ export const subscribe = async (listingID, userID) =>{
         {
           $addToSet: {
             subscribedlistings: {
-              _id: listingIDObj,
+              listingID: listingIDObj,
               active: true,
             },
           },
@@ -314,7 +314,73 @@ export const subscribe = async (listingID, userID) =>{
   }
 };
 
+//Logic for getting scout user's active subscribed listing
+export const getScoutActiveSubscribedListings = async (userID) =>{
+
+  console.log("getScoutActiveSubscribedListingIDs Data is triggered!");
+  try {
+
+      //checking if it is a valid userID or not
+      helpers.isValidObjectID(userID, "Scout User ID");
+      //converting it into a ObjectID type
+      let userIDObj = new ObjectId(userID)
+
+      const scoutCollection = await scoutUsers();
+      //this will give me all the scout users from
+      const scoutUser = await scoutCollection.findOne({_id: userIDObj})
+
+      if(!scoutUser){
+        throw `Couldn't find the scout user!!`
+      }
+
+      //The filter method will help me get all the listings object from the subscribedListing attribute of the scout user where active is true
+      //this is because i want to select only the listings that is currently active
+      console.log("Subscribed Listings -> ");
+
+      for(let i=0; i<scoutUser.subscribedlistings.length; i++){
+        console.log(scoutUser.subscribedlistings[i].listingID + " " + scoutUser.subscribedlistings[i].active);
+      }
+
+      const activeListings = scoutUser.subscribedlistings.filter(listing => listing.active === true);
+      //this logic will help me return only the id's of each listing object 
+      const listingIDList = activeListings.map(listing=>listing.listingID)
+
+      console.log("ListingIDList -> ", listingIDList);
+
+      if(listingIDList.length !==0){
+        const listingCollection = await listings();
+        //reffered https://www.mongodb.com/docs/manual/reference/operator/query/in/ . &in is used to help us return any document whose attrubute matches any elelents in the list
+        const activeSubscribedListings = await listingCollection.find({ _id: { $in: listingIDList } }).toArray();
+
+        const resultListings = []
+
+        console.log("activesublisting -> ", activeSubscribedListings);
+
+        for(let i=0; i< activeSubscribedListings.length; i++){
+          activeSubscribedListings[i]._id = activeSubscribedListings[i]._id.toString()
+          resultListings.push(activeSubscribedListings[i]);
+        }
+
+        if(resultListings.length===0){
+          console.log("Empty resultListings");
+          return [];
+        }
+        else{
+          console.log("Resulting Lists -> ", resultListings);
+          return resultListings;
+        }
+      }else {
+        return [];
+      }
+
+
+  } catch (error) {
+      throw error;
+  }
+};
+
+
 
 
 //confirm with TAs if this additional code is required since we are already exporting functions individually
-export default {createUser,checkUser,getAllListings,searchListings, viewListings, getWalletBalance, subscribe}
+export default {createUser,checkUser,getAllListings,searchListings, viewListings, getWalletBalance, subscribe, getScoutActiveSubscribedListings}

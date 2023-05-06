@@ -1,0 +1,50 @@
+<nav class="navbar">
+  <div class="navbar-logo">
+    <a href="#">
+      <img src="/public/image/unnamed.png" alt="Logo">
+    </a>
+  </div>
+  <ul class="navbar-nav">
+    <li class="nav-item">
+      <a class="nav-link" href="/">Home</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/viewactivesubscribes">Active Subscribed Listing</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#">Listing History</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/scoutWallet">My Wallet</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/profile">Profile</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/logout">Logout</a>
+    </li>
+  </ul>
+</nav>
+<br />
+
+{{#if isEmptySubscribes}}
+  <p>No listings found.</p>
+{{else}}
+  {{#each activeSubscribes}}
+    <div class="listing-card">
+      <div class="card-content" data-listing-id="{{_id}}">
+        <h3 class="listing-name">{{listingName}}</h3>
+        <p class="listing-link"><a href="{{listingLink}}" target="_blank">{{listingLink}}</a></p>
+        <p class="listing-address"> Street: {{street}}</p>
+        <p class="listing-city">City: {{city}}</p>
+        <p class="listing-state">State: {{state}}</p>
+        <p class="listing-country">Country: {{country}}</p>
+        <p class="listing-pincode">Pincode: {{pincode}}</p>
+        <p class="listing-agent">Agent Number: {{agentNumber}}</p>
+        <p class="listing-owner">Owner Number: {{ownerNumber}}</p>
+        <p class="listing-reward">Reward: {{reward}}</p>
+      </div>
+    </div>
+  {{/each}}
+{{/if}}
+
