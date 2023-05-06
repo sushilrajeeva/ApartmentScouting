@@ -197,7 +197,8 @@ footer {
 }
 
 .listing-card a {
-  color: #007bff;
+  /* changed the colour of the list to fix tot11y error */
+  color: #006be0;
   text-decoration: none;
 }
 

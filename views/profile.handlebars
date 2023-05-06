@@ -40,7 +40,7 @@
   <input type="email" id="emailAddressInput" name="emailAddressInput" placeholder="Please enter your email address" value="{{emailAddress}}" required><br>
 
   <label for="countryCodeInput">Country Code <span class="mandatory">*</span>:</label><br>
-  <input list="countryCodes" id="countryCodeInput" name="countryCodeInput" autocomplete="on" placeholder="{{defaultCountry.flag}} - {{defaultCountry.code}} - ({{defaultCountry.dial_code}}) {{defaultCountry.name}}" value="{{countryCode}}" "Please Select Your Country Dail Code">
+  <input list="countryCodes" id="countryCodeInput" name="countryCodeInput" autocomplete="on" placeholder="{{defaultCountry.flag}} - {{defaultCountry.code}} - ({{defaultCountry.dial_code}}) {{defaultCountry.name}}" value="{{countryCode}}" required>
   <datalist id="countryCodes">
     {{#each countryCodes}}
     <option value="{{dial_code}}-{{name}}">{{flag}} - {{code}} - ({{dial_code}}) {{name}} </option>
@@ -68,3 +68,4 @@
   <label for="dobInput">Date of Birth <span class="mandatory">*</span>:</label><br>
   <input type="date" id="dobInput" name="dobInput" max="{{maxDate}}" value="{{dob}}" >
   <br>
+</form>

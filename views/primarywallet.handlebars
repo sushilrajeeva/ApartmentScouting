@@ -21,9 +21,9 @@
 }
 
 .card-header {
-  background-color: #4caf50;
+  background-color: #3aa93f;
   padding: 20px;
-  color: white;
+  color: #ffffff;
   text-align: center;
 }
 
@@ -42,8 +42,8 @@ p {
 }
 
 button {
-  background-color: #4caf50;
-  color: white;
+  background-color: #008b00;
+  color: #ffffff;
   padding: 10px;
   border: none;
   border-radius: 5px;
@@ -88,16 +88,15 @@ button {
 <div class="centered-container">
   <div class="card" id="wallet-card">
       <div class="card-header">
-          <h3 id="user-name">{{name}}</h3>
+          <h1 id="user-name">{{name}}</h1>
       </div>
       <div class="card-body">
           <p>Wallet Balance: $<span id="wallet-balance">{{walletBalance}}</span></p>
           {{#if isBalZero}}
             <p>You don't have money!!</p>
           {{/if}}
-          <a href="/addmoney" class="add-money-link">
-            <button>Add Money</button>
-          </a>
+        {{!-- Refrence - https://stackoverflow.com/questions/75746523/button-onclick-window-location-href-not-redirecting-to-view-in-different-fo --}}
+          <button class="add-money-link" onclick="window.location.href='/addmoney'">Add Money</button>
       </div>
   </div>
 </div>
