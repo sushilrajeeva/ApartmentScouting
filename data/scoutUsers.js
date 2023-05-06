@@ -314,7 +314,7 @@ export const subscribe = async (listingID, userID) =>{
   }
 };
 
-//Logic for getting scout user's active subscribed listing
+//Logic for getting scout user's active subscribed listings
 export const getScoutActiveSubscribedListings = async (userID) =>{
 
   console.log("getScoutActiveSubscribedListingIDs Data is triggered!");
@@ -382,5 +382,73 @@ export const getScoutActiveSubscribedListings = async (userID) =>{
 
 
 
+//Logic for getting scout user's subscribed listings History
+export const getScoutSubscribedListingsHistory = async (userID) =>{
+
+  console.log("getScoutSubscribedListingsHistory Data is triggered!");
+  try {
+
+      //checking if it is a valid userID or not
+      helpers.isValidObjectID(userID, "Scout User ID");
+      //converting it into a ObjectID type
+      let userIDObj = new ObjectId(userID)
+
+      const scoutCollection = await scoutUsers();
+      //this will give me all the scout users from
+      const scoutUser = await scoutCollection.findOne({_id: userIDObj})
+
+      if(!scoutUser){
+        throw `Couldn't find the scout user!!`
+      }
+
+      //The filter method will help me get all the listings object from the subscribedListing attribute of the scout user where active is false
+      //this is because i want to select only the listings that is currently inactive
+      console.log("Subscribed Listings -> ");
+
+      for(let i=0; i<scoutUser.subscribedlistings.length; i++){
+        console.log(scoutUser.subscribedlistings[i].listingID + " " + scoutUser.subscribedlistings[i].active);
+      }
+
+      const inactiveListings = scoutUser.subscribedlistings.filter(listing => listing.active === false);
+      //this logic will help me return only the id's of each listing object 
+      const listingIDList = inactiveListings.map(listing=>listing.listingID)
+
+      console.log("ListingIDList -> ", listingIDList);
+
+      if(listingIDList.length !==0){
+        const listingCollection = await listings();
+        //reffered https://www.mongodb.com/docs/manual/reference/operator/query/in/ . &in is used to help us return any document whose attrubute matches any elelents in the list
+        const subscribedListingsHistory = await listingCollection.find({ _id: { $in: listingIDList } }).toArray();
+
+        const historyListings = []
+
+        console.log("activesublisting -> ", subscribedListingsHistory);
+
+        for(let i=0; i< subscribedListingsHistory.length; i++){
+          subscribedListingsHistory[i]._id = subscribedListingsHistory[i]._id.toString()
+          historyListings.push(subscribedListingsHistory[i]);
+        }
+
+        if(historyListings.length===0){
+          console.log("Empty historyListings");
+          return [];
+        }
+        else{
+          console.log("Subscribed Listings History -> ", historyListings);
+          return historyListings;
+        }
+      }else {
+        return [];
+      }
+
+
+  } catch (error) {
+      throw error;
+  }
+};
+
+
+
+
 //confirm with TAs if this additional code is required since we are already exporting functions individually
-export default {createUser,checkUser,getAllListings,searchListings, viewListings, getWalletBalance, subscribe, getScoutActiveSubscribedListings}
+export default {createUser,checkUser,getAllListings,searchListings, viewListings, getWalletBalance, subscribe, getScoutActiveSubscribedListings, getScoutSubscribedListingsHistory}

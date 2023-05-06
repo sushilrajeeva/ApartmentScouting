@@ -27,10 +27,10 @@
 </nav>
 <br />
 
-{{#if isEmptySubscribes}}
-  <p>No Active Subscribed Scout listings found.</p>
+{{#if isEmptyHistory}}
+  <p>No Subscribed Scout Listings History found.</p>
 {{else}}
-  {{#each activeSubscribes}}
+  {{#each subscribedHistory}}
     <div class="listing-card">
       <div class="card-content" data-listing-id="{{_id}}">
         <h3 class="listing-name">{{listingName}}</h3>
@@ -47,4 +47,3 @@
     </div>
   {{/each}}
 {{/if}}
-

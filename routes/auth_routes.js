@@ -450,7 +450,7 @@ router.route('/viewprimarylistings').get(async (req, res) => {
   let userID = req.session.user._id.toString()
   const listings = await primaryUsers.viewListings(userID);
   let isEmptyListings = false;
-  if(!listings){
+  if(listings.length===0){
     isEmptyListings = true;
   }
 
@@ -458,6 +458,7 @@ router.route('/viewprimarylistings').get(async (req, res) => {
   
 });
 
+//This route retrieves all the listings that is subscribed by the user that is in active state / active=true
 router.route('/viewactivesubscribes').get(async (req, res) => {
   //code here for GET
 
@@ -465,7 +466,7 @@ router.route('/viewactivesubscribes').get(async (req, res) => {
   let userID = xss(req.session.user._id.toString());
   const activeSubscribes = await scoutUsers.getScoutActiveSubscribedListings(userID)
   let isEmptySubscribes = false;
-  if(!activeSubscribes){
+  if(activeSubscribes.length===0){
     isEmptySubscribes = true;
   }
 
@@ -476,6 +477,25 @@ router.route('/viewactivesubscribes').get(async (req, res) => {
   
 });
 
+//This route retrieves all the listings that is subscribed by the user that is in inactive state / active = false
+router.route('/viewScoutSubscribedListingsHistory').get(async (req, res) => {
+  //code here for GET
+
+
+  let userID = xss(req.session.user._id.toString());
+  const subscribedHistory = await scoutUsers.getScoutSubscribedListingsHistory(userID)
+  let isEmptyHistory = false;
+  if(subscribedHistory.length===0){
+    isEmptyHistory = true;
+  }
+
+  console.log("subHistory -> from auth : ", subscribedHistory);
+  console.log("is Empty ->", isEmptyHistory);
+
+  res.render('viewScoutSubscribedListingHistory', {title: 'Active Subscribes ', subscribedHistory: subscribedHistory, isEmptyHistory: isEmptyHistory})
+  
+});
+
 router.route('/getAllListings').get(async (req, res) => {
   //code here for GET
 
@@ -483,7 +503,7 @@ router.route('/getAllListings').get(async (req, res) => {
   const allListings = await scoutUsers.getAllListings();
 
   let isEmptyListings = false;
-  if(!allListings){
+  if(allListings.length===0){
     isEmptyListings = true;
   }
 
@@ -499,7 +519,7 @@ router.route('/getAllListings').get(async (req, res) => {
   const searchedListings = await scoutUsers.searchListings(searchKey);
 
   let isEmptyListings = false;
-  if(!searchedListings){
+  if(!searchedListings.length===0){
     isEmptyListings = true;
   }
 
