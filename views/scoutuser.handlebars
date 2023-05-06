@@ -65,6 +65,9 @@ If the user is logged in , and 'GET /protected' endpoint is called, you will ren
         <p class="listing-agent">Agent Number: {{agentNumber}}</p>
         <p class="listing-owner">Owner Number: {{ownerNumber}}</p>
         <p class="listing-reward">Reward: {{reward}}</p>
+        <button class="subscribe-btn">Subscribe</button>
+        {{!--  &#10003; is the unicode for check mark , found it from https://emojipedia.org/check-mark/  --}}
+        <div class="success-msg" style="display: none;">Subscribed <span>&#10003;</span></div>
       </div>
     </div>
   {{/each}}
@@ -77,3 +80,5 @@ If the user is logged in , and 'GET /protected' endpoint is called, you will ren
 
 
 {{{scoutuser}}}
+
+<script src="/public/js/subscribe.js"></script>
