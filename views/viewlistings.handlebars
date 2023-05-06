@@ -12,7 +12,6 @@
   <button id="editBtn">Edit</button>
 </div> --}}
 
-{{#if isPrimary}}
 <nav class="navbar">
   <div class="navbar-logo">
     <a href="#">
@@ -27,7 +26,7 @@
       <a class="nav-link" href="/addlisting">Add Listings</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="/viewlistings">View Listings</a>
+      <a class="nav-link" href="/viewprimarylistings">View Listings</a>
     </li>
     <li class="nav-item">
       <a class="nav-link" href="/primaryWallet">My Wallet</a>
@@ -40,35 +39,7 @@
     </li>
   </ul>
 </nav>
-{{else}}
-<nav class="navbar">
-  <div class="navbar-logo">
-    <a href="#">
-      <img src="/public/image/unnamed.png" alt="Logo">
-    </a>
-  </div>
-  <ul class="navbar-nav">
-    <li class="nav-item">
-      <a class="nav-link" href="/">Home</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="#">Subscribed Listing</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="#">Listing History</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="/scoutWallet">My Wallet</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="/profile">Profile</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="/logout">Logout</a>
-    </li>
-  </ul>
-</nav>
-{{/if}}
+
 <br>
 
 {{#if isEmptyListings}}

@@ -12,10 +12,10 @@ If the user is logged in , and 'GET /protected' endpoint is called, you will ren
   </div>
   <ul class="navbar-nav">
     <li class="nav-item">
-      <a class="nav-link" href="#">Home</a>
+      <a class="nav-link" href="/">Home</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="/viewListings">Subscribed Listing</a>
+      <a class="nav-link" href="/viewactivesubscribes">Active Subscribed Listing</a>
     </li>
     <li class="nav-item">
       <a class="nav-link" href="#">Listing History</a>
@@ -67,6 +67,7 @@ If the user is logged in , and 'GET /protected' endpoint is called, you will ren
         <p class="listing-reward">Reward: {{reward}}</p>
         <button class="subscribe-btn">Subscribe</button>
         {{!--  &#10003; is the unicode for check mark , found it from https://emojipedia.org/check-mark/  --}}
+        <button class="unsubscribe-btn" style="display: none;">Unsubscribe</button>
         <div class="success-msg" style="display: none;">Subscribed <span>&#10003;</span></div>
       </div>
     </div>
