@@ -38,9 +38,42 @@ If the user is logged in , and 'GET /protected' endpoint is called, you will ren
         {{title}}
     </p>
 </div>
+<form id="search-form"  method="post">
+  <label for="searchInput">Search: </label><br>
+    <input class="search-bar" type="text" name="searchInput" id="searchInput" placeholder="Search by postal code | Address | City | State | Country">
+    {{#if reset}}
+      <input type="submit" value="Reset" aria-label="Click here to Reset" ></input>
+    {{else}}
+      <input type="submit" value="Search" aria-label="Click here to Search" ></input>
+    {{/if}}
+  </form>
+
+
+{{#if isEmptyListings}}
+  <p>No listings found.</p>
+{{else}}
+  {{#each listings}}
+    <div class="listing-card">
+      <div class="card-content" data-listing-id="{{_id}}">
+        <h3 class="listing-name">{{listingName}}</h3>
+        <p class="listing-link"><a href="{{listingLink}}" target="_blank">{{listingLink}}</a></p>
+        <p class="listing-address"> Street: {{street}}</p>
+        <p class="listing-city">City: {{city}}</p>
+        <p class="listing-state">State: {{state}}</p>
+        <p class="listing-country">Country: {{country}}</p>
+        <p class="listing-pincode">Pincode: {{pincode}}</p>
+        <p class="listing-agent">Agent Number: {{agentNumber}}</p>
+        <p class="listing-owner">Owner Number: {{ownerNumber}}</p>
+        <p class="listing-reward">Reward: {{reward}}</p>
+      </div>
+    </div>
+  {{/each}}
+{{/if}}
 
 <p>
     Welcome {{firstName}}, the time is now: {{currentTime}}. Your role in the system is: {{role}}.
 </p>
+
+
 
 {{{scoutuser}}}

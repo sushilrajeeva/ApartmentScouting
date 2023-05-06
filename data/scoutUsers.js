@@ -170,7 +170,9 @@ export const getAllListings = async () => {
     try {
   
         const listingsCollection = await listings();
+        console.log("Hi");
         const allListings = await listingsCollection.find({}).toArray();
+        console.log("ohh");
 
         return allListings;
       
