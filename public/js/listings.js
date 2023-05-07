@@ -24,6 +24,8 @@ document.querySelectorAll('.edit-btn').forEach(editBtn => {
         stateInput: cardContent.querySelector('.listing-state').textContent.replace('State: ', ''),
         countryInput: cardContent.querySelector('.listing-country').textContent.replace('Country: ', ''),
         pincodeInput: cardContent.querySelector('.listing-pincode').textContent.replace('Pincode: ', ''),
+        rentInput: cardContent.querySelector('.listing-rent').textContent.replace('Rent: ', ''),
+        additionalInfoInput: cardContent.querySelector('.listing-additionalInfo').textContent.replace('Additional Info: ', ''),
         agentNumberInput: cardContent.querySelector('.listing-agent').textContent.replace('Agent Number: ', ''),
         ownerNumberInput: cardContent.querySelector('.listing-owner').textContent.replace('Owner Number: ', ''),
         rewardInput: cardContent.querySelector('.listing-reward').textContent.replace('Reward: ', ''),

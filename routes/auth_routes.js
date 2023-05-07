@@ -461,6 +461,8 @@ router.route('/addlisting').get(async(req, res)=>{
   let state = xss(req.body.stateInput);
   let country = xss(req.body.countryInput);
   let pincode = xss(req.body.pincodeInput);
+  let rent = xss(req.body.rentInput);
+  let additionalInfo = xss(req.body.additionalInfoInput);
   let agentNumber = xss(req.body.agentNumberInput);
   let ownerNumber = xss(req.body.ownerNumberInput);
   let reward = xss(req.body.rewardInput);
@@ -473,6 +475,8 @@ router.route('/addlisting').get(async(req, res)=>{
     state: state,
     country: country,
     pincode: pincode,
+    rent: rent,
+    additionalInfo: additionalInfo,
     agentNumber: agentNumber,
     ownerNumber: ownerNumber,
     reward: reward,
@@ -488,16 +492,20 @@ router.route('/addlisting').get(async(req, res)=>{
   state = helpers.checkEmptyInputString(state, "State");
   country = helpers.checkEmptyInputString(country, "Country");
   pincode = helpers.checkEmptyInputString(pincode, "Pincode");
+  rent = helpers.checkEmptyInputString(rent, "Rent");
+  additionalInfo = helpers.checkEmptyInputString(additionalInfo, "Additional Info");
   agentNumber = helpers.checkEmptyInputString(agentNumber, "Agent Number");
   ownerNumber = helpers.checkEmptyInputString(ownerNumber, "Owner Number");
   reward = helpers.checkEmptyInputString(reward, "Reward");
 
     helpers.checkPropertyNameInput(listingName, "Listing Name");
     helpers.isValidWebsiteLink(listingLink);
-    helpers.isValidCountry(country);
-    helpers.isValidPincode(pincode);
     helpers.checkStateNameInput(state, "State");
     helpers.checkStateNameInput(city, "City");
+    helpers.isValidCountry(country);
+    helpers.isValidPincode(pincode);
+    helpers.isValidRent(rent);
+    helpers.isValidAdditionalInfo(additionalInfo);
     helpers.validPhoneNumber(agentNumber);
     helpers.validPhoneNumber(ownerNumber);
     helpers.validRewards(reward);
@@ -516,7 +524,7 @@ router.route('/addlisting').get(async(req, res)=>{
 
 
 
-    const userListing = await primaryUsers.addListing(emailAddress, listingName, listingLink, street, city, state, country, pincode, agentNumber, ownerNumber, reward);
+    const userListing = await primaryUsers.addListing(emailAddress, listingName, listingLink, street, city, state, country, pincode, rent, additionalInfo, agentNumber, ownerNumber, reward);
 
     console.log("Updated User -> ", userListing.updatedUser);
     console.log("listingID -> ", userListing.listingID);
@@ -701,6 +709,8 @@ router.route('/updateListing/:listingID').post(async (req, res) => {
   let state = xss(req.body.stateInput);
   let country = xss(req.body.countryInput);
   let pincode = xss(req.body.pincodeInput);
+  let rent = xss(req.body.rentInput);
+  let additionalInfo = xss(req.body.additionalInfoInput);
   let agentNumber = xss(req.body.agentNumberInput);
   let ownerNumber = xss(req.body.ownerNumberInput);
   let reward = xss(req.body.rewardInput);
@@ -713,6 +723,8 @@ router.route('/updateListing/:listingID').post(async (req, res) => {
     state: state,
     country: country,
     pincode: pincode,
+    rent: rent,
+    additionalInfo: additionalInfo,
     agentNumber: agentNumber,
     ownerNumber: ownerNumber,
     reward: reward,
@@ -727,16 +739,21 @@ router.route('/updateListing/:listingID').post(async (req, res) => {
   state = helpers.checkEmptyInputString(state, "State");
   country = helpers.checkEmptyInputString(country, "Country");
   pincode = helpers.checkEmptyInputString(pincode, "Pincode");
+  rent = helpers.checkEmptyInputString(rent, "Rent");
+  additionalInfo = helpers.checkEmptyInputString(additionalInfo, "Additional Info");
   agentNumber = helpers.checkEmptyInputString(agentNumber, "Agent Number");
   ownerNumber = helpers.checkEmptyInputString(ownerNumber, "Owner Number");
   reward = helpers.checkEmptyInputString(reward, "Reward");
 
+    helpers.checkStreetName(street);
     helpers.checkStateNameInput(state, "State");
     helpers.checkStateNameInput(city, "City");
     helpers.checkPropertyNameInput(listingName, "Listing Name");
     helpers.isValidWebsiteLink(listingLink);
     helpers.isValidCountry(country);
     helpers.isValidPincode(pincode);
+    helpers.isValidRent(rent);
+    helpers.isValidAdditionalInfo(additionalInfo);
     helpers.validPhoneNumber(agentNumber);
     helpers.validPhoneNumber(ownerNumber);
     helpers.validRewards(reward);
@@ -755,7 +772,7 @@ router.route('/updateListing/:listingID').post(async (req, res) => {
 
 
 
-    const userListing = await primaryUsers.updateListing(listingID, emailAddress, listingName, listingLink, street, city, state, country, pincode, agentNumber, ownerNumber, reward);
+    const userListing = await primaryUsers.updateListing(listingID, emailAddress, listingName, listingLink, street, city, state, country, pincode, rent, additionalInfo, agentNumber, ownerNumber, reward);
 
     console.log("Updated User -> ", userListing.updatedUser);
     console.log("listingID -> ", userListing.listingID);

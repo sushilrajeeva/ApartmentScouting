@@ -1644,7 +1644,8 @@ if(registrationForm){
 
 
             countryCodeExists(countryCode);
-            ValidityState
+            checkStateNameInput(state, "State");
+            checkStateNameInput(city, "City");
             validPhoneNumber(phoneNumber)
             validCountrySelected(country);
             checkEmptyInputString(password, "Password")
@@ -1659,8 +1660,6 @@ if(registrationForm){
             
 
             checkNameInput(firstName, "Name");
-            checkStateNameInput(state, "State");
-            checkStateNameInput(city, "City");
 
             checkValidEmail(emailAddress);
 
@@ -1893,6 +1892,14 @@ if (addListingForm) {
             let pincodeInput = document.getElementById('pincodeInput');
             let pincode = checkEmptyInputString(pincodeInput.value, "Pincode");
 
+            let rentInput = document.getElementById("rentInput");
+            let rent = checkEmptyInputString(rentInput.value, "Rent");
+            rent = rent.trim();
+
+            let additionalInfoInput = document.getElementById("additionalInfoInput");
+            let additionalInfo = checkEmptyInputString(additionalInfoInput.value, "Additional Info")
+            additionalInfo = additionalInfo.trim();
+
             let agentNumberInput = document.getElementById('agentNumberInput');
             let agentNumber = checkEmptyInputString(agentNumberInput.value, "Agent Number");
 
@@ -1906,11 +1913,18 @@ if (addListingForm) {
 
             checkPropertyNameInput(listingName, "Listing Name");
             isValidWebsiteLink(listingLink);
+
+            checkStreetName(street);
+            checkStateNameInput(state, "State");
+            checkStateNameInput(city, "City");
             isValidCountry(country);
             isValidPincode(pincode);
+            isValidRent(rent);
+            isValidAdditionalInfo(additionalInfo)
             validPhoneNumber(agentNumber);
             validPhoneNumber(ownerNumber);
             validRewards(reward);
+            
 
 
 
@@ -1921,6 +1935,8 @@ if (addListingForm) {
             stateInput.value = state;
             countryInput.value = country;
             pincodeInput.value = pincode;
+            rentInput.value = rent;
+            additionalInfo.value = additionalInfo;
             agentNumberInput.value = agentNumber;
             ownerNumberInput.value = ownerNumber;
             rewardInput.value = reward;
@@ -1935,6 +1951,8 @@ if (addListingForm) {
                 state: stateInput.value,
                 country: countryInput.value,
                 pincode: pincodeInput.value,
+                rent: rentInput.value,
+                additionalInfo: additionalInfoInput.value,
                 agentNumber: agentNumberInput.value,
                 ownerNumber: ownerNumberInput.value,
                 reward: rewardInput.value
@@ -2084,6 +2102,15 @@ function checkStateNameInput(name, type){
 
 }
 
+function checkStreetName(street){
+    const streetRegex = /^\s*\S(?:.*\S)?\s*$/;
+
+    if (!streetRegex.test(street)) {
+        throw new Error(`Street name ${street} you Entered is invalid! Street must be at least 3 non-whitespace characters long.`);
+    }
+
+}
+
 function checkPasswordsMatch(password, confirmPassword){
     if(password!==confirmPassword){
         throw `Error: Password and Confirm Password don't match!!`
@@ -2218,4 +2245,50 @@ function isValidPincode(pincode) {
     }
   }
 
+  function validRent(rent){
+    const rewardRegex = /^([1-9]\d?|100)$/
+
+    if(!rewardRegex.test(reward)){
+        throw `The reward amount ${reward} USD you entered is Invalid! Reward should be an Integer between 1 and 100 USD only!`
+    }
+  }
+
+  function validAdditionalInfo(additionalInfo){
+    const rewardRegex = /^([1-9]\d?|100)$/
+
+    if(!rewardRegex.test(reward)){
+        throw `The reward amount ${reward} USD you entered is Invalid! Reward should be an Integer between 1 and 100 USD only!`
+    }
+  }
+
+  function getCharCount() {
+    const textarea = document.getElementById('additionalInfoInput');
+    const charCount = document.getElementById('charCount');
+    //I am removing any leading and trailing whitespaces so that sesries of empty spaces won't be counted as charecters!
+    const remainingChars = 250 - textarea.value.trim().length;
+    charCount.textContent = remainingChars;
+  }
+
+  function isValidRent(rent){
+    const rentRegex = /^\d*$/;
+    if(!rentRegex.test(rent)){
+        throw `The rent ${rent} you entered is invalid!!, Rent should be an Integer, with minimum 0`
+    }
+  }
+
+  function isValidAdditionalInfo(additionalInfo){
+    const minLength = 2;
+    const maxLength = 250;
+    if (additionalInfo === '') {
+        throw 'Additional Information input cannot be empty.';
+    }
+
+    if (additionalInfo.length < minLength) {
+        throw `Additional Information must be at least ${minLength} characters long`;
+    }
+
+    if (additionalInfo.length > maxLength) {
+        throw `Additional Information must be no more than ${maxLength} characters long`;
+    }
+  }
   

@@ -62,7 +62,13 @@
       <label for="pincodeInput">Pincode <span class="mandatory">*</span>:</label>
       <input type="text" id="pincodeInput" name="pincodeInput" pattern="^\d{5}$" placeholder="Please enter the pincode where listing is located" required><br>
 
-  
+      {{!-- Reffered this https://stackoverflow.com/questions/6595413/regex-which-accept-positive-integer-and-nothing to get logic for to check if input is a valid positive integer including 0  --}}
+      <label for="rentInput">Rent <span class="mandatory">*</span>:</label>
+      <input type="text" id="rentInput" name="rentInput" pattern="^\d*$" placeholder="Please enter the Listing Rent (Integer), If you don't know the rent just Enter 0"><br>
+      
+      <label for="additionalInfoInput">Additional Information <span class="mandatory">*</span>:</label>
+      <textarea id="additionalInfoInput" name="additionalInfoInput" rows="4" cols="50" maxlength="250" oninput="getCharCount()" pattern="^(?=.{2,250}$)(NA|.*)" placeholder="Please enter any relevant info you want to add. Enter NA if you don't have anything to add"></textarea>
+      <p><span id="charCount">250</span> characters remaining</p>
 
       <label for="agentNumberInput">Agent Number <span class="mandatory">*</span>:</label><br>
       <input type="tel" id="agentNumberInput" name="agentNumberInput" pattern="[0-9]{10}" required placeholder="Please enter the listing's Agent number" ><br>
@@ -82,6 +88,7 @@
 
 <!--From professor's lecture code , modified according to requirement of lab9-->
 <!--Used type="module" to counter error thrown at console for importing helper.js inside lab10.js-->
+
     <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
         crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"

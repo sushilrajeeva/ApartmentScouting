@@ -295,6 +295,36 @@ const exportedMethods = {
             throw `The ${type} is not a valid ObjectID type`;
           }
       },
+      isValidRent(rent){
+        const rentRegex = /^\d*$/;
+        if(!rentRegex.test(rent)){
+            throw `The rent ${rent} you entered is invalid!!`
+        }
+      },
+
+      isValidAdditionalInfo(additionalInfo){
+        const minLength = 2;
+        const maxLength = 250;
+        if (additionalInfo === '') {
+            throw 'Additional Information input cannot be empty.';
+        }
+    
+        if (additionalInfo.length < minLength) {
+            throw `Additional Information must be at least ${minLength} characters long`;
+        }
+    
+        if (additionalInfo.length > maxLength) {
+            throw `Additional Information must be no more than ${maxLength} characters long`;
+        }
+      },
+      checkStreetName(street){
+        const streetRegex = /^\s*\S(?:.*\S)?\s*$/;
+    
+        if (!streetRegex.test(street)) {
+            throw new Error(`Street name ${street} you Entered is invalid! Street must be at least 3 non-whitespace characters long.`);
+        }
+    
+    },
 //USED THIS REPO FOR COUNTRY CODE https://gist.githubusercontent.com/DmytroLisitsyn/1c31186e5b66f1d6c52da6b5c70b12ad/raw/2bc71083a77106afec2ec37cf49d05ee54be1a22/country_dial_info.json
 
 

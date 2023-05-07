@@ -287,6 +287,8 @@ export const addListing = async (emailAddress,
     state,
     country,
     pincode,
+    rent,
+    additionalInfo,
     agentNumber,
     ownerNumber,
     reward) => {
@@ -306,6 +308,8 @@ export const addListing = async (emailAddress,
         state = helpers.checkEmptyInputString(state, "State");
         country = helpers.checkEmptyInputString(country, "Country");
         pincode = helpers.checkEmptyInputString(pincode, "Pincode");
+        rent = helpers.checkEmptyInputString(rent, "Rent");
+        additionalInfo = helpers.checkEmptyInputString(additionalInfo, "Additional Info");
         agentNumber = helpers.checkEmptyInputString(agentNumber, "Agent Number");
         ownerNumber = helpers.checkEmptyInputString(ownerNumber, "Owner Number");
         reward = helpers.checkEmptyInputString(reward, "Reward");
@@ -315,6 +319,8 @@ export const addListing = async (emailAddress,
         helpers.isValidWebsiteLink(listingLink);
         helpers.isValidCountry(country);
         helpers.isValidPincode(pincode);
+        helpers.isValidRent(rent);
+        helpers.isValidAdditionalInfo(additionalInfo);
         helpers.validPhoneNumber(agentNumber);
         helpers.validPhoneNumber(ownerNumber);
         helpers.validRewards(reward);
@@ -338,9 +344,14 @@ export const addListing = async (emailAddress,
             state: state,
             country: country,
             pincode: pincode,
+            rent: rent,
+            additionalInfo: additionalInfo,
             agentNumber: agentNumber,
             ownerNumber: ownerNumber,
             reward: reward,
+            progressbar: 0,
+            subscriberDetail: [],
+            messageID: ""
           };
 
 
@@ -399,6 +410,8 @@ export const updateListing = async ( listingID,
   state,
   country,
   pincode,
+  rent,
+  additionalInfo,
   agentNumber,
   ownerNumber,
   reward) => {
@@ -419,14 +432,21 @@ export const updateListing = async ( listingID,
       state = helpers.checkEmptyInputString(state, "State");
       country = helpers.checkEmptyInputString(country, "Country");
       pincode = helpers.checkEmptyInputString(pincode, "Pincode");
+      rent = helpers.checkEmptyInputString(rent, "Rent");
+      additionalInfo = helpers.checkEmptyInputString(additionalInfo, "Additional Info");
       agentNumber = helpers.checkEmptyInputString(agentNumber, "Agent Number");
       ownerNumber = helpers.checkEmptyInputString(ownerNumber, "Owner Number");
       reward = helpers.checkEmptyInputString(reward, "Reward");
 
       helpers.checkPropertyNameInput(listingName, "Listing Name");
       helpers.isValidWebsiteLink(listingLink);
+      helpers.checkStreetName(street);
+      helpers.checkStateNameInput(state, "State");
+      helpers.checkStateNameInput(city, "City");
       helpers.isValidCountry(country);
       helpers.isValidPincode(pincode);
+      helpers.isValidRent(rent);
+      helpers.isValidAdditionalInfo(additionalInfo);
       helpers.validPhoneNumber(agentNumber);
       helpers.validPhoneNumber(ownerNumber);
       helpers.validRewards(reward);
@@ -440,24 +460,51 @@ export const updateListing = async ( listingID,
           throw `Logged In user's email address is invalid, please try logging into the application`
       }
 
+      const listingCollection = await listings();
+
+
       const listingData = {
-          userID: user._id,
           listingName: listingName,
+          userID: user._id,
           listingLink: listingLink,
           street: street,
           city: city,
           state: state,
           country: country,
           pincode: pincode,
+          rent: rent,
+          additionalInfo: additionalInfo,
           agentNumber: agentNumber,
           ownerNumber: ownerNumber,
           reward: reward,
         };
 
 
-        const listingCollection = await listings();
+        
         // const listing = await listingCollection.insertOne(listingData)
-        const listing = await listingCollection.findOneAndReplace({_id:  new ObjectId(listingID)}, listingData, {returnOriginal: false})
+        //const listing = await listingCollection.findOneAndReplace({_id:  new ObjectId(listingID)}, listingData, {returnOriginal: false})
+        //since i am updating only partial portion of the collection so i will use findOneAndUpdate instead of findOneAndReplace
+        const listing = await listingCollection.findOneAndUpdate(
+          { _id: new ObjectId(listingID) },
+          {
+              $set: {
+                  listingName: listingData.listingName,
+                  userID: listingData.userID,
+                  listingLink: listingData.listingLink,
+                  street: listingData.street,
+                  city: listingData.city,
+                  state: listingData.state,
+                  country: listingData.country,
+                  pincode: listingData.pincode,
+                  rent: listingData.rent,
+                  additionalInfo: listingData.additionalInfo,
+                  agentNumber: listingData.agentNumber,
+                  ownerNumber: listingData.ownerNumber,
+                  reward: listingData.reward,
+              },
+          },
+          { returnOriginal: false }
+      );
           
 
 
