@@ -169,9 +169,9 @@ export const getAllListings = async (scoutID = null) => {
     try {
   
         const listingsCollection = await listings();
-        //I am checking if the user has provided scoutID or not, if it's not provided then the user has not logged in in that case i want to show all the listings else i want to show the listings that the user has not subscribed to
-        // Reffered MongoDB documentation for this query https://www.mongodb.com/docs/manual/reference/operator/query/ne/
-        const query = scoutID ? { scoutID: { $ne: new ObjectId(scoutID) } } : {};
+        //Using this ogic to query those listings from the collection that has scoutID as null
+        // this is because i don't want users to see listings on their homepage that are already subscribed
+        const query =  { scoutID: null };
         const allListings = await listingsCollection.find(query).toArray();
 
         return allListings;
