@@ -261,12 +261,17 @@ router
     //code here for GET
   
 
-    let emailAddress = req.session.user.emailAddress
-    let role = req.session.user.role
+    let emailAddress = xss(req.session.user.emailAddress)
+    let role = xss(req.session.user.role)
     const user = await primaryUsers.getuser(emailAddress, role);
     let countryList = helpers.countryCalculator(helpers.countryCodes)
 
-    res.render('profile',{title: 'profile',user:user, countryCodes: helpers.countryCodes, countryList: countryList})
+    let isPrimary = true;
+    if(role.toLowerCase().trim()!=="primary user"){
+      isPrimary = false;
+    }
+
+    res.render('profile',{title: 'profile',user:user, countryCodes: helpers.countryCodes, countryList: countryList, isPrimary})
   }).post(middlewareMethods.protectedMiddleware, async (req, res)=>{
 
     console.log("Post profile route is triggered!!");
@@ -310,66 +315,140 @@ try {
   helpers.validPhoneNumber(phoneNumber);
   helpers.validCountrySelected(country);
 
-      // Update the user in the database
-      const updatedUser = await primaryUsers.updateUser(
-        user._id,
-        firstName,
-        middleName,
-        lastName,
-        emailAddress,
-        countryCode,
-        phoneNumber,
-        city,
-        state,
-        country,
-        dob,
-        password
-      );
-
-      console.log({"Updated User": updatedUser});
-
-      // // Update the user information in the session
-      // req.session.user = {
-      //   ...req.session.user,
-      //   firstName,
-      //   middleName,
-      //   lastName,
-      //   emailAddress,
-      //   countryCode,
-      //   phoneNumber,
-      //   city,
-      //   state,
-      //   country,
-      //   dob,
-      // };
-      
-
-        req.session.user = {
-          _id: xss(updatedUser._id.toString()),
-          firstName: xss(updatedUser.firstName),
-          middleName: xss(updatedUser.middleName),
-          lastName: xss(updatedUser.lastName),
-          emailAddress: xss(updatedUser.emailAddress),
-          countryCode: xss(updatedUser.countryCode),
-          phoneNumber: xss(updatedUser.phoneNumber),
-          city: xss(updatedUser.city),
-          state: xss(updatedUser.state),
-          country: xss(updatedUser.country),
-          dob: xss(updatedUser.dob),
-          listings: updatedUser.listings,
-          wallet: xss(updatedUser.wallet),
-          role: xss(updatedUser.role),
-        };
-
-
-        console.log("Updated User in session is -> ", req.session.user);
-        let successMsg = `<div id="successMsg" class="successMsg" > Your Profile Details have been Successfully Updated!</div>`
-
-      // Redirect to the profile page with a success message
-      // req.flash('success', 'Profile updated successfully.');
-      // res.redirect('/profile');
-      let countryList  = helpers.countryCalculator(helpers.countryCodes);
-      res.status(200).render('profile',{title: 'profile',user:updatedUser, countryCodes: helpers.countryCodes, countryList: countryList, success: successMsg})
+  let userType = xss(req.session.user.role);
+  let isPrimary = true;
+  console.log("User Type from sesion ->",userType)
+  if(userType.toLowerCase().trim()!=="primary user"){
+      isPrimary = false;
+    }
+  if(userType.toLowerCase().trim() === "primary user"){
+    isPrimary = true;
+    console.log("Updating primary user");
+        // Update the user in the database
+        const updatedUser = await primaryUsers.updateUser(
+          user._id,
+          firstName,
+          middleName,
+          lastName,
+          emailAddress,
+          countryCode,
+          phoneNumber,
+          city,
+          state,
+          country,
+          dob,
+          password
+        );
+  
+        console.log({"Updated User": updatedUser});
+  
+        // // Update the user information in the session
+        // req.session.user = {
+        //   ...req.session.user,
+        //   firstName,
+        //   middleName,
+        //   lastName,
+        //   emailAddress,
+        //   countryCode,
+        //   phoneNumber,
+        //   city,
+        //   state,
+        //   country,
+        //   dob,
+        // };
+        
+  
+          req.session.user = {
+            _id: xss(updatedUser._id.toString()),
+            firstName: xss(updatedUser.firstName),
+            middleName: xss(updatedUser.middleName),
+            lastName: xss(updatedUser.lastName),
+            emailAddress: xss(updatedUser.emailAddress),
+            countryCode: xss(updatedUser.countryCode),
+            phoneNumber: xss(updatedUser.phoneNumber),
+            city: xss(updatedUser.city),
+            state: xss(updatedUser.state),
+            country: xss(updatedUser.country),
+            dob: xss(updatedUser.dob),
+            listings: updatedUser.listings,
+            wallet: xss(updatedUser.wallet),
+            role: xss(updatedUser.role),
+          };
+  
+  
+          console.log("Updated Primary User in session is -> ", req.session.user);
+          let successMsg = `<div id="successMsg" class="successMsg" > Your Profile Details have been Successfully Updated!</div>`
+  
+        // Redirect to the profile page with a success message
+        // req.flash('success', 'Profile updated successfully.');
+        // res.redirect('/profile');
+        let countryList  = helpers.countryCalculator(helpers.countryCodes);
+        res.status(200).render('profile',{title: 'profile',user:updatedUser, countryCodes: helpers.countryCodes, countryList: countryList, success: successMsg})
+  }else{
+    isPrimary=false;
+    console.log("Update Scout User method");
+        // Update the user in the database
+        const updatedUser = await scoutUsers.updateUser(
+          user._id,
+          firstName,
+          middleName,
+          lastName,
+          emailAddress,
+          countryCode,
+          phoneNumber,
+          city,
+          state,
+          country,
+          dob,
+          password
+        );
+  
+        console.log({"Updated User": updatedUser});
+  
+        // // Update the user information in the session
+        // req.session.user = {
+        //   ...req.session.user,
+        //   firstName,
+        //   middleName,
+        //   lastName,
+        //   emailAddress,
+        //   countryCode,
+        //   phoneNumber,
+        //   city,
+        //   state,
+        //   country,
+        //   dob,
+        // };
+        
+  
+          req.session.user = {
+            _id: xss(updatedUser._id.toString()),
+            firstName: xss(updatedUser.firstName),
+            middleName: xss(updatedUser.middleName),
+            lastName: xss(updatedUser.lastName),
+            emailAddress: xss(updatedUser.emailAddress),
+            countryCode: xss(updatedUser.countryCode),
+            phoneNumber: xss(updatedUser.phoneNumber),
+            city: xss(updatedUser.city),
+            state: xss(updatedUser.state),
+            country: xss(updatedUser.country),
+            dob: xss(updatedUser.dob),
+            listings: updatedUser.listings,
+            wallet: xss(updatedUser.wallet),
+            role: xss(updatedUser.role),
+          };
+  
+  
+          console.log("Updated User in session is -> ", req.session.user);
+          let successMsg = `<div id="successMsg" class="successMsg" > Your Profile Details have been Successfully Updated!</div>`
+  
+        // Redirect to the profile page with a success message
+        // req.flash('success', 'Profile updated successfully.');
+        // res.redirect('/profile');
+        let countryList  = helpers.countryCalculator(helpers.countryCodes);
+        res.status(200).render('profile',{title: 'profile',user:updatedUser, countryCodes: helpers.countryCodes, countryList: countryList, success: successMsg, isPrimary})
+  }
+  
     } catch (error) {
        console.log("Error caugth");
       console.log(error);

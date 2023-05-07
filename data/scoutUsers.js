@@ -30,7 +30,7 @@ export const createUser = async (
 
   console.log("Create scout User function is called!!");
   console.log({firstName: firstName, middleName: middleName, lastName: lastName, emailAddress: emailAddress, countryCode: countryCode, phoneNumber: phoneNumber, city: city, state: state, country: country, dob: dob, password: password, confirmPassword: confirmPassword, userType: userType});
-  let codeCountry = "";
+  
   //console.log("ScoutUSers: Create User function is called!!");
   //check if inputs are empty or not
   
@@ -121,6 +121,102 @@ export const createUser = async (
   }
 
 };
+
+export const updateUser = async (
+  userId,
+  firstName,
+  middleName,
+  lastName,
+  emailAddress,
+  countryCode,
+  phoneNumber,
+  city,
+  state,
+  country,
+  dob
+) => {
+  console.log("Update User function of scout is called!!");
+  console.log({
+    userId,
+    firstName,
+    middleName,
+    lastName,
+    emailAddress,
+    countryCode,
+    phoneNumber,
+    city,
+    state,
+    country,
+    dob,
+  });
+
+
+  try {
+    firstName = helpers.checkEmptyInputString(firstName, "First Name");
+    lastName = helpers.checkEmptyInputString(lastName, "Last Name");
+    emailAddress = helpers.checkEmptyInputString(emailAddress, "Email Address");
+    emailAddress = emailAddress.toLowerCase();
+    countryCode = helpers.checkEmptyInputString(countryCode, "Country Code");
+    countryCode = countryCode.trim();
+    phoneNumber = helpers.checkEmptyInputString(phoneNumber, "Phone Number");
+    city = helpers.checkEmptyInputString(city, "City");
+    state = helpers.checkEmptyInputString(state, "State");
+    country = helpers.checkEmptyInputString(country, "Country");
+    country = helpers.checkEmptyInputString(country, "Country Code");
+    country = country.trim();
+    dob = helpers.checkEmptyInputString(dob);
+
+    helpers.countryCodeExists(countryCode);
+    helpers.validPhoneNumber(phoneNumber);
+    helpers.validCountrySelected(country);
+
+    helpers.checkNameInput(firstName, "Name");
+
+    helpers.checkValidEmail(emailAddress);
+
+    helpers.checkValidAge(dob);
+
+    const usersCollection = await scoutUsers();
+    const user = await usersCollection.findOne({ _id: new ObjectId(userId) });
+
+    if (!user) {
+      throw `The Scout user with ID ${userId} does not exist!`;
+    }
+
+    const updatedUser = {
+      firstName,
+      middleName,
+      lastName,
+      emailAddress,
+      countryCode,
+      phoneNumber,
+      city,
+      state,
+      country,
+      dob,
+    };
+
+    const updateInfo = await usersCollection.updateOne(
+      { _id: new ObjectId(userId) },
+      { $set: updatedUser },
+      {returnDocument: 'after'}
+    );
+
+    if (!updateInfo.matchedCount || !updateInfo.modifiedCount) {
+      throw "Could not update user";
+    }
+
+    const updatedUserInfo = await usersCollection.findOne({
+      _id: new ObjectId(userId),
+    });
+    return {_id: updatedUserInfo._id.toString(), firstName: updatedUserInfo.firstName, middleName: updatedUserInfo.middleName, lastName: updatedUserInfo.lastName, emailAddress: updatedUserInfo.emailAddress, countryCode: updatedUserInfo.countryCode, phoneNumber: updatedUserInfo.phoneNumber, city: updatedUserInfo.city, state: updatedUserInfo.state, country: updatedUserInfo.country, dob: updatedUserInfo.dob, listings: updatedUserInfo.listings, wallet: updatedUserInfo.wallet, role: updatedUserInfo.role}
+
+    return { updatedUser: true };
+  } catch (error) {
+    throw error;
+  }
+};
+
 
 export const checkUser = async (emailAddress, password) => {
 
@@ -467,4 +563,4 @@ export const getScoutSubscribedListingsHistory = async (userID) =>{
 
 
 //confirm with TAs if this additional code is required since we are already exporting functions individually
-export default {createUser,checkUser,getAllListings,searchListings, viewListings, getWalletBalance, subscribe, getScoutActiveSubscribedListings, getScoutSubscribedListingsHistory}
+export default {createUser,checkUser,getAllListings,searchListings, viewListings, getWalletBalance, subscribe, getScoutActiveSubscribedListings, getScoutSubscribedListingsHistory,updateUser}

@@ -1,4 +1,5 @@
-<nav class="navbar">
+{{#if isPrimary}}
+  <nav class="navbar">
   <div class="navbar-logo">
     <a href="#">
       <img src="/public/image/unnamed.png" alt="Logo">
@@ -25,6 +26,35 @@
     </li>
   </ul>
 </nav>
+{{else}}
+  <nav class="navbar">
+  <div class="navbar-logo">
+    <a href="#">
+      <img src="/public/image/unnamed.png" alt="Logo">
+    </a>
+  </div>
+  <ul class="navbar-nav">
+    <li class="nav-item">
+      <a class="nav-link" href="/">Home</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/viewactivesubscribes">Active Subscribed Listing</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/viewScoutSubscribedListingHistory">Subscribed Listing History</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/scoutWallet">My Wallet</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/profile">Profile</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/logout">Logout</a>
+    </li>
+  </ul>
+</nav>
+{{/if}}
 
     {{{success}}}
 <form class="update-form" method="post" id="update-form">
@@ -73,7 +103,7 @@
   <label for="passwordInput">Password <span class="mandatory">*</span>:</label><br>
   <input type="password" id="passwordInput" name="passwordInput" placeholder="Please enter your password"required><br>
 
-  <button type="submit" class="submit-btn">Update Profile</button>
+  <button type="submit" value="Submit" aria-label="Submit to Update">Update Profile</button>
   {{error}}
 </form>
 <div id="error" class="error" hidden></div>

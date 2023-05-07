@@ -1718,9 +1718,11 @@ if(registrationForm){
 if(updateForm){
     updateForm.addEventListener('submit', (event)=>{
 
+        console.log("************************************************************************");
+
         //adding this line because i don't want the form to be submitted without validation
         event.preventDefault()
-        //console.log("Registration Form is triggered!!");
+        console.log("update Form is triggered!!");
 
         let firstNameInput = document.getElementById('firstNameInput');
         let firstName = firstNameInput.value;
@@ -1838,10 +1840,11 @@ if(updateForm){
             console.log("Final form elements are : ");
             console.log({firstNameInput: firstNameInput.value, middleNameInput: middleNameInput.value, lastNameInput: lastNameInput.value, emailAddressInput: emailAddressInput.value, countryCodeInput: countryCodeInput.value, phoneNumberInput: phoneNumberInput.value, cityInput: cityInput.value, stateInput: stateInput.value, countryInput: countryInput.value, dobInput: dobInput.value, passwordInput: passwordInput.value});
             
-            
+            console.log('all rights')
             event.target.submit();
 
         } catch (error) {
+            console.log('error');
             errorDiv.hidden = false;
             console.log(error);
             errorDiv.innerHTML = error;
