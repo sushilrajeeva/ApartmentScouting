@@ -387,7 +387,9 @@ router.route('/scoutuser').get(middlewareMethods.protectedMiddleware, async (req
   let firstName = xss(req.session.user.firstName);
   let role = xss(req.session.user.role);
 
-  const allListings = await scoutUsers.getAllListings();
+  let scoutID = xss(req.session.user._id);
+
+  const allListings = await scoutUsers.getAllListings(scoutID);
 
   let isEmptyListings = false;
   if(allListings.length===0){
@@ -620,6 +622,7 @@ router.route('/viewScoutSubscribedListingHistory').get(async (req, res) => {
 
 router.route('/getAllListings').get(async (req, res) => {
   //code here for GET
+
 
   
   const allListings = await scoutUsers.getAllListings();

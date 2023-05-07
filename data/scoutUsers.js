@@ -162,16 +162,17 @@ export const checkUser = async (emailAddress, password) => {
   }
 };
 
-export const getAllListings = async () => {
+export const getAllListings = async (scoutID = null) => {
 
     console.log(" getAllListings method is called!");
     
     try {
   
         const listingsCollection = await listings();
-        console.log("Hi");
-        const allListings = await listingsCollection.find({}).toArray();
-        console.log("ohh");
+        //I am checking if the user has provided scoutID or not, if it's not provided then the user has not logged in in that case i want to show all the listings else i want to show the listings that the user has not subscribed to
+        // Reffered MongoDB documentation for this query https://www.mongodb.com/docs/manual/reference/operator/query/ne/
+        const query = scoutID ? { scoutID: { $ne: new ObjectId(scoutID) } } : {};
+        const allListings = await listingsCollection.find(query).toArray();
 
         return allListings;
       
@@ -295,13 +296,29 @@ export const subscribe = async (listingID, userID) =>{
         }
       );
 
-
       //refered https://www.mongodb.com/docs/manual/reference/method/db.collection.updateOne/
       //i am using matchedcount because if i use the modifiedcount , it doesn't return updated count because i am using $addToSet, as the listing is already present, so found this solution to fix the bug
       if (updatedScout.matchedCount === 0) {
         
-        throw 'Failed to subscribe to the listing.';
+        throw 'Failed to add Listing to the Scout Collection.';
       }
+
+      const updatedListing = await listingCollection.findOneAndUpdate(
+        { _id: listingIDObj },
+        {
+            $set: {
+                progressbar: 25,
+                scoutID: userIDObj
+            }
+        },
+        { returnOriginal: false }
+    );
+
+    if (updatedListing.matchedCount === 0) {
+        
+      throw 'Failed to Add scoutID to the listing collection.';
+    }
+
   
       return true;
   

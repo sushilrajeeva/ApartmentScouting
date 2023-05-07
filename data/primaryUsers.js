@@ -350,7 +350,7 @@ export const addListing = async (emailAddress,
             ownerNumber: ownerNumber,
             reward: reward,
             progressbar: 0,
-            subscriberDetail: [],
+            scoutID: null,
             messageID: ""
           };
 
