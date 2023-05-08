@@ -688,7 +688,41 @@ export const viewScoutSubscribedlistings = async (userID) =>{
   } catch (error) {
       throw error;
   }
-}
+};
+
+
+export const postComment = async (listingID, userID, scoutID, comment) =>{
+
+  console.log("Primary User posting comment Data is triggered!");
+  try {
+
+
+      helpers.isValidObjectID(listingID, "Listing ID");
+      helpers.isValidObjectID(userID, "User ID");
+      helpers.isValidObjectID(scoutID, "Scout ID");
+      
+      helpers.checkCreateUserInputs(comment, "Comment")
+      
+
+      let listingIDObj = new ObjectId(listingID);
+      let userIDObj = new ObjectId(userID);
+      let scoutIDObj = new ObjectId(scoutID);
+
+      //I will first get the listing from listings collection
+      const listingsCollection = await listings();
+      let getListingquery =  { _id: listingIDObj };
+      const listing = await listingsCollection.findOne(getListingquery);
+
+      if(!listing.messageID || listing.messageID === ""){
+        
+      }
+
+
+  } catch (error) {
+      throw error;
+  }
+};
+
 
 //confirm with TAs if this additional code is required since we are already exporting functions individually
 export default {createUser,checkUser,addListing, viewListings, getWalletBalance, getuser, updateListing, updateUser, addMoneyToWallet, viewScoutSubscribedlistings}

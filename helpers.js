@@ -291,6 +291,9 @@ const exportedMethods = {
       },
 
       isValidObjectID(idString, type){
+
+        this.checkEmptyInputString(idString, type);
+
         if (!ObjectId.isValid(idString)) {
             throw `The ${type} is not a valid ObjectID type`;
           }
@@ -375,6 +378,21 @@ const exportedMethods = {
 
 
     },
+    isValidComment(comment){
+        const minLength = 1;
+        const maxLength = 500;
+        if (comment === '') {
+            throw 'Comment Section input cannot be empty.';
+        }
+    
+        if (comment.length < minLength) {
+            throw `Comment text must be at least ${minLength} characters long`;
+        }
+    
+        if (comment.length > maxLength) {
+            throw `Comment text must be no more than ${maxLength} characters long`;
+        }
+      },
 //USED THIS REPO FOR COUNTRY CODE https://gist.githubusercontent.com/DmytroLisitsyn/1c31186e5b66f1d6c52da6b5c70b12ad/raw/2bc71083a77106afec2ec37cf49d05ee54be1a22/country_dial_info.json
 
 

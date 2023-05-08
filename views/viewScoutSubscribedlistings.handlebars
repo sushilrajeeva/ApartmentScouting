@@ -35,7 +35,9 @@
   <p>No Active Subscribed Scout listings found.</p>
 {{else}}
   {{#each listings}}
-    <div class="listing-card">
+  {{!-- reffered -> https://handlebarsjs.com/guide/expressions.html#subexpressions --}}
+  {{!-- I am doing this because this will help me store my listings as a json object which i can then pass when my open listing button is clicked --}}
+     <div class="listing-card" data-listings="{{jsonListings}}">
       <div class="card-content" data-listing-id="{{_id}}">
         <h3 class="listing-name">{{listingName}}</h3>
         <p class="listing-link"><a href="{{listingLink}}" target="_blank">{{listingLink}}</a></p>
@@ -50,6 +52,8 @@
         <p class="listing-owner">Owner Number: {{ownerNumber}}</p>
         <p class="listing-reward">Reward: {{reward}}</p>
         <p class="listing-scoutName">Subscribed Scout Name: {{scoutName}}</p>
+        {{!-- this is so that my event listener can target this class --}}
+        <button class="OpenListingButton">Open Listing</button>
       </div>
     </div>
   {{/each}}

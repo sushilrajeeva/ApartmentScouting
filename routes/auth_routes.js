@@ -7,6 +7,7 @@ import middlewareMethods from '../middleware.js';
 import helpers from '../helpers.js';
 import primaryUsers from '../data/primaryUsers.js';
 import scoutUsers from '../data/scoutUsers.js';
+import listings from '../data/listings.js';
 import xss from 'xss';
 
 //refered https://www.youtube.com/watch?v=TDe7DRYK8vU this youtube video for passing the middlewear [timestamp - 26:30 ish ]
@@ -1043,15 +1044,96 @@ router.route('/viewScoutSubscribedlistings').get(async (req, res) =>{
     isEmptyListings = true;
   }
 
-  console.log("Checking the format of listings", listings);
+  //converting my array object to json type so that it will be easier for me to pass it to my uri encoder later
+  const jsonListings = JSON.stringify(listings)
 
-  res.status(200).render('viewScoutSubscribedlistings', {title: 'View Scout Subbed Listings', isEmptyListings: isEmptyListings, listings: listings})
+  res.status(200).render('viewScoutSubscribedlistings', {title: 'View Scout Subbed Listings', isEmptyListings: isEmptyListings, listings: listings, jsonListings: jsonListings})
 
   } catch (error) {
     console.log(error);
   }
 
-})
+});
+
+router.route('/trackListing').get(async (req, res) => {
+  console.log("Get Method of trackingListing route is triggered!!");
+
+  try {
+    // Get the _id from the query parameters
+    const listingID = xss(req.query.id);
+    console.log("Received Listing ID:", listingID);
+
+    let listing = await listings.getListing(listingID);
+
+    
+
+    let scoutNameDetails = await scoutUsers.getScoutNameDetails(listing.scoutID)
+    let scoutName = scoutNameDetails.name;
+    listing.scoutName = scoutName; 
+
+    console.log("Listing Data -> ", listing);
+
+    res.status(200).render('taskListing', {title: 'Task Listing', listing: listing})
+
+    // Do something with the listingId
+
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+
+//primaryComment
+router.route('/primaryComment').post(async (req, res) => {
+  //code here for POST
+
+  try {
+
+
+    let comment = helpers.checkEmptyInputString(xss(req.body.comment));
+    let listingID = helpers.checkEmptyInputString(xss(req.body.listingId));
+    let userID = helpers.checkEmptyInputString(xss(req.body.userId));
+    let scoutID = helpers.checkEmptyInputString(xss(req.body.scoutId));
+    let messengerType = xss(req.body.messengerType);
+
+    console.log("comment:", comment);
+    console.log("listingId:", listingID);
+    console.log("userId:", userID);
+    console.log("scoutId:", scoutID);
+    console.log("messageType", messengerType);
+
+  
+
+    
+
+    if(!messengerType){
+      throw `Error! Your user Session has expired, please try logging!`;
+    }else if(!messengerType.trim()){
+      throw `Error! Your user Session has expired, please try logging!`;
+    }
+
+    isValidComment(comment);
+
+    if(messengerType.toLowerCase().trim() === "primary"){
+      console.log("It is a primary user comment");
+    }else{
+      console.log("It is a scout user comment");
+    }
+
+    
+
+
+
+
+
+  } catch (error) {
+    throw error;
+  }
+
+  
+
+
+});
 
 
 
