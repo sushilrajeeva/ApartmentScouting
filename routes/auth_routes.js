@@ -964,11 +964,61 @@ router.route('/scoutWallet').get(async (req, res) => {
 
   if(req.session.user.role.toLowerCase() ==="scout user"){
 
-  let name = ` ${req.session.user.firstName} ${req.session.user.middleName} ${req.session.user.lastName}`;
+    let name = ` ${xss(req.session.user.firstName)} ${xss(req.session.user.middleName)} ${xss(req.session.user.lastName)}`
 
-  return res.render('scoutwallet', {title: 'Wallet Balance', name: name,  walletBalance: walletBalance, isBalZero:isBalZero})
+  return res.render('scoutwallet', {title: 'Wallet Balance', name: name,  walletBalance: walletBalance, isBalZero:isBalZero});
   }
-})
+});
+
+router.route('/addmoney').get(async (req, res) =>{
+  //Adding Add money route functionality to add money to primary user waller
+
+  console.log("add money route is hit!!");
+
+  return res.status(200).render('payment', {title: 'Payments Page | Add MoneY', });
+
+}).post(async (req, res) =>{
+  //Payment route funtionality ot post changes
+  console.log("Payment route post method is triggred!");
+  console.log("Req Body ", req.body);
+
+  let userID = xss(req.session.user._id);
+  
+
+  try {
+    let cardNumber = helpers.checkEmptyInputString(xss(req.body.cardNumberInput), "Card Number");
+  let cvv = helpers.checkEmptyInputString(xss(req.body.cvvInput), "CVV");
+  let amount = helpers.checkEmptyInputString(xss(req.body.amountInput), "Amount");
+
+  helpers.isValidCardNumber(cardNumber);
+  helpers.isValidCVV(cvv);
+  helpers.isValidAmount(amount);
+
+  const updatedUser = await primaryUsers.addMoneyToWallet(userID, cardNumber, cvv, amount)
+  const walletBalance = updatedUser.wallet;
+
+  let isBalZero = false;
+  if(walletBalance === 0){
+    isBalZero = true;
+  }
+
+  console.log("Updated balance is -> ", updatedUser.wallet);
+  let name = ` ${xss(req.session.user.firstName)} ${xss(req.session.user.middleName)} ${xss(req.session.user.lastName)}`
+
+  let successMsg = `<div id="successMsg" class="successMsg" > Your Wallet have been Successfully Updated!</div>`
+
+  return res.status(200).render('primarywallet', {title: 'Wallet Balance', name: name,  walletBalance: walletBalance, isBalZero:isBalZero, success: successMsg})
+
+  } catch (error) {
+    console.log("Error -->", error);
+
+    return res.status(404).render('payment', {title: 'Payments Page | Add MoneY', error: `<div id="error" class="error" > ${error}</div>`});
+  }
+
+
+
+});;
+
 
 
 

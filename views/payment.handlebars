@@ -1,5 +1,13 @@
 
 <style>
+
+    .input-field {
+    margin-bottom: 10px;
+  }
+  label {
+    display: block;
+    margin-bottom: 5px;
+  }
   
   .centered-container {
   display: flex;
@@ -54,6 +62,8 @@ button {
 
 </style>
 
+
+
 <nav class="navbar">
   <div class="navbar-logo">
     <a href="#">
@@ -83,24 +93,30 @@ button {
 </nav>
 <br>
 
+<div class="card-body">
+  <form id="paymentForm" method = "post">
+    <label for="cardNumberInput">Card Number</label>
+    <input type="text" aria-placeholder="Please Enter your 15 Crdit/Debit Card Number here!" id="cardNumberInput" name="cardNumberInput" required>
 
-{{{success}}}
+    
+    <label for="cvvInput">CVV</label>
+    <input type="text" id="cvvInput" name="cvvInput" required>
 
-<div class="centered-container">
-  <div class="card" id="wallet-card">
-      <div class="card-header">
-          <h1 id="user-name">{{name}}</h1>
-      </div>
-      <div class="card-body">
-          <p>Wallet Balance: $<span id="wallet-balance">{{walletBalance}}</span></p>
-          {{#if isBalZero}}
-            <p>You don't have money!!</p>
-          {{/if}}
-       
-          <button id="addMoneyButton" >Add Money</button>
-      </div>
-  </div>
+    
+    <label for="amountInput">Amount (1 to 10,000 USD)</label>
+    <input type="text" id="amountInput" name="amountInput" required>
+
+    <input type="submit" value="Submit" aria-label="Submit To Pay">
+  </form>
 </div>
+
+<div id="error" class="error" hidden></div>
+{{{error}}}
+
+
+
+
+
 
 <script src="/public/js/addmoney.js"></script>
 

@@ -182,7 +182,7 @@ export const updateUser = async (
     const user = await usersCollection.findOne({ _id: new ObjectId(userId) });
 
     if (!user) {
-      throw `The user with ID ${userId} does not exist!`;
+      throw `The Primary User with ID ${userId} does not exist!`;
     }
 
     const updatedUser = {
@@ -596,5 +596,67 @@ export const getWalletBalance = async (userID) =>{
     }
 }
 
+export const addMoneyToWallet = async (userID, cardNumber, cvv, amount) =>{
+
+  //Added wallet functionality. This functionality allows primary user to fetch his/her wallet balance
+
+console.log("Add money to  Wallet Data is triggered!");
+try {
+
+  helpers.checkEmptyInputString(userID, "User ID")
+  helpers.isValidObjectID(userID, "User ID");
+
+  cardNumber = helpers.checkEmptyInputString(cardNumber, "Card Number");
+  cvv = helpers.checkEmptyInputString(cvv, "CVV");
+  amount = helpers.checkEmptyInputString(amount, "Amount");
+
+  helpers.isValidCardNumber(cardNumber);
+  helpers.isValidCVV(cvv);
+  helpers.isValidAmount(amount);
+
+
+  let userIDObj = new ObjectId(userID);
+
+  console.log("User ID -> ", userIDObj.toString());
+
+  const usersCollection = await primaryUsers();
+  const user = await usersCollection.findOne({ _id: userIDObj });
+
+  if(!user){
+      throw `Your Session has expired! Please try logging in again!!`
+  }
+
+  helpers.validCardCredentials(cardNumber, cvv);
+  
+
+  //currently amount is a string so converting it to Integer
+  let walletBalance = user.wallet + parseInt(amount, 10);
+
+  //I am using { returnDocument: 'after' } instead of {returnOriginal : false} because mongo has depricated this after version 3.6+. My current mongo version is 4.x.x
+  const updatedUser = await usersCollection.findOneAndUpdate(
+    { _id: userIDObj },
+    { $set: { wallet: walletBalance } },
+    { returnDocument: 'after' }
+  );
+
+  if (updatedUser.value) {
+    console.log('User is updated successfully');
+    console.log('Updated document:', updatedUser.value);
+  } else {
+    throw `Unable to update wallet balance of primary user collection!`
+  }
+
+  console.log();
+
+    updatedUser.value._id = updatedUser.value._id.toString();
+
+
+  return updatedUser.value;
+
+} catch (error) {
+  throw error;
+}
+}
+
 //confirm with TAs if this additional code is required since we are already exporting functions individually
-export default {createUser,checkUser,addListing, viewListings, getWalletBalance, getuser, updateListing, updateUser}
+export default {createUser,checkUser,addListing, viewListings, getWalletBalance, getuser, updateListing, updateUser, addMoneyToWallet}

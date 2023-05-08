@@ -325,6 +325,56 @@ const exportedMethods = {
         }
     
     },
+    isValidCardNumber(cardNumber){
+        // reffered -> https://www.regextester.com/104911 
+        let cardNumberRegex = /(^\d{15}$)|(^\d{16}$)/;
+    
+        if(!cardNumberRegex.test(cardNumber)){
+            throw `The Card Number ${cardNumber} you entered is invalid! Please Enter a 15 or 16 digit number only!`
+        }
+    
+    },
+    isValidCVV(cvv){
+        // reffered -> https://www.regextester.com/104911 
+        let cvvRegex = /(^\d{3}$)|(^\d{4}$)/;
+    
+        if(!cvvRegex.test(cvv)){
+            throw `The CVV ${cvv} you entered is invalid! Please Enter a valid 3 or 4 digit number only!`
+        }
+    
+    },
+    isValidAmount(amount){
+        let amountRegex = /^([1-9]\d{0,3}|10000)$/;
+    
+        if(!amountRegex.test(amount)){
+            throw `The amount ${amount} you entered is invalid! Please enter a valid amount from 1 to 10000 USD`
+        }
+    },
+    validCardCredentials(cardNumber, cvv){
+        let isValidCred = false;
+        if(cardNumber === '1234123412341234'){
+            if(cvv === '1234'){
+                isValidCred = true;
+            }else {
+                throw `Error: Invalid Card Number or CVV please Try Again!`
+            }
+        }else if(cardNumber === '123412341234123'){
+            if(cvv === '123'){
+                isValidCred = true;
+            }else{
+                throw `Error: Invalid Card Number or CVV please Try Again!`;
+            }
+        }else {
+            throw `Error: Invalid Card Number or CVV please Try Again!`
+        }
+
+        console.log("VALID CRED");
+
+        return isValidCred;
+
+
+
+    },
 //USED THIS REPO FOR COUNTRY CODE https://gist.githubusercontent.com/DmytroLisitsyn/1c31186e5b66f1d6c52da6b5c70b12ad/raw/2bc71083a77106afec2ec37cf49d05ee54be1a22/country_dial_info.json
 
 
