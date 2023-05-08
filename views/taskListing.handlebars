@@ -1,0 +1,58 @@
+<nav class="navbar">
+  <div class="navbar-logo">
+    <a href="#">
+      <img src="/public/image/unnamed.png" alt="Logo">
+    </a>
+  </div>
+  <ul class="navbar-nav">
+    <li class="nav-item">
+      <a class="nav-link" href="/">Home</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/addlisting">Add Listings</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/viewprimarylistings">View Listings</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/viewScoutSubscribedlistings">View Scout Subscribed Listings</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/primaryWallet">My Wallet</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/profile">Profile</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/logout">Logout</a>
+    </li>
+  </ul>
+</nav>
+
+<br>
+
+<div class="listing-card">
+  <form id="commentForm">
+    <h3 class="listingName">{{listing.listingName}}</h3>
+    <p class="listingLink"><a href="{{listing.listingLink}}" target="_blank">{{listing.listingLink}}</a></p>
+    <p class="scoutName">Scout Assigned: {{listing.scoutName}}</p>
+
+    <label for="commentInput">Comments:</label>
+    <textarea id="commentInput" name="commentInput" rows="4" cols="50" oninput="getCharCount()" pattern="^.{1,500}$" placeholder="Please enter your comment here"></textarea>
+    <p><span id="charCount">250</span> characters remaining</p>
+    <br>
+
+    <input type="hidden" id="listingIdInput" name="listingIdInput" value="{{listing._id}}">
+    <input type="hidden" id="userIdInput" name="userIdInput" value="{{listing.userID}}">
+    <input type="hidden" id="scoutIdInput" name="scoutIdInput" value="{{listing.scoutID}}">
+    <input type="hidden" id="messengerTypeInput" name="messengerTypeInput" value="primary">
+
+    <button type="submit">Submit</button>
+  </form>
+</div>
+
+<div id="error" class="error" hidden></div>
+    {{{error}}}
+
+
+  <script src="/public/js/comment.js" ></script>
