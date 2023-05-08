@@ -1017,7 +1017,41 @@ router.route('/addmoney').get(async (req, res) =>{
 
 
 
-});;
+});
+
+//Writing this route to view all the listings of primary subscribers that are subscribed by some scout!
+router.route('/viewScoutSubscribedlistings').get(async (req, res) =>{
+
+  console.log("viewScoutSubscribedlistings GET route is hit!!");
+
+  try {
+    
+    let userID = xss(req.session.user._id.toString())
+  const listings = await primaryUsers.viewScoutSubscribedlistings(userID);
+  
+  for(let i=0; i< listings.length; i++){
+    let scoutID = listings[i].scoutID
+    let scoutNameDetails = await scoutUsers.getScoutNameDetails(scoutID)
+    let scoutName = scoutNameDetails.name;
+    listings[i].scoutName = scoutName;
+
+    console.log("Scout Name : ", scoutName);
+  }
+
+  let isEmptyListings = false;
+  if(listings.length===0){
+    isEmptyListings = true;
+  }
+
+  console.log("Checking the format of listings", listings);
+
+  res.status(200).render('viewScoutSubscribedlistings', {title: 'View Scout Subbed Listings', isEmptyListings: isEmptyListings, listings: listings})
+
+  } catch (error) {
+    console.log(error);
+  }
+
+})
 
 
 

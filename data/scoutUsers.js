@@ -559,8 +559,57 @@ export const getScoutSubscribedListingsHistory = async (userID) =>{
   }
 };
 
+//This function retrieves the scout collection based on the scoutID provided
+export const getScoutDetails = async (userID) =>{
+
+  
+
+console.log(" getScoutDetails Data is triggered!");
+try {
+
+  helpers.isValidObjectID(userID, "User ID");
+
+  let userIDObj = new ObjectId(userID);
+
+  console.log("User ID -> ", userIDObj.toString());
+
+  const usersCollection = await scoutUsers();
+  const user = await usersCollection.findOne({ _id: userIDObj });
+
+  if(!user){
+      throw `Your Session has expired! Please try logging in again!!`
+  }
+
+  user._id = user._id.toString();
+
+  return user;
+
+} catch (error) {
+  throw error;
+}
+}
+
+export const getScoutNameDetails = async (userID) =>{
+
+  
+
+  console.log(" getScoutName Data is triggered!");
+  try {
+  
+    let user = await getScoutDetails(userID);
+  
+    let name = `${user.firstName} ${user.middleName} ${user.lastName}`;
+    return {name: name, user: user};
+  
+  } catch (error) {
+    throw error;
+  }
+  }
+
+
+
 
 
 
 //confirm with TAs if this additional code is required since we are already exporting functions individually
-export default {createUser,checkUser,getAllListings,searchListings, viewListings, getWalletBalance, subscribe, getScoutActiveSubscribedListings, getScoutSubscribedListingsHistory,updateUser}
+export default {createUser,checkUser,getAllListings,searchListings, viewListings, getWalletBalance, subscribe, getScoutActiveSubscribedListings, getScoutSubscribedListingsHistory,updateUser, getScoutDetails, getScoutNameDetails}

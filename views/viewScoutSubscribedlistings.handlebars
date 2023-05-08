@@ -31,15 +31,15 @@
 
 <br>
 
-{{#if isEmptyListings}}
-  <p>No listings found.</p>
+{{#if isEmptySubscribes}}
+  <p>No Active Subscribed Scout listings found.</p>
 {{else}}
   {{#each listings}}
     <div class="listing-card">
       <div class="card-content" data-listing-id="{{_id}}">
-        <h1 class="listing-name">{{listingName}}</h1>
+        <h3 class="listing-name">{{listingName}}</h3>
         <p class="listing-link"><a href="{{listingLink}}" target="_blank">{{listingLink}}</a></p>
-        <p class="listing-address">Street: {{street}}</p>
+        <p class="listing-address"> Street: {{street}}</p>
         <p class="listing-city">City: {{city}}</p>
         <p class="listing-state">State: {{state}}</p>
         <p class="listing-country">Country: {{country}}</p>
@@ -49,9 +49,8 @@
         <p class="listing-agent">Agent Number: {{agentNumber}}</p>
         <p class="listing-owner">Owner Number: {{ownerNumber}}</p>
         <p class="listing-reward">Reward: {{reward}}</p>
+        <p class="listing-scoutName">Subscribed Scout Name: {{scoutName}}</p>
       </div>
-      <button class="edit-btn">Edit</button>
-      <button class="save-btn" style="display: none;">Save</button>
     </div>
   {{/each}}
 {{/if}}

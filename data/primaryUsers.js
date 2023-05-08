@@ -540,7 +540,7 @@ export const updateListing = async ( listingID,
 };
 
 
-
+//This method allows Primary users to get all the listings from the listings collections that belongs to the primary user's userID
 export const viewListings = async (userID
     ) =>{
 
@@ -551,6 +551,7 @@ export const viewListings = async (userID
 
         let userIDObj = new ObjectId(userID);
 
+        //To query listings based on primary user's id
         const query = { userID: userIDObj };
 
         const listingCollection = await listings();
@@ -598,7 +599,7 @@ export const getWalletBalance = async (userID) =>{
 
 export const addMoneyToWallet = async (userID, cardNumber, cvv, amount) =>{
 
-  //Added wallet functionality. This functionality allows primary user to fetch his/her wallet balance
+  //Added wallet functionality. This functionality allows primary user to add monety to his/her wallet balance
 
 console.log("Add money to  Wallet Data is triggered!");
 try {
@@ -658,5 +659,36 @@ try {
 }
 }
 
+//to view all the listings of primary subscribers that are subscribed by some scout!
+export const viewScoutSubscribedlistings = async (userID) =>{
+
+  console.log("View Listings Data is triggered!");
+  try {
+
+      helpers.isValidObjectID(userID, "User ID");
+
+      let userIDObj = new ObjectId(userID);
+
+      //To query listings based on primary user's id and scout id not null
+      //This is because if they are null means no scout has subscribed!
+      const query = { 
+        userID: userIDObj,
+        scoutID: { $ne: null }
+      };
+
+      const listingCollection = await listings();
+      const userListings = await listingCollection.find(query).toArray();
+
+      if(!userListings){
+          return []
+      }else {
+          return userListings;
+      }
+
+  } catch (error) {
+      throw error;
+  }
+}
+
 //confirm with TAs if this additional code is required since we are already exporting functions individually
-export default {createUser,checkUser,addListing, viewListings, getWalletBalance, getuser, updateListing, updateUser, addMoneyToWallet}
+export default {createUser,checkUser,addListing, viewListings, getWalletBalance, getuser, updateListing, updateUser, addMoneyToWallet, viewScoutSubscribedlistings}
