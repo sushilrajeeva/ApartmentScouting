@@ -33,7 +33,7 @@
 
   .timestamp {
     font-size: 0.8em;
-    color: #777;
+    color: #6e6e6e;
   }
 </style>
 
@@ -72,12 +72,12 @@
 
 <div class="listing-card">
   <form id="commentForm">
-    <h3 class="listingName">{{listing.listingName}}</h3>
+    <h1 class="listingName">{{listing.listingName}}</h1>
     <p class="listingLink"><a href="{{listing.listingLink}}" target="_blank">{{listing.listingLink}}</a></p>
     <p class="scoutName">Scout Assigned: {{listing.scoutName}}</p>
 
     <label for="commentInput">Comments:</label>
-    <textarea id="commentInput" name="commentInput" rows="4" cols="50" oninput="getCharCount()" pattern="^.{1,500}$" placeholder="Please enter your comment here"></textarea>
+    <textarea id="commentInput" name="commentInput" rows="4" cols="50" oninput="getCharCount()" placeholder="Please enter your comment here"></textarea>
     <p><span id="charCount">500</span> characters remaining</p>
     <br>
 
@@ -85,6 +85,33 @@
     <input type="hidden" id="userIdInput" name="userIdInput" value="{{listing.userID}}">
     <input type="hidden" id="scoutIdInput" name="scoutIdInput" value="{{listing.scoutID}}">
     <input type="hidden" id="messengerTypeInput" name="messengerTypeInput" value="primary">
+
+    <br>
+    
+    {{#if twentyFive}}
+      <p>Progress: 25% | Scout has subscribed to this listing!! awaiting their response</p>
+    {{/if}}
+  
+    {{#if fifty}}
+      <p>Progress: 50% | Scout has Started Initial Inspection Phase!!</p>
+    {{/if}}
+
+    {{#if seventy}}
+      <p>Progress: 70%</p>
+      {{#if hasMoney}}
+        <p>Press Approve to close this listing!</p>
+        <button type="button" class="approve-task-btn">Approve</button>
+      {{else}}
+        <p>Insufficient balance!! Please load your balance to get option to pay!</p>
+      {{/if}}
+      
+    {{/if}}
+
+    {{#if hundred}}
+      <p>Congrats!! This task has been closed successfully!!</p>
+    {{/if}}
+    <br>
+    <br>
 
     <button type="submit">Submit</button>
   </form>
