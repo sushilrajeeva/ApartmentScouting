@@ -16,7 +16,8 @@ router.route('/').get(middlewareMethods.checkAuthentication, async (req, res) =>
   //code here for GET THIS ROUTE SHOULD NEVER FIRE BECAUSE OF MIDDLEWARE #1 IN SPECS.
   return res.json({error: 'YOU SHOULD NOT BE HERE!'});
 });
-7
+
+//Route for registering - takes care of registration of both primary and scout user along with authentication
 router
   .route('/registeruser')
   .get(middlewareMethods.registerMiddleware, async (req, res) => {
@@ -30,7 +31,7 @@ router
     console.log("Primary User Regester GET Route is called!!");
     res.render('registeruser', {title: 'New User Register', countryCodes: helpers.countryCodes, countryList: countryList, defaultCountry: helpers.defaultCountry, maxDate: maxDate})
   })
-  .post(async (req, res) => {
+  .post(middlewareMethods.registerMiddleware, async (req, res) => {
     //code here for POST
     console.log("Regester POST route is called!!");
 
@@ -149,6 +150,8 @@ router
 
     });
 
+//Route for login - takes care of login of both primary and scout user along with authentication
+
 router
   .route('/login')
   .get(middlewareMethods.loginMiddleware, async (req, res) => {
@@ -156,7 +159,7 @@ router
     //console.log("GET Login Route is called");
     res.render('login', {title: 'Login'})
   })
-  .post(async (req, res) => {
+  .post(middlewareMethods.loginMiddleware, async (req, res) => {
     //code here for POST
     console.log("Post login is called");
 
@@ -259,7 +262,8 @@ router
   });
 
 
-  router.route('/profile').get(middlewareMethods.protectedMiddleware, async (req, res) =>{
+  //Route for profile - both primary and scout have access to this rout - takes care of authentication
+  router.route('/profile').get(middlewareMethods.commonMiddleware, async (req, res) =>{
     //code here for GET
   
 
@@ -277,7 +281,7 @@ router
     const maxDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`
 
     res.render('profile',{title: 'profile',user:user, countryCodes: helpers.countryCodes, countryList: countryList, isPrimary, maxDate: maxDate})
-  }).post(middlewareMethods.protectedMiddleware, async (req, res)=>{
+  }).post(middlewareMethods.commonMiddleware, async (req, res)=>{
 
     console.log("Post profile route is triggered!!");
         let user = req.session.user;
@@ -464,8 +468,8 @@ try {
   });
 
   
-
-router.route('/scoutuser').get(middlewareMethods.protectedMiddleware, async (req, res) => {
+ //Route for scout user - only scout user have access to this rout - takes care of authentication
+router.route('/scoutuser').get(middlewareMethods.scoutMiddleware, async (req, res) => {
   //code here for GET
   //console.log("Protected route is hit");
   let firstName = xss(req.session.user.firstName);
@@ -488,7 +492,7 @@ router.route('/scoutuser').get(middlewareMethods.protectedMiddleware, async (req
   }else{
     res.render('scoutuser', {title: 'scout user', reset: reset, isEmptyListings: isEmptyListings, listings: allListings, firstName: firstName, currentTime: new Date().toUTCString(), role: role})
   }
-}).post(async (req,res)=>{
+}).post(middlewareMethods.scoutMiddleware, async (req,res)=>{
   let firstName = xss(req.session.user.firstName);
   let role = xss(req.session.user.role);
   console.log("Search Listing post route is triggered");
@@ -513,7 +517,8 @@ router.route('/scoutuser').get(middlewareMethods.protectedMiddleware, async (req
   res.render('scoutuser', {title: 'scout user', reset: reset, isEmptyListings: isEmptyListings, listings: searchedListings, firstName: firstName, currentTime: new Date().toUTCString(), role: role})
 });
 
-router.route('/primaryuser').get(middlewareMethods.adminMiddleware, async (req, res) => {
+ //Route for primary user - only primary user have access to this rout - takes care of authentication
+router.route('/primaryuser').get(middlewareMethods.primaryMiddleware, async (req, res) => {
   //code here for GET
   console.log("Primary user route is hit");
   let firstName = xss(req.session.user.firstName);
@@ -521,11 +526,13 @@ router.route('/primaryuser').get(middlewareMethods.adminMiddleware, async (req, 
   res.render('primaryuser', {title: 'primary user', firstName: firstName, currentTime: new Date().toUTCString()})
 });
 
+//This is the route for displaying error
 router.route('/error').get(async (req, res) => {
   //code here for GET
   res.render('error', {title: 'error'})
 });
 
+//This is the route for logout
 router.route('/logout').get(middlewareMethods.logoutMiddleware, async (req, res) => {
   //code here for 
   let firstName = xss(req.session.user.firstName);
@@ -533,11 +540,12 @@ router.route('/logout').get(middlewareMethods.logoutMiddleware, async (req, res)
   res.render('logout', {title: 'logout', firstName: firstName});
 });
 
-router.route('/addlisting').get(async(req, res)=>{
+//This route will only be accssed by primary user - takes care of authentication
+router.route('/addlisting').get(middlewareMethods.primaryMiddleware, async(req, res)=>{
   console.log("Get Method of Add Listing route is triggered!");
   let countryList = helpers.countryCalculator(helpers.countryCodes)
   res.render('addListing', {title: 'Add Listings' ,countryCodes: helpers.countryCodes, countryList: countryList})
-}).post(async(req,res)=>{
+}).post(middlewareMethods.primaryMiddleware, async(req,res)=>{
   console.log("Post Method of Add Listing route is triggered!!");
   
   let listingName = xss(req.body.listingNameInput);
@@ -651,7 +659,8 @@ router.route('/addlisting').get(async(req, res)=>{
 
 });
 
-router.route('/viewprimarylistings').get(async (req, res) => {
+//This route will only be accssed by primary user - takes care of authentication
+router.route('/viewprimarylistings').get(middlewareMethods.primaryMiddleware, async (req, res) => {
   //code here for GET
 
 
@@ -666,8 +675,9 @@ router.route('/viewprimarylistings').get(async (req, res) => {
   
 });
 
+//This route will only be accessed by scout user - takes care of authentication
 //This route retrieves all the listings that is subscribed by the user that is in active state / active=true
-router.route('/viewactivesubscribes').get(async (req, res) => {
+router.route('/viewactivesubscribes').get(middlewareMethods.scoutMiddleware, async (req, res) => {
   //code here for GET
 
 
@@ -685,8 +695,9 @@ router.route('/viewactivesubscribes').get(async (req, res) => {
   
 });
 
+//This route will only be accessed by scout user - takes care of authentication
 //This route retrieves all the listings that is subscribed by the user that is in inactive state / active = false
-router.route('/viewScoutSubscribedListingHistory').get(async (req, res) => {
+router.route('/viewScoutSubscribedListingHistory').get(middlewareMethods.scoutMiddleware, async (req, res) => {
   //code here for GET
 
 
@@ -704,7 +715,7 @@ router.route('/viewScoutSubscribedListingHistory').get(async (req, res) => {
   
 });
 
-router.route('/getAllListings').get(async (req, res) => {
+router.route('/homepage').get(middlewareMethods.homepageAuthentication, async (req, res) => {
   //code here for GET
 
 
@@ -718,10 +729,10 @@ router.route('/getAllListings').get(async (req, res) => {
 
   let user = req.session.user
   if(!user){
-    return res.render('landingpage', {title: 'Homepage', isEmptyListings: isEmptyListings, listings: allListings})
+    return res.render('homepage', {title: 'Homepage', isEmptyListings: isEmptyListings, listings: allListings})
   }
   
-}).post(async (req,res)=>{
+}).post(middlewareMethods.homepageAuthentication, async (req,res)=>{
   console.log("Search Listing post route is triggered");
   let searchKey = xss(req.body.searchInput);
   console.log("Search Key -> ", searchKey);
@@ -734,7 +745,7 @@ router.route('/getAllListings').get(async (req, res) => {
 
   let user = req.session.user
   if(!user){
-    return res.render('landingpage', {title: 'Homepage', isEmptyListings: isEmptyListings, listings: searchedListings})
+    return res.render('homepage', {title: 'Homepage', isEmptyListings: isEmptyListings, listings: searchedListings})
   }
 });
 
@@ -1159,7 +1170,7 @@ router.route('/viewTask').get(async (req, res) => {
       comment.scoutID = comment.scoutID.toString();
       comment.isCurrentUser = comment.commenterId === comment.scoutID;
       comment.side = comment.isCurrentUser ? 'left' : 'right';
-      comment.scoutName = primaryName
+      comment.primaryName = primaryName
 
       comment.timestamp = helpers.formatDate(comment.timestamp);
 });

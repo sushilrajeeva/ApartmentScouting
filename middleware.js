@@ -7,7 +7,7 @@ const middlewareMethods = {
         
         if (!req.session.user) {
           
-          return res.redirect('/login');
+          return res.redirect('/homepage');
         } else {
           if (req.session.user.role.toLowerCase() === 'primary user') {
             return res.redirect('/primaryuser');
@@ -16,6 +16,19 @@ const middlewareMethods = {
           }
         }
         next();
+      },
+      homepageAuthentication: (req, res, next) => {
+        
+        if (!req.session.user) {
+          
+          next();
+        } else {
+          if (req.session.user.role.toLowerCase() === 'primary user') {
+            return res.redirect('/primaryuser');
+          } else if (req.session.user.role.toLowerCase() === 'scout user') {
+            return res.redirect('/scoutuser');
+          }
+        }
       },
 
       loginMiddleware: (req, res, next)=>{
@@ -43,7 +56,7 @@ const middlewareMethods = {
             }
         }
       },
-      protectedMiddleware: (req, res, next)=>{
+      commonMiddleware: (req, res, next)=>{
         if(!req.session.user){
             //hitting GET/login since user is not authenticated
             return res.redirect('/login');
@@ -52,11 +65,22 @@ const middlewareMethods = {
             next();
         }
       },
-      adminMiddleware: (req, res, next)=>{
+      
+      primaryMiddleware: (req, res, next)=>{
         if(!req.session.user){
             return res.redirect('/login');
         }else if(req.session.user.role.toLowerCase() !== 'primary user'){
-            let msg = `${req.session.user.firstName}, You do not have permission to view this page. only primary user can view this, your current role is of user`
+            let msg = `${req.session.user.firstName}, You do not have permission to view this page. only primary user can view this, your current role is scout user!`
+            return res.status(403).render('error', {title: "error", error: `<div id="error" class="error" > ${msg}</div>`});
+        }else{
+            next();
+        }
+      },
+      scoutMiddleware: (req, res, next)=>{
+        if(!req.session.user){
+            return res.redirect('/login');
+        }else if(req.session.user.role.toLowerCase() !== 'scout user'){
+            let msg = `${req.session.user.firstName}, You do not have permission to view this page. only scout user can view this, your current role is primary user`
             return res.status(403).render('error', {title: "error", error: `<div id="error" class="error" > ${msg}</div>`});
         }else{
             next();
