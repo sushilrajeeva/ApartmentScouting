@@ -150,3 +150,53 @@ function isValidComment(comment){
         throw `Comment text must be no more than ${maxLength} characters long`;
     }
   }
+
+
+
+  const initialInspectionBtn = document.querySelector('.initial-inspection-btn');
+const finishedTaskBtn = document.querySelector('.finished-task-btn');
+
+
+
+function updateProgressBar(value) {
+  const url = '/updateprogressbar';
+  const listingID = document.getElementById('listingIdInput').value;
+  const data = { 
+    value: value,
+    listingID: listingID
+  };
+  
+
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  }).then(response => {
+    if (response.ok) {
+      // i am doing this because i want the page to reload when the response is successful
+      window.location.reload();
+    } else {
+      
+      throw response;
+    }
+  })
+  .catch(error => {
+    console.error('Fetch request encountered an error:', error);
+  });
+}
+
+if (initialInspectionBtn) {
+  initialInspectionBtn.addEventListener('click', () => {
+    console.log("Value 50 will be selected!");
+    updateProgressBar(50);
+  });
+}
+
+if (finishedTaskBtn) {
+  finishedTaskBtn.addEventListener('click', () => {
+    console.log("Value 70 will be selected!");
+    updateProgressBar(70);
+  });
+}

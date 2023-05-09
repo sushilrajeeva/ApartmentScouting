@@ -52,6 +52,9 @@
         <p class="listing-owner">Owner Number: {{ownerNumber}}</p>
         <p class="listing-reward">Reward: {{reward}}</p>
         <p class="listing-scoutName">Subscribed Scout Name: {{scoutName}}</p>
+        <p class="listing-progress">Progress: {{progressbar}}%</p>
+        <progress value="{{progressbar}}" max="100" class="progressBar">
+        </progress>
         {{!-- this is so that my event listener can target this class --}}
         <button class="OpenListingButton">Open Listing</button>
       </div>

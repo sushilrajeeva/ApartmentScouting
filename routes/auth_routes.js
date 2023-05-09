@@ -1195,11 +1195,44 @@ router.route('/viewTask').get(middlewareMethods.scoutMiddleware, async (req, res
       comment.timestamp = helpers.formatDate(comment.timestamp);
 });
 
+
+    let progress = listing.progressbar;
+    let twentyFive = false;
+    let fifty = false;
+    let seventy = false;
+    let hundred = false
+    if(!progress || progress === "" || progress === 0){
+      twentyFive = false;
+      fifty = false;
+      seventy = false;
+      hundred = false
+    }else if(progress === 25){
+      twentyFive = true;
+      fifty = false;
+      seventy = false;
+      hundred = false
+
+    }else if(progress === 50){
+      twentyFive = false;
+      fifty = true;
+      seventy = false;
+      hundred = false
+    }else if(progress === 70){
+      twentyFive = false;
+      fifty = false;
+      seventy = true;
+      hundred = false
+    } else if(progress === 100){
+      twentyFive = false;
+      fifty = false;
+      seventy = false;
+      hundred = true
+    }
     
 
     console.log("wHAT IS MY COMMENT ARR -> ", commentsList);
 
-    return res.status(200).render('viewtask', {title: 'View Task', listing: listing, commentsList: commentsList})
+    return res.status(200).render('viewtask', {title: 'View Task', progress: listing.progressbar, listing: listing, commentsList: commentsList, twentyFive: twentyFive, fifty: fifty, seventy: seventy, hundred: hundred})
 
     
   } catch (error) {
@@ -1375,6 +1408,24 @@ router.route('/scoutComment').post(middlewareMethods.scoutMiddleware, async (req
 
 
 });
+
+//both scout and primary user have access to this route
+router.route('/updateprogressbar').post(middlewareMethods.commonMiddleware, async (req, res)=>{
+  console.log("update progresbar method is hit");
+
+  let progressValue = xss(req.body.value);
+  let listingID = xss(req.body.listingID);
+
+
+  console.log("Recieved progress value is : ", progressValue);
+  console.log("Recieved listingID is : ", listingID);
+
+  let newListing = await listings.updateProgress(listingID, progressValue)
+
+  
+  return res.status(200).json({message: 'successful'})
+
+})
 
 
 
