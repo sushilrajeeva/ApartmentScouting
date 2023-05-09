@@ -15,7 +15,7 @@ If the user is logged in , and 'GET /protected' endpoint is called, you will ren
       <a class="nav-link" href="/">Home</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="/viewactivesubscribes">Active Subscribed Listing</a>
+      <a class="nav-link" href="/viewactivesubscribes">Active Subscribed Listings</a>
     </li>
     <li class="nav-item">
       <a class="nav-link" href="/viewScoutSubscribedListingHistory">Subscribed Listing History</a>
@@ -31,7 +31,7 @@ If the user is logged in , and 'GET /protected' endpoint is called, you will ren
     </li>
   </ul>
 </nav>
-<br />
+<br>
 
 <div class="pageTitle">
     <p>
@@ -42,9 +42,9 @@ If the user is logged in , and 'GET /protected' endpoint is called, you will ren
   <label for="searchInput">Search: </label><br>
     <input class="search-bar" type="text" name="searchInput" id="searchInput" placeholder="Search by postal code | Address | City | State | Country">
     {{#if reset}}
-      <input type="submit" value="Reset" aria-label="Click here to Reset" ></input>
+      <input type="submit" value="Reset" aria-label="Click here to Reset" >
     {{else}}
-      <input type="submit" value="Search" aria-label="Click here to Search" ></input>
+      <input type="submit" value="Search" aria-label="Click here to Search" >
     {{/if}}
   </form>
 

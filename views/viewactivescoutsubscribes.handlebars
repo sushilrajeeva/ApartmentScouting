@@ -9,7 +9,7 @@
       <a class="nav-link" href="/">Home</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="/viewactivesubscribes">Active Subscribed Listing</a>
+      <a class="nav-link" href="/viewactivesubscribes">Active Subscribed Listings</a>
     </li>
     <li class="nav-item">
       <a class="nav-link" href="/viewScoutSubscribedListingHistory">Subscribed Listing History</a>
@@ -25,7 +25,7 @@
     </li>
   </ul>
 </nav>
-<br />
+<br>
 
 {{#if isEmptySubscribes}}
   <p>No Active Subscribed Scout listings found.</p>
@@ -33,7 +33,7 @@
   {{#each activeSubscribes}}
     <div class="listing-card">
       <div class="card-content" data-listing-id="{{_id}}">
-        <h3 class="listing-name">{{listingName}}</h3>
+        <h1 class="listing-name">{{listingName}}</h1>
         <p class="listing-link"><a href="{{listingLink}}" target="_blank">{{listingLink}}</a></p>
         <p class="listing-address"> Street: {{street}}</p>
         <p class="listing-city">City: {{city}}</p>

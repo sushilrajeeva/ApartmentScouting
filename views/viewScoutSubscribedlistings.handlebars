@@ -15,7 +15,7 @@
       <a class="nav-link" href="/viewprimarylistings">View Listings</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="/viewScoutSubscribedlistings">View Scout Subscribed Listings</a>
+      <a class="nav-link" href="/viewScoutSubscribedlistings">View Listings Subscribed By Scout</a>
     </li>
     <li class="nav-item">
       <a class="nav-link" href="/primaryWallet">My Wallet</a>
@@ -39,7 +39,7 @@
   {{!-- I am doing this because this will help me store my listings as a json object which i can then pass when my open listing button is clicked --}}
      <div class="listing-card" data-listings="{{jsonListings}}">
       <div class="card-content" data-listing-id="{{_id}}">
-        <h3 class="listing-name">{{listingName}}</h3>
+        <h1 class="listing-name">{{listingName}}</h1>
         <p class="listing-link"><a href="{{listingLink}}" target="_blank">{{listingLink}}</a></p>
         <p class="listing-address"> Street: {{street}}</p>
         <p class="listing-city">City: {{city}}</p>

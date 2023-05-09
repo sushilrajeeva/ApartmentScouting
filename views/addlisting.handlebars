@@ -15,17 +15,19 @@
       <a class="nav-link" href="/viewprimarylistings">View Listings</a>
     </li>
     <li class="nav-item">
+      <a class="nav-link" href="/viewScoutSubscribedlistings">View Listings Subscribed By Scout</a>
+    </li>
+    <li class="nav-item">
       <a class="nav-link" href="/primaryWallet">My Wallet</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="profile">Profile</a>
+      <a class="nav-link" href="/profile">Profile</a>
     </li>
     <li class="nav-item">
       <a class="nav-link" href="/logout">Logout</a>
     </li>
   </ul>
 </nav>
-<br>
 
 <div>
   {{{success}}}
@@ -67,7 +69,7 @@
       <input type="text" id="rentInput" name="rentInput" pattern="^\d*$" placeholder="Please enter the Listing Rent (Integer), If you don't know the rent just Enter 0"><br>
       
       <label for="additionalInfoInput">Additional Information <span class="mandatory">*</span>:</label>
-      <textarea id="additionalInfoInput" name="additionalInfoInput" rows="4" cols="50" maxlength="250" oninput="getCharCount()" pattern="^(?=.{2,250}$)(NA|.*)" placeholder="Please enter any relevant info you want to add. Enter NA if you don't have anything to add"></textarea>
+      <textarea id="additionalInfoInput" name="additionalInfoInput" rows="4" cols="50" maxlength="250" oninput="getCharCount()" placeholder="Please enter any relevant info you want to add. Enter NA if you don't have anything to add"></textarea>
       <p><span id="charCount">250</span> characters remaining</p>
 
       <label for="agentNumberInput">Agent Number <span class="mandatory">*</span>:</label><br>

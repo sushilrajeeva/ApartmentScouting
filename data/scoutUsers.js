@@ -426,7 +426,7 @@ export const subscribe = async (listingID, userID) =>{
   }
 };
 
-//Logic for getting scout user's active subscribed listings
+//Logic for getting scout user's Active Subscribed Listingss
 export const getScoutActiveSubscribedListings = async (userID) =>{
 
   console.log("getScoutActiveSubscribedListingIDs Data is triggered!");
