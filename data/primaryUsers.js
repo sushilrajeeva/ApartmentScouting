@@ -4,6 +4,7 @@ import {ObjectId} from 'mongodb';
 import { primaryUsers} from '../config/mongoCollections.js'
 import { listings } from '../config/mongoCollections.js';
 import { scoutUsers } from '../config/mongoCollections.js';
+import { messages } from '../config/mongoCollections.js';
 import helpers from '../helpers.js'
 
 import bcrypt from 'bcryptjs';
@@ -697,11 +698,17 @@ export const postComment = async (listingID, userID, scoutID, comment) =>{
   try {
 
 
+      listingID =  helpers.checkEmptyInputString(listingID, "ListingID");
+      userID = helpers.checkEmptyInputString(userID, "User ID");
+      scoutID = helpers.checkEmptyInputString(scoutID, "Scout ID");
+      comment = helpers.checkEmptyInputString(comment, "comment");
+
+      helpers.isValidComment(comment);
+
+
       helpers.isValidObjectID(listingID, "Listing ID");
       helpers.isValidObjectID(userID, "User ID");
       helpers.isValidObjectID(scoutID, "Scout ID");
-      
-      helpers.checkCreateUserInputs(comment, "Comment")
       
 
       let listingIDObj = new ObjectId(listingID);
@@ -714,8 +721,119 @@ export const postComment = async (listingID, userID, scoutID, comment) =>{
       const listing = await listingsCollection.findOne(getListingquery);
 
       if(!listing.messageID || listing.messageID === ""){
-        
+        listing.messageID = new ObjectId();
+        console.log("Am i even called???");
       }
+
+      const messageID = listing.messageID
+
+      console.log("Message ID -> ", messageID);
+
+      // Updating the listing with the messageID whose _id is ListingID
+      const updatedListing = await listingsCollection.updateOne(
+        { _id: listingIDObj },
+        { $set: { messageID: messageID } }
+      );
+
+      if (updatedListing.modifiedCount === 1) {
+        console.log("Listing updated successfully");
+      } else {
+        console.log("Failed to update listing");
+    }
+
+
+    // Checking if a message with _id: messageID exists in our collection
+    const messagesCollection = await messages();
+    const message = await messagesCollection.findOne({ _id: messageID });
+
+    if (message) {
+      // Message with _id: messageID exists
+      console.log("Message found:", message);
+
+
+    
+
+    // The new comment object to be added
+    const newComment = {
+      userID: userIDObj,
+      scoutID: scoutIDObj,
+      commenterId: userIDObj,
+      comment: comment,
+      timestamp: new Date()
+  };
+
+
+      // Updating the messages collection by adding the new comment object to the comments array in the comment collection of my mongo collection
+      const updatedMessage = await messagesCollection.findOneAndUpdate(
+        { _id: messageID },
+        { $push: { comments: newComment } },
+        { returnOriginal: false} // Return the updated document
+      );
+
+      if (updatedMessage && updatedMessage.value) {
+        let msgQuery = {_id: messageID}
+        const result = await messagesCollection.findOne(msgQuery);
+
+        result._id = result._id.toString();
+      
+        console.log("Message updated successfully with the new comment");
+        console.log("Let's check the updated message result - ", updatedMessage.value);
+      
+        return result;
+      } else {
+        console.log("Failed to update message");
+        throw `The comment you tried to post didn't not go through!!`;
+      }
+
+
+    } else {
+      // Message with _id: messageID doesn't exist
+      console.log("Message not present");
+
+      const messageData = {
+        _id: messageID,
+        listingID: listingIDObj,
+        comments: [
+          {
+            userID: userIDObj,
+            scoutID: scoutIDObj,
+            commenterId: userIDObj,
+            comment: comment,
+            timestamp: new Date()
+          }
+        ]
+      }
+
+
+      // Insert message data into the messages collection
+      const messagesCollection = await messages();
+      const insertedOutput = await messagesCollection.insertOne(messageData);
+
+      if (insertedOutput.insertedCount === 1) {
+        console.log("Message data inserted successfully");
+      } else {
+        console.log("Failed to insert message data");
+      }
+      
+      // Fetch the inserted message document
+      const insertedMessage = await messagesCollection.findOne({ _id: messageID });
+      
+      if (insertedMessage) {
+        insertedMessage._id = insertedMessage._id.toString();
+        return insertedMessage;
+        // Perform any additional actions or return the insertedMessage
+      } else {
+        console.log("Failed to fetch the inserted message");
+        // Handle the error or return an appropriate value
+      }
+
+    }
+
+
+    
+
+
+
 
 
   } catch (error) {
@@ -725,4 +843,4 @@ export const postComment = async (listingID, userID, scoutID, comment) =>{
 
 
 //confirm with TAs if this additional code is required since we are already exporting functions individually
-export default {createUser,checkUser,addListing, viewListings, getWalletBalance, getuser, updateListing, updateUser, addMoneyToWallet, viewScoutSubscribedlistings}
+export default {createUser,checkUser,addListing, viewListings, getWalletBalance, getuser, updateListing, updateUser, addMoneyToWallet, viewScoutSubscribedlistings, postComment}

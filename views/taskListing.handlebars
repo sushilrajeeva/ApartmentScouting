@@ -1,3 +1,35 @@
+<style>
+  .comments-container {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .comment-card {
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    width: 60%;
+    clear: both;
+    overflow: auto;
+  }
+
+  .left {
+    float: left;
+    background-color: #f1f1f1;
+  }
+
+  .right {
+    float: right;
+    background-color: #ddd;
+  }
+
+  .timestamp {
+    font-size: 0.8em;
+    color: #777;
+  }
+</style>
+
 <nav class="navbar">
   <div class="navbar-logo">
     <a href="#">
@@ -15,7 +47,7 @@
       <a class="nav-link" href="/viewprimarylistings">View Listings</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="/viewScoutSubscribedlistings">View Scout Subscribed Listings</a>
+      <a class="nav-link" href="/viewScoutSubscribedlistings">View Listings Subscribed By Scouts</a>
     </li>
     <li class="nav-item">
       <a class="nav-link" href="/primaryWallet">My Wallet</a>
@@ -53,6 +85,20 @@
 
 <div id="error" class="error" hidden></div>
     {{{error}}}
+
+
+<div class="comments-container">
+  {{#each commentsList}}
+    <div class="comment-card {{side}}">
+      <div class="message">
+        {{comment}}
+      </div>
+      <div class="timestamp">
+        {{timestamp}}
+      </div>
+    </div>
+  {{/each}}
+</div>
 
 
   <script src="/public/js/comment.js" ></script>

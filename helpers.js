@@ -292,7 +292,7 @@ const exportedMethods = {
 
       isValidObjectID(idString, type){
 
-        this.checkEmptyInputString(idString, type);
+        
 
         if (!ObjectId.isValid(idString)) {
             throw `The ${type} is not a valid ObjectID type`;
@@ -393,6 +393,12 @@ const exportedMethods = {
             throw `Comment text must be no more than ${maxLength} characters long`;
         }
       },
+      formatDate(timestamp) {
+        
+        const date = new Date(timestamp);
+        return date.toDateString() + ' ' + date.toTimeString().split(' ')[0];
+      },
+      
 //USED THIS REPO FOR COUNTRY CODE https://gist.githubusercontent.com/DmytroLisitsyn/1c31186e5b66f1d6c52da6b5c70b12ad/raw/2bc71083a77106afec2ec37cf49d05ee54be1a22/country_dial_info.json
 
 

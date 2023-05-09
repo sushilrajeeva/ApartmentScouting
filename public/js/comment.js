@@ -54,13 +54,6 @@ document.getElementById('commentForm').addEventListener('submit', function(event
             messengerType: messengerType
         })
         })
-        .then(response => response.json())
-        .then(data => {
-            console.log('Comment submitted:', data);
-        })
-        .catch(error => {
-            console.error('Error submitting comment:', error);
-        });
     } catch (error) {
         errorDiv.hidden = false;
         errorDiv.innerHTML = error;
