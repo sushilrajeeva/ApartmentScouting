@@ -788,7 +788,9 @@ router.route('/updateListing/:listingID').post(async (req, res) => {
   console.log("Update Listing post route is triggered");
 
   // let listingID = xss(req.body.listingIDInput);
-  let listingID = xss(req.params.listingID);
+  try {
+    
+    let listingID = xss(req.params.listingID);
   let listingName = xss(req.body.listingName);
   let listingLink = xss(req.body.listingLink);
   let street = xss(req.body.street);
@@ -893,7 +895,14 @@ router.route('/updateListing/:listingID').post(async (req, res) => {
 
 
   let countryList = helpers.countryCalculator(helpers.countryCodes)
-  return res.render('viewlistings', {title: 'Views Listings' ,countryCodes: helpers.countryCodes, countryList: countryList})
+  return res.status(200).render('viewlistings', {title: 'Views Listings' ,countryCodes: helpers.countryCodes, countryList: countryList, successMsg: successMsg})
+
+  } catch (error) {
+
+    let countryList = helpers.countryCalculator(helpers.countryCodes)
+    return res.status(404).render('viewlistings', {title: 'Views Listings' ,countryCodes: helpers.countryCodes, countryList: countryList, error: `<div id="error" class="error" > ${error}</div>`})
+    
+  }
   
 
 
