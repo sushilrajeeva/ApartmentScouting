@@ -789,18 +789,18 @@ router.route('/updateListing/:listingID').post(async (req, res) => {
 
   // let listingID = xss(req.body.listingIDInput);
   let listingID = xss(req.params.listingID);
-  let listingName = xss(req.body.listingNameInput);
-  let listingLink = xss(req.body.listingLinkInput);
-  let street = xss(req.body.streetInput);
-  let city = xss(req.body.cityInput);
-  let state = xss(req.body.stateInput);
-  let country = xss(req.body.countryInput);
-  let pincode = xss(req.body.pincodeInput);
+  let listingName = xss(req.body.listingName);
+  let listingLink = xss(req.body.listingLink);
+  let street = xss(req.body.street);
+  let city = xss(req.body.city);
+  let state = xss(req.body.state);
+  let country = xss(req.body.country);
+  let pincode = xss(req.body.pincode);
   let rent = xss(req.body.rentInput);
-  let additionalInfo = xss(req.body.additionalInfoInput);
-  let agentNumber = xss(req.body.agentNumberInput);
-  let ownerNumber = xss(req.body.ownerNumberInput);
-  let reward = xss(req.body.rewardInput);
+  let additionalInfo = xss(req.body.additionalInfo);
+  let agentNumber = xss(req.body.agentNumber);
+  let ownerNumber = xss(req.body.ownerNumber);
+  let reward = xss(req.body.reward);
 
   const inputData = {
     listingName: listingName,
