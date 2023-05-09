@@ -31,8 +31,8 @@
   <p>No Active Subscribed Scout listings found.</p>
 {{else}}
   {{#each activeSubscribes}}
-    <div class="listing-card">
-      <div class="card-content" data-listing-id="{{_id}}">
+    <form class="listing-card" data-listing-id="{{_id}}">
+      <div class="card-content">
         <h1 class="listing-name">{{listingName}}</h1>
         <p class="listing-link"><a href="{{listingLink}}" target="_blank">{{listingLink}}</a></p>
         <p class="listing-address"> Street: {{street}}</p>
@@ -46,7 +46,11 @@
         <p class="listing-owner">Owner Number: {{ownerNumber}}</p>
         <p class="listing-reward">Reward: {{reward}}</p>
       </div>
-    </div>
+      <button type="submit" class="viewTaskButton">View Task</button>
+    </form>
   {{/each}}
 {{/if}}
+
+
+<script src="/public/js/listings.js"></script>
 

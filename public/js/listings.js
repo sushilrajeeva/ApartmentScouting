@@ -75,19 +75,45 @@ document.querySelectorAll('.save-btn').forEach(saveBtn => {
 // });
 
 document.addEventListener('DOMContentLoaded', function() {
-  // Add an event listener for all buttons with the 'OpenListingButton' class
+  
   document.querySelectorAll('.OpenListingButton').forEach(function(button) {
     button.addEventListener('click', function(event) {
-      // Prevent the default action for the button click
+      
       event.preventDefault();
       
-      // Get the parent element with the 'card-content' class and extract the '_id' attribute
+      // Get the parent element with the 'card-content' class and extract the '_id' attribute so that i can get my listingID
       let listingId = event.target.closest('.card-content').getAttribute('data-listing-id');
       
-      // Navigate to the '/trackListing' route with the '_id' as a query parameter
+      // NavigatING to the '/trackListing' route with the '_id' as a query parameter
       window.location.href = `/trackListing?id=${listingId}`;
     });
   });
 });
+
+
+//for scout user view task from a listing
+
+document.addEventListener("DOMContentLoaded", () => {
+  const viewTaskButtons = document.querySelectorAll(".viewTaskButton");
+
+  console.log("View Task Button is working!!");
+
+  viewTaskButtons.forEach((button) => {
+    button.addEventListener("click", (event) => {
+      event.preventDefault();
+
+      // Get the parent element with the 'listing-card' class and extract the '_id' attribute so that i can get my listingID
+      let listingId = event.target.closest('.listing-card').getAttribute('data-listing-id');
+
+      // NavigatING to the '/viewTask' route with the listing ID as a query parameter
+      window.location.href = `/viewTask?listingId=${listingId}`;
+    });
+  });
+});
+
+
+
+
+
 
 

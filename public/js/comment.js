@@ -41,19 +41,70 @@ document.getElementById('commentForm').addEventListener('submit', function(event
 
         console.log("hmm", message);
 
-        fetch('/primaryComment', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ 
-            comment: comment,
-            listingId: listingId,
-            userId: userId,
-            scoutId: scoutId,
-            messengerType: messengerType
-        })
-        })
+        if(messengerType.toLowerCase().trim() === "primary"){
+            console.log("#############################");
+            fetch('/primaryComment', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                  comment: comment,
+                  listingId: listingId,
+                  userId: userId,
+                  scoutId: scoutId,
+                  messengerType: messengerType
+                })
+              })
+                .then((response) => {
+                  if (response.ok) {
+                    console.log("Response Ok is recieved for primary message!");
+                    //I will just reload if the response i got from my route is response.ok
+                    window.location.reload();
+                  } else {
+                    throw `Error posting primary message`;
+                  }
+                })
+                .catch((error) => {
+                  errorDiv.hidden = false;
+                  errorDiv.innerHTML = error;
+                  commentInput.focus();
+                  commentInput.className = "inputClass";
+                });
+              
+        }else{
+            console.log("#############################");
+            fetch('/scoutComment', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                  comment: comment,
+                  listingId: listingId,
+                  userId: userId,
+                  scoutId: scoutId,
+                  messengerType: messengerType
+                })
+              })
+                .then((response) => {
+                  if (response.ok) {
+                    console.log("Response Ok for scout message!");
+                    //I will just reload if the response is ok
+                    window.location.reload();
+                  } else {
+                    throw `Error posting scout message`;
+                  }
+                })
+                .catch((error) => {
+                  errorDiv.hidden = false;
+                  errorDiv.innerHTML = error;
+                  commentInput.focus();
+                  commentInput.className = "inputClass";
+                });
+              
+
+        }
     } catch (error) {
         errorDiv.hidden = false;
         errorDiv.innerHTML = error;

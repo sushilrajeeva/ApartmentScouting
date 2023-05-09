@@ -47,7 +47,7 @@
       <a class="nav-link" href="/viewprimarylistings">View Listings</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="/viewScoutSubscribedlistings">View Listings Subscribed By Scouts</a>
+      <a class="nav-link" href="/viewScoutSubscribedlistings">View Listings Subscribed By Scout</a>
     </li>
     <li class="nav-item">
       <a class="nav-link" href="/primaryWallet">My Wallet</a>
@@ -60,14 +60,13 @@
     </li>
   </ul>
 </nav>
-
 <br>
 
 <div class="listing-card">
   <form id="commentForm">
     <h3 class="listingName">{{listing.listingName}}</h3>
     <p class="listingLink"><a href="{{listing.listingLink}}" target="_blank">{{listing.listingLink}}</a></p>
-    <p class="scoutName">Scout Assigned: {{listing.scoutName}}</p>
+    <p class="scoutName">Listing created By: {{listing.primaryName}}</p>
 
     <label for="commentInput">Comments:</label>
     <textarea id="commentInput" name="commentInput" rows="4" cols="50" oninput="getCharCount()" pattern="^.{1,500}$" placeholder="Please enter your comment here"></textarea>
@@ -77,7 +76,7 @@
     <input type="hidden" id="listingIdInput" name="listingIdInput" value="{{listing._id}}">
     <input type="hidden" id="userIdInput" name="userIdInput" value="{{listing.userID}}">
     <input type="hidden" id="scoutIdInput" name="scoutIdInput" value="{{listing.scoutID}}">
-    <input type="hidden" id="messengerTypeInput" name="messengerTypeInput" value="primary">
+    <input type="hidden" id="messengerTypeInput" name="messengerTypeInput" value="scout">
 
     <button type="submit">Submit</button>
   </form>
@@ -99,6 +98,5 @@
     </div>
   {{/each}}
 </div>
-
 
   <script src="/public/js/comment.js" ></script>

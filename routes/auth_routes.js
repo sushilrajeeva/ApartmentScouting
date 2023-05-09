@@ -1120,9 +1120,141 @@ router.route('/trackListing').get(async (req, res) => {
   }
 });
 
+router.route('/viewTask').get(async (req, res) => {
+  console.log("View Task of subscriber route is triggered!!");
+
+  try {
+
+    console.log("iS THIS FINE!");
+    const listingID = xss(req.query.listingId);
+
+    console.log("Listing ID recieved  -> ", listingID);
+
+    let listing = await listings.getListing(listingID);
+
+
+    console.log("Listing is retrieved");
+    
+
+    let primaryNameDetails = await primaryUsers.getPrimaryNameDetails(listing.userID)
+    let primaryName = primaryNameDetails.name;
+    listing.primaryName = primaryName; 
+
+    console.log("Listing Data -> ", listing);
+
+    if(!listing.messageID || listing.messageID === ""){
+      return res.status(200).render('taskListing', {title: 'Task Listing', listing: listing})
+    }
+
+    console.log("Is my messageID -> ", listing.messageID);
+
+    let message = await messages.getMessageById(listing.messageID.toString());
+
+    let commentsList = message.comments;
+    commentsList.forEach(comment => {
+      comment.commenterId = comment.commenterId.toString();
+      comment.userID = comment.userID.toString();
+      comment.scoutID = comment.scoutID.toString();
+      comment.side = comment.commenterId === comment.scoutID ? 'left' : 'right';
+
+      
+      comment.timestamp = helpers.formatDate(comment.timestamp);
+    });
+
+    console.log("wHAT IS MY COMMENT ARR -> ", commentsList);
+
+    return res.status(200).render('viewtask', {title: 'View Task', listing: listing, commentsList: commentsList})
+
+    
+  } catch (error) {
+    
+  }
+
+});
+
 
 //primaryComment
 router.route('/primaryComment').post(async (req, res) => {
+  //code here for POST
+
+  try {
+
+    console.log("Post route of primary comment is called!!");
+
+    let comment = helpers.checkEmptyInputString(xss(req.body.comment));
+    let listingID = helpers.checkEmptyInputString(xss(req.body.listingId));
+    let userID = helpers.checkEmptyInputString(xss(req.body.userId));
+    let scoutID = helpers.checkEmptyInputString(xss(req.body.scoutId));
+    let messengerType = xss(req.body.messengerType);
+
+    console.log("comment:", comment);
+    console.log("listingId:", listingID);
+    console.log("userId:", userID);
+    console.log("scoutId:", scoutID);
+    console.log("messageType", messengerType);
+
+  
+
+    
+
+    if(!messengerType){
+      throw `Error! Your user Session has expired, please try logging!`;
+    }else if(!messengerType.trim()){
+      throw `Error! Your user Session has expired, please try logging!`;
+    }
+
+     helpers.isValidComment(comment)
+
+     console.log("It is a primary user comment");
+     let messageData = await primaryUsers.postComment(listingID, userID, scoutID, comment);
+     console.log("The comment messages are : ", messageData);
+
+     let commentsList = messageData.comments;
+
+     commentsList.forEach(comment => {
+      comment.commenterId = comment.commenterId.toString();
+      comment.userID = comment.userID.toString();
+      comment.scoutID = comment.scoutID.toString();
+      comment.side = comment.commenterId === comment.scoutID ? 'left' : 'right';
+
+      
+      comment.timestamp = helpers.formatDate(comment.timestamp);
+    });
+
+     let listing = await listings.getListing(listingID);
+
+   
+
+   let scoutNameDetails = await scoutUsers.getScoutNameDetails(listing.scoutID)
+   let scoutName = scoutNameDetails.name;
+   listing.scoutName = scoutName; 
+
+   console.log("Is all ok");
+   console.log(commentsList);
+
+     return res.status(200).render('taskListing', {title: 'Task Listing', listing: listing, commentsList: commentsList})
+
+
+    
+    
+
+
+
+
+
+
+
+  } catch (error) {
+    return res.status(404).json(error)
+  }
+
+  
+
+
+});
+
+//scoutComment
+router.route('/scoutComment').post(async (req, res) => {
   //code here for POST
 
   try {
@@ -1152,37 +1284,34 @@ router.route('/primaryComment').post(async (req, res) => {
 
      helpers.isValidComment(comment)
 
-    if(messengerType.toLowerCase().trim() === "primary"){
-      console.log("It is a primary user comment");
-      let messageData = await primaryUsers.postComment(listingID, userID, scoutID, comment);
-      console.log("The comment messages are : ", messageData);
+     console.log("It is a Scout user comment");
+     let messageData = await scoutUsers.postComment(listingID, userID, scoutID, comment);
+     console.log("The comment messages are : ", messageData);
 
-      let commentsList = messageData.comments;
+     let commentsList = messageData.comments;
 
-      commentsList.forEach(comment => {
-        comment.commenterId_str = comment.commenterId.toString();
-        comment.userID_str = comment.userID.toString();
-        comment.scoutID_str = comment.scoutID.toString();
-      });
+     commentsList.forEach(comment => {
+      comment.commenterId = comment.commenterId.toString();
+      comment.userID = comment.userID.toString();
+      comment.scoutID = comment.scoutID.toString();
+      comment.side = comment.commenterId === comment.scoutID ? 'left' : 'right';
 
-      let listing = await listings.getListing(listingID);
+      
+      comment.timestamp = helpers.formatDate(comment.timestamp);
+    });
 
-    
+     let listing = await listings.getListing(listingID);
 
-    let scoutNameDetails = await scoutUsers.getScoutNameDetails(listing.scoutID)
-    let scoutName = scoutNameDetails.name;
-    listing.scoutName = scoutName; 
+   
 
-    console.log("Is all ok");
-    console.log(commentsList);
+   let primaryNameDetails = await primaryUsers.getPrimaryNameDetails(listing.userID)
+   let primaryName = primaryNameDetails.name;
+    listing.primaryName = primaryName; 
 
-      return res.status(200).render('taskListing', {title: 'Task Listing', listing: listing, commentsList: commentsList})
+   console.log("Is all ok");
+   console.log(commentsList);
 
-      return res.status(200).json(messageData);
-
-    }else{
-      console.log("It is a scout user comment");
-    }
+     return res.status(200).render('viewtask', {title: 'Task Listing', listing: listing, commentsList: commentsList})
 
 
     
@@ -1195,13 +1324,17 @@ router.route('/primaryComment').post(async (req, res) => {
 
 
   } catch (error) {
-    throw error;
+    return res.status(404).json(error)
   }
 
   
 
 
 });
+
+
+
+
 
 
 

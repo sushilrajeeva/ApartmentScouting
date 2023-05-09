@@ -842,5 +842,54 @@ export const postComment = async (listingID, userID, scoutID, comment) =>{
 };
 
 
+//This function retrieves the scout collection based on the scoutID provided
+export const getPrimaryDetails = async (userID) =>{
+
+  
+
+  console.log(" getPrimaryDetails Data is triggered!");
+  try {
+  
+    helpers.isValidObjectID(userID, "User ID");
+  
+    let userIDObj = new ObjectId(userID);
+  
+    console.log("User ID -> ", userIDObj.toString());
+  
+    const usersCollection = await primaryUsers();
+    const user = await usersCollection.findOne({ _id: userIDObj });
+  
+    if(!user){
+        throw `Your Session has expired! Please try logging in again!!`
+    }
+  
+    user._id = user._id.toString();
+  
+    return user;
+  
+  } catch (error) {
+    throw error;
+  }
+  }
+  
+  export const getPrimaryNameDetails = async (userID) =>{
+  
+    
+  
+    console.log(" getPrimaryNameDetails Data is triggered!");
+    try {
+    
+      let user = await getPrimaryDetails(userID);
+    
+      let name = `${user.firstName} ${user.middleName} ${user.lastName}`;
+      return {name: name, user: user};
+    
+    } catch (error) {
+      throw error;
+    }
+    }
+  
+
+
 //confirm with TAs if this additional code is required since we are already exporting functions individually
-export default {createUser,checkUser,addListing, viewListings, getWalletBalance, getuser, updateListing, updateUser, addMoneyToWallet, viewScoutSubscribedlistings, postComment}
+export default {createUser,checkUser,addListing, viewListings, getWalletBalance, getuser, updateListing, updateUser, addMoneyToWallet, viewScoutSubscribedlistings, postComment, getPrimaryDetails, getPrimaryNameDetails}
