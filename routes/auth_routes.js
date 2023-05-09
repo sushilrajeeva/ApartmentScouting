@@ -8,6 +8,7 @@ import helpers from '../helpers.js';
 import primaryUsers from '../data/primaryUsers.js';
 import scoutUsers from '../data/scoutUsers.js';
 import listings from '../data/listings.js';
+import messages from '../data/messages.js';
 import xss from 'xss';
 
 //refered https://www.youtube.com/watch?v=TDe7DRYK8vU this youtube video for passing the middlewear [timestamp - 26:30 ish ]
@@ -272,7 +273,10 @@ router
       isPrimary = false;
     }
 
-    res.render('profile',{title: 'profile',user:user, countryCodes: helpers.countryCodes, countryList: countryList, isPrimary})
+    const today = new Date();
+    const maxDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`
+
+    res.render('profile',{title: 'profile',user:user, countryCodes: helpers.countryCodes, countryList: countryList, isPrimary, maxDate: maxDate})
   }).post(middlewareMethods.protectedMiddleware, async (req, res)=>{
 
     console.log("Post profile route is triggered!!");
@@ -1065,6 +1069,7 @@ router.route('/trackListing').get(async (req, res) => {
 
     let listing = await listings.getListing(listingID);
 
+
     
 
     let scoutNameDetails = await scoutUsers.getScoutNameDetails(listing.scoutID)
@@ -1073,7 +1078,31 @@ router.route('/trackListing').get(async (req, res) => {
 
     console.log("Listing Data -> ", listing);
 
-    res.status(200).render('taskListing', {title: 'Task Listing', listing: listing})
+    if(!listing.messageID || listing.messageID === ""){
+      return res.status(200).render('taskListing', {title: 'Task Listing', listing: listing})
+    }
+
+    console.log("Is my messageID -> ", listing.messageID);
+
+    let message = await messages.getMessageById(listing.messageID.toString());
+
+    console.log("HMM THIS SHOULD RENDER");
+    let commentsList = message.comments;
+    commentsList.forEach(comment => {
+      comment.commenterId = comment.commenterId.toString();
+      comment.userID = comment.userID.toString();
+      comment.scoutID = comment.scoutID.toString();
+      comment.side = comment.commenterId === comment.userID ? 'left' : 'right';
+
+      
+      comment.timestamp = helpers.formatDate(comment.timestamp);
+    });
+
+    console.log("wHAT IS MY COMMENT ARR -> ", commentsList);
+
+    return res.status(200).render('taskListing', {title: 'Task Listing', listing: listing, commentsList: commentsList})
+
+    
 
     // Do something with the listingId
 
@@ -1112,15 +1141,45 @@ router.route('/primaryComment').post(async (req, res) => {
       throw `Error! Your user Session has expired, please try logging!`;
     }
 
-    isValidComment(comment);
+     helpers.isValidComment(comment)
 
     if(messengerType.toLowerCase().trim() === "primary"){
       console.log("It is a primary user comment");
+      let messageData = await primaryUsers.postComment(listingID, userID, scoutID, comment);
+      console.log("The comment messages are : ", messageData);
+
+      let commentsList = messageData.comments;
+
+      commentsList.forEach(comment => {
+        comment.commenterId_str = comment.commenterId.toString();
+        comment.userID_str = comment.userID.toString();
+        comment.scoutID_str = comment.scoutID.toString();
+      });
+
+      let listing = await listings.getListing(listingID);
+
+    
+
+    let scoutNameDetails = await scoutUsers.getScoutNameDetails(listing.scoutID)
+    let scoutName = scoutNameDetails.name;
+    listing.scoutName = scoutName; 
+
+    console.log("Is all ok");
+    console.log(commentsList);
+
+      return res.status.render('taskListing', {title: 'Task Listing', listing: listing, commentsList: commentsList})
+
+      return res.status(200).json(messageData);
+
     }else{
       console.log("It is a scout user comment");
     }
 
+
     
+    
+
+
 
 
 
