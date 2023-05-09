@@ -1167,7 +1167,7 @@ router.route('/primaryComment').post(async (req, res) => {
     console.log("Is all ok");
     console.log(commentsList);
 
-      return res.status.render('taskListing', {title: 'Task Listing', listing: listing, commentsList: commentsList})
+      return res.status(200).render('taskListing', {title: 'Task Listing', listing: listing, commentsList: commentsList})
 
       return res.status(200).json(messageData);
 
