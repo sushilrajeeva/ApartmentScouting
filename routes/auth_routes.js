@@ -1082,7 +1082,7 @@ router.route('/trackListing').get(async (req, res) => {
     
 
     let scoutNameDetails = await scoutUsers.getScoutNameDetails(listing.scoutID)
-    let scoutName = scoutNameDetails.name;
+    const scoutName = scoutNameDetails.name;
     listing.scoutName = scoutName; 
 
     console.log("Listing Data -> ", listing);
@@ -1101,11 +1101,13 @@ router.route('/trackListing').get(async (req, res) => {
       comment.commenterId = comment.commenterId.toString();
       comment.userID = comment.userID.toString();
       comment.scoutID = comment.scoutID.toString();
-      comment.side = comment.commenterId === comment.userID ? 'left' : 'right';
+      comment.isCurrentUser = comment.commenterId === comment.userID;
+      comment.side = comment.isCurrentUser ? 'left' : 'right';
+      comment.scoutName = scoutName
 
-      
       comment.timestamp = helpers.formatDate(comment.timestamp);
-    });
+});
+
 
     console.log("wHAT IS MY COMMENT ARR -> ", commentsList);
 
@@ -1137,7 +1139,7 @@ router.route('/viewTask').get(async (req, res) => {
     
 
     let primaryNameDetails = await primaryUsers.getPrimaryNameDetails(listing.userID)
-    let primaryName = primaryNameDetails.name;
+    const primaryName = primaryNameDetails.name;
     listing.primaryName = primaryName; 
 
     console.log("Listing Data -> ", listing);
@@ -1155,11 +1157,14 @@ router.route('/viewTask').get(async (req, res) => {
       comment.commenterId = comment.commenterId.toString();
       comment.userID = comment.userID.toString();
       comment.scoutID = comment.scoutID.toString();
-      comment.side = comment.commenterId === comment.scoutID ? 'left' : 'right';
+      comment.isCurrentUser = comment.commenterId === comment.scoutID;
+      comment.side = comment.isCurrentUser ? 'left' : 'right';
+      comment.scoutName = primaryName
 
-      
       comment.timestamp = helpers.formatDate(comment.timestamp);
-    });
+});
+
+    
 
     console.log("wHAT IS MY COMMENT ARR -> ", commentsList);
 
@@ -1210,24 +1215,27 @@ router.route('/primaryComment').post(async (req, res) => {
      console.log("The comment messages are : ", messageData);
 
      let commentsList = messageData.comments;
-
-     commentsList.forEach(comment => {
-      comment.commenterId = comment.commenterId.toString();
-      comment.userID = comment.userID.toString();
-      comment.scoutID = comment.scoutID.toString();
-      comment.side = comment.commenterId === comment.scoutID ? 'left' : 'right';
-
-      
-      comment.timestamp = helpers.formatDate(comment.timestamp);
-    });
+     
+    
 
      let listing = await listings.getListing(listingID);
 
    
 
    let scoutNameDetails = await scoutUsers.getScoutNameDetails(listing.scoutID)
-   let scoutName = scoutNameDetails.name;
+   const scoutName = scoutNameDetails.name;
    listing.scoutName = scoutName; 
+
+   commentsList.forEach(comment => {
+    comment.commenterId = comment.commenterId.toString();
+    comment.userID = comment.userID.toString();
+    comment.scoutID = comment.scoutID.toString();
+    comment.isCurrentUser = comment.commenterId === comment.userID;
+    comment.side = comment.isCurrentUser ? 'left' : 'right';
+    comment.scoutName = scoutName
+
+    comment.timestamp = helpers.formatDate(comment.timestamp);
+});
 
    console.log("Is all ok");
    console.log(commentsList);
@@ -1290,23 +1298,26 @@ router.route('/scoutComment').post(async (req, res) => {
 
      let commentsList = messageData.comments;
 
-     commentsList.forEach(comment => {
-      comment.commenterId = comment.commenterId.toString();
-      comment.userID = comment.userID.toString();
-      comment.scoutID = comment.scoutID.toString();
-      comment.side = comment.commenterId === comment.scoutID ? 'left' : 'right';
-
-      
-      comment.timestamp = helpers.formatDate(comment.timestamp);
-    });
+     
 
      let listing = await listings.getListing(listingID);
 
    
 
    let primaryNameDetails = await primaryUsers.getPrimaryNameDetails(listing.userID)
-   let primaryName = primaryNameDetails.name;
+   const primaryName = primaryNameDetails.name;
     listing.primaryName = primaryName; 
+
+    commentsList.forEach(comment => {
+      comment.commenterId = comment.commenterId.toString();
+      comment.userID = comment.userID.toString();
+      comment.scoutID = comment.scoutID.toString();
+      comment.isCurrentUser = comment.commenterId === comment.scoutID;
+      comment.side = comment.isCurrentUser ? 'left' : 'right';
+      comment.scoutName = primaryName
+
+      comment.timestamp = helpers.formatDate(comment.timestamp);
+});
 
    console.log("Is all ok");
    console.log(commentsList);

@@ -1,4 +1,11 @@
 <style>
+
+    .commenter-name {
+  font-weight: bold;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
   .comments-container {
     width: 100%;
     max-width: 600px;
@@ -90,6 +97,13 @@
 <div class="comments-container">
   {{#each commentsList}}
     <div class="comment-card {{side}}">
+      <div class="commenter-name">
+        {{#if isCurrentUser}}
+          You
+        {{else}}
+          {{scoutName}}
+        {{/if}}
+      </div>
       <div class="message">
         {{comment}}
       </div>
@@ -99,6 +113,7 @@
     </div>
   {{/each}}
 </div>
+
 
 
   <script src="/public/js/comment.js" ></script>
