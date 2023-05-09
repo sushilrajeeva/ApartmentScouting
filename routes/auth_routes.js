@@ -252,7 +252,7 @@ router
 
     } catch (error) {
       //console.log("Login Error Caught: ", error);
-      return res.status(400).render('login', {title: 'login', error: `<div id="error" class="error" > ${error}</div>`})
+      return res.status(400).render('login', {title: 'login', error: `<div id="error" class="error" > ${error}</div>`, email: emailAddress, userType: userType})
       //res.status(400).json({error: error})
     }
 
@@ -817,7 +817,7 @@ router.route('/updateListing/:listingID').post(middlewareMethods.primaryMiddlewa
   let state = xss(req.body.state);
   let country = xss(req.body.country);
   let pincode = xss(req.body.pincode);
-  let rent = xss(req.body.rentInput);
+  let rent = xss(req.body.rent);
   let additionalInfo = xss(req.body.additionalInfo);
   let agentNumber = xss(req.body.agentNumber);
   let ownerNumber = xss(req.body.ownerNumber);
@@ -1098,7 +1098,7 @@ router.route('/viewScoutSubscribedlistings').get(middlewareMethods.primaryMiddle
 });
 
 //This route is for primary users only! This function retrieves additional info of the listing and allows users to post comments and chat
-router.route('/trackListing').get(middlewareMethods.primaryMiddleware, async (req, res) => {
+router.route('/trackListing').get( async (req, res) => {
   console.log("Get Method of trackingListing route is triggered!!");
 
   try {
@@ -1138,10 +1138,53 @@ router.route('/trackListing').get(middlewareMethods.primaryMiddleware, async (re
       comment.timestamp = helpers.formatDate(comment.timestamp);
 });
 
+  let progress = listing.progressbar;
+  let twentyFive = false;
+  let fifty = false;
+  let seventy = false;
+  let hundred = false
+  if(!progress || progress === "" || progress === 0){
+    twentyFive = false;
+    fifty = false;
+    seventy = false;
+    hundred = false
+  }else if(progress === 25){
+    twentyFive = true;
+    fifty = false;
+    seventy = false;
+    hundred = false
+
+  }else if(progress === 50){
+    twentyFive = false;
+    fifty = true;
+    seventy = false;
+    hundred = false
+  }else if(progress === 70){
+    twentyFive = false;
+    fifty = false;
+    seventy = true;
+    hundred = false
+  } else if(progress === 100){
+    twentyFive = false;
+    fifty = false;
+    seventy = false;
+    hundred = true
+}
+
+let userID = xss(req.session.user._id);
+
+  let balance = await primaryUsers.getWalletBalance(userID);
+  let reward = parseInt(listing.reward, 10);
+
+  let hasMoney = true;
+  if(balance<reward){
+    hasMoney = false;
+  }
+
 
     console.log("wHAT IS MY COMMENT ARR -> ", commentsList);
 
-    return res.status(200).render('taskListing', {title: 'Task Listing', listing: listing, commentsList: commentsList})
+    return res.status(200).render('taskListing', {title: 'Task Listing', listing: listing, commentsList: commentsList, twentyFive: twentyFive, fifty: fifty, seventy: seventy, hundred: hundred, hasMoney: hasMoney})
 
     
 
@@ -1244,7 +1287,7 @@ router.route('/viewTask').get(middlewareMethods.scoutMiddleware, async (req, res
 
 //primaryComment route is used to post comments by primary user on a perticular listing
 //This route will only be accessible to primary user
-router.route('/primaryComment').post(middlewareMethods.scoutMiddleware, async (req, res) => {
+router.route('/primaryComment').post( async (req, res) => {
   //code here for POST
 
   try {
@@ -1328,7 +1371,7 @@ router.route('/primaryComment').post(middlewareMethods.scoutMiddleware, async (r
 
 //scoutComment route is used to post comments by scout user on a perticular listing that they have subscribed to
 //This route will only be accessible to scout users
-router.route('/scoutComment').post(middlewareMethods.scoutMiddleware, async (req, res) => {
+router.route('/scoutComment').post( async (req, res) => {
   //code here for POST
 
   try {
@@ -1413,12 +1456,31 @@ router.route('/scoutComment').post(middlewareMethods.scoutMiddleware, async (req
 router.route('/updateprogressbar').post(middlewareMethods.commonMiddleware, async (req, res)=>{
   console.log("update progresbar method is hit");
 
-  let progressValue = xss(req.body.value);
-  let listingID = xss(req.body.listingID);
+  const progressValue = xss(req.body.value);
+  const listingID = xss(req.body.listingID);
+  const userID =xss(req.session.user._id)
 
 
   console.log("Recieved progress value is : ", progressValue);
   console.log("Recieved listingID is : ", listingID);
+
+  let listing = await listings.getListing(listingID);
+  const scoutID = listing.scoutID;
+  const reward = parseInt(listing.reward,10);
+
+  const userBalance = await primaryUsers.getWalletBalance(userID);
+
+  
+
+  if(parseInt(progressValue,10)===100){
+    if(userBalance<reward){
+      throw `You don't have enough funds in your account to Pay the scout user`
+    }
+    console.log("Primary User has closed the listing");
+    let updatedScout = await scoutUsers.listingFinished(listingID, scoutID)
+    let scoutWalletUpdate = await scoutUsers.addReward(scoutID, reward)
+    let primaryWalletUpdate = await primaryUsers.subtractRewardMoney(userID, reward)
+  }
 
   let newListing = await listings.updateProgress(listingID, progressValue)
 

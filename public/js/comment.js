@@ -155,6 +155,7 @@ function isValidComment(comment){
 
   const initialInspectionBtn = document.querySelector('.initial-inspection-btn');
 const finishedTaskBtn = document.querySelector('.finished-task-btn');
+const approvedTaskBtn = document.querySelector('.approve-task-btn');
 
 
 
@@ -198,5 +199,13 @@ if (finishedTaskBtn) {
   finishedTaskBtn.addEventListener('click', () => {
     console.log("Value 70 will be selected!");
     updateProgressBar(70);
+  });
+}
+
+if (approvedTaskBtn) {
+  console.log("Approve button click is triggered");
+  approvedTaskBtn.addEventListener('click', () => {
+    console.log("Value 100 will be selected!");
+    updateProgressBar(100);
   });
 }

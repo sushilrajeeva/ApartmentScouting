@@ -335,6 +335,84 @@ export const getAllListings = async (scoutID = null) => {
     }
 };
 
+export const listingFinished = async (listingID, userID) =>{
+
+  console.log("listingFinished Data is triggered!");
+  try {
+
+    helpers.isValidObjectID(listingID, "Listing ID");
+
+    const listingIDObj = new ObjectId(listingID)
+
+    helpers.isValidObjectID(userID, "User ID");
+
+        const userIDObj = new ObjectId(userID);
+
+        const usersCollection = await scoutUsers();
+
+        const filter = {
+          _id: userIDObj,
+          'subscribedlistings.listingID': listingIDObj
+        };
+        
+        const update = {
+          $set: {
+            'subscribedlistings.$.active': false
+          }
+        };
+        
+        const options = { returnOriginal: false };
+        
+        const result = await usersCollection.findOneAndUpdate(filter, update, options);
+        
+        // The updated user document will be in 'result.value'
+        const updatedUser = result.value;
+
+      
+
+  } catch (error) {
+      throw error;
+  }
+};
+
+export const addReward = async (scoutID, reward) => {
+  console.log("addReward Data is triggered!");
+
+  try {
+    helpers.isValidObjectID(scoutID, "Scout ID");
+
+    const scoutIDObj = new ObjectId(scoutID);
+    const usersCollection = await scoutUsers();
+
+    const user = await usersCollection.findOne({ _id: scoutIDObj });
+
+    // Converting the wallet balance from a string to a number and adding the reward
+    const updatedWalletBalance = parseInt(user.wallet,10) + parseInt(reward,10);
+
+    
+    const result = await usersCollection.updateOne(
+      { _id: scoutIDObj },
+      {
+        $set: {
+          wallet: updatedWalletBalance,
+        },
+      }
+    );
+
+    // to Check if the update was successful
+    if (result.modifiedCount === 0) {
+      throw 'Failed to update the wallet balance';
+    }
+
+    return {
+      modifiedCount: result.modifiedCount,
+      newWalletBalance: updatedWalletBalance,
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const getWalletBalance = async (userID) =>{
 
   //Added wallet functionality. This functionality allows primary user to fetch his/her wallet balance
@@ -766,4 +844,4 @@ export const getScoutNameDetails = async (userID) =>{
 
 
 //confirm with TAs if this additional code is required since we are already exporting functions individually
-export default {createUser,checkUser,getAllListings,searchListings, viewListings, getWalletBalance, subscribe, getScoutActiveSubscribedListings, getScoutSubscribedListingsHistory,updateUser, getScoutDetails, getScoutNameDetails, postComment}
+export default {createUser,checkUser,getAllListings,searchListings, viewListings, getWalletBalance, subscribe, getScoutActiveSubscribedListings, getScoutSubscribedListingsHistory,updateUser, getScoutDetails, getScoutNameDetails, postComment, listingFinished, addReward}

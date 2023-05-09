@@ -887,9 +887,50 @@ export const getPrimaryDetails = async (userID) =>{
     } catch (error) {
       throw error;
     }
+    };
+
+
+    export const subtractRewardMoney = async (userID, reward) => {
+      console.log("subtractRewardMoney Data is triggered!");
+    
+      try {
+        helpers.isValidObjectID(userID, "Primary User ID");
+    
+        const userIDObj = new ObjectId(userID);
+        const usersCollection = await primaryUsers();
+    
+        const user = await usersCollection.findOne({ _id: userIDObj });
+    
+        // Converting the wallet balance from a string to a number and adding the reward
+        const updatedWalletBalance = parseInt(user.wallet,10) - parseInt(reward,10);
+    
+        
+        const result = await usersCollection.updateOne(
+          { _id: userIDObj },
+          {
+            $set: {
+              wallet: updatedWalletBalance,
+            },
+          }
+        );
+    
+        // to Check if the update was successful
+        // to Check if the update was successful
+    if (result.modifiedCount === 0) {
+      throw new Error('Failed to update the wallet balance');
     }
+
+    return {
+      modifiedCount: result.modifiedCount,
+      newWalletBalance: updatedWalletBalance,
+    };
+    
+      } catch (error) {
+        throw error;
+      }
+    };
   
 
 
 //confirm with TAs if this additional code is required since we are already exporting functions individually
-export default {createUser,checkUser,addListing, viewListings, getWalletBalance, getuser, updateListing, updateUser, addMoneyToWallet, viewScoutSubscribedlistings, postComment, getPrimaryDetails, getPrimaryNameDetails}
+export default {createUser,checkUser,addListing, viewListings, getWalletBalance, getuser, updateListing, updateUser, addMoneyToWallet, viewScoutSubscribedlistings, postComment, getPrimaryDetails, getPrimaryNameDetails, subtractRewardMoney}
