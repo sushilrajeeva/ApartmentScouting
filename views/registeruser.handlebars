@@ -4,6 +4,26 @@ registration handelbars
 
 --}}
 
+<nav class="navbar">
+  <div class="navbar-logo">
+    <a href="#">
+      <img src="/public/image/unnamed.png" alt="Logo">
+    </a>
+  </div>
+  <ul class="navbar-nav">
+    <li class="nav-item">
+      <a class="nav-link" href="/homepage">Home</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/registeruser">Register User</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/login">Login</a>
+    </li>
+  </ul>
+  
+</nav>
+
 <div class="pageTitle">
     <p>
         {{title}}
@@ -73,7 +93,7 @@ registration handelbars
         <label for="datastoragepermissionInput">I agree to allow my data to be stored according to US laws.</label><br>
         <span id="datastoragepermissionDesc" class="visually-hidden">By checking this box, you agree to our privacy policy and terms of service.</span><br>
 
-        <input type="submit" value="Submit" aria-label="Submit To Register">
+        <input type="submit" value="Register" aria-label="Submit To Register">
         <p>
            If you already have an account, Please click here to <a href="/login">login</a>
         </p>

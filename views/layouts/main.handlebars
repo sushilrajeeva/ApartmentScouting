@@ -16,9 +16,12 @@ don't forget to include your css and your client-side script file references in 
             {{{body}}}
         </main>
         <footer>
-            <p>&copy; 2023 Apartment Scout Application</p>
-            <p>All Rights Reserved</p>
+            <p>&copy; <span id="currentYear"></span> Apartment Scout. All Rights Reserved.</p>
         </footer>
+
+        <script>
+            document.getElementById('currentYear').innerText = new Date().getFullYear();
+        </script>
     </body>
 </html>
 

@@ -182,7 +182,7 @@ footer {
 }
 
 .listing-card {
-  width: 300px;
+  width: 90%;
   background-color: #f3f3f3;
   padding: 16px;
   margin: 16px;
@@ -327,6 +327,10 @@ input[type="checkbox"]:required:invalid + label {
 label {
   display: block;
   margin-bottom: 5px;
+}
+
+textarea{
+  width: 100%;
 }
 
 .centered-container {
