@@ -30,6 +30,7 @@ router
     let countryList = helpers.countryCalculator(helpers.countryCodes)
     console.log("Primary User Regester GET Route is called!!");
     res.render('registeruser', {title: 'New User Register', countryCodes: helpers.countryCodes, countryList: countryList, defaultCountry: helpers.defaultCountry, maxDate: maxDate})
+    
   })
   .post(middlewareMethods.registerMiddleware, async (req, res) => {
     //code here for POST
@@ -51,7 +52,7 @@ router
     let confirmPassword = xss(req.body.confirmPasswordInput);
     let userType = xss(req.body.userTypeInput);
 
-    console.log("ola");
+   
 
     console.log({firstName: firstName, middleName: middleName, lastName: lastName, emailAddress: emailAddress, countryCode: countryCode, phoneNumber: phoneNumber, city: city, state: state, country: country, dob: dob, password: password, confirmPassword: confirmPassword, userType: userType});
             
@@ -138,9 +139,36 @@ router
 
       
     } catch (error) {
+      const today = new Date();
+      const maxDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`
+  
+      let countryList = helpers.countryCalculator(helpers.countryCodes)
       console.log("Error caugth");
       console.log(error);
-      res.status(400).render('registeruser',{title: 'register', error: `<div id="error" class="error" > ${error}</div>`});
+      //res.status(400).render('registeruser',{title: 'register', error: `<div id="error" class="error" > ${error}</div>`});
+      res.status(400).render(
+        'registeruser',
+        {
+          title: 'register',
+          error: `<div id="error" class="error" > ${error}</div>`,
+          countryCodes: helpers.countryCodes, 
+          countryList: countryList, 
+          defaultCountry: helpers.defaultCountry, 
+          maxDate: maxDate,
+          user: {
+            firstName: firstName,
+            middleName: middleName,
+            lastName: lastName,
+            emailAddress: emailAddress,
+            countryCode: countryCode,
+            phoneNumber: phoneNumber,
+            city: city,
+            state: state,
+            country: country,
+            dob: dob,
+            userType: userType
+          },
+        });
     }
 
     //console.log({firstName: firstName, lastName: lastName, emailAddress, emailAddress, password: password, confirmPassword: confirmPassword, role: role});
@@ -280,7 +308,7 @@ router
     const today = new Date();
     const maxDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`
 
-    res.render('profile',{title: 'profile',user:user, countryCodes: helpers.countryCodes, countryList: countryList, isPrimary, maxDate: maxDate})
+    res.render('profile',{title: 'profile',user:user, countryCodes: helpers.countryCodes, countryList: countryList, isPrimary: isPrimary, maxDate: maxDate})
   }).post(middlewareMethods.commonMiddleware, async (req, res)=>{
 
     console.log("Post profile route is triggered!!");
@@ -463,7 +491,7 @@ try {
       console.log(error);
         let countryList = helpers.countryCalculator(helpers.countryCodes)
       // res.render('profile',{title: 'profile',user:user, countryCodes: helpers.countryCodes, countryList: countryList})
-      res.status(400).render('profile',{title: 'profile',user:user, countryCodes: helpers.countryCodes, countryList: countryList, error: error});
+      res.status(400).render('profile',{title: 'profile',user:user, countryCodes: helpers.countryCodes, countryList: countryList, error: `<div id="error" class="error" > ${error}</div>`});
     }
   });
 
