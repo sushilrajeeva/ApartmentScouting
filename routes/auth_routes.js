@@ -715,6 +715,7 @@ router.route('/viewScoutSubscribedListingHistory').get(middlewareMethods.scoutMi
   
 });
 
+//This route is only accessed when user is not authenticated
 router.route('/homepage').get(middlewareMethods.homepageAuthentication, async (req, res) => {
   //code here for GET
 
@@ -738,19 +739,26 @@ router.route('/homepage').get(middlewareMethods.homepageAuthentication, async (r
   console.log("Search Key -> ", searchKey);
   const searchedListings = await scoutUsers.searchListings(searchKey);
 
+  let reset = false;
   let isEmptyListings = false;
-  if(!searchedListings.length===0){
+  if(searchedListings.length===0){
     isEmptyListings = true;
+    reset = true;
   }
+
+
+  console.log("isEmpty -> ",isEmptyListings);
+  console.log("Reset -> ", reset);
 
   let user = req.session.user
   if(!user){
-    return res.render('homepage', {title: 'Homepage', isEmptyListings: isEmptyListings, listings: searchedListings})
+    return res.render('homepage', {title: 'Homepage', reset: reset, isEmptyListings: isEmptyListings, listings: searchedListings})
   }
 });
 
+//This route will only be accessed by scout user - takes care of authentication
 //route for scout user to subscribe to a listing
-router.route('/subscribelisting/:listingID').post(async (req, res) => {
+router.route('/subscribelisting/:listingID').post(middlewareMethods.scoutMiddleware, async (req, res) => {
   console.log("Subscribe route event is triggered for scout user");
   let listingID = xss(req.params.listingID);
   console.log("Listing id -> ", listingID);
@@ -773,7 +781,7 @@ router.route('/subscribelisting/:listingID').post(async (req, res) => {
 });
 
 //route for scout user to unsubscribe to a listing
-router.route('/unsubscribelisting/:listingID').post(async (req, res) => {
+router.route('/unsubscribelisting/:listingID').post(middlewareMethods.scoutMiddleware, async (req, res) => {
   console.log("Unsubscribe route event is triggered for scout user");
   let listingID = xss(req.params.listingID);
   console.log("Listing id -> ", listingID);
@@ -793,8 +801,8 @@ router.route('/unsubscribelisting/:listingID').post(async (req, res) => {
 });
 
 
-
-router.route('/updateListing/:listingID').post(async (req, res) => {
+//This route is to update listing posted by the primary user, only primary user is authorized to access this link
+router.route('/updateListing/:listingID').post(middlewareMethods.primaryMiddleware, async (req, res) => {
   //code here for POST
   console.log("Update Listing post route is triggered");
 
@@ -920,12 +928,14 @@ router.route('/updateListing/:listingID').post(async (req, res) => {
 });
 
 
-router.route('/primaryWallet').get(async (req, res) => {
+//Only Primary users are authorized to see primary wallet route
+router.route('/primaryWallet').get(middlewareMethods.primaryMiddleware, async (req, res) => {
   //code here for GET
   //Added wallet functionality. This functionality allows primary user to fetch his/her wallet balance
 
 
-  let userID = req.session.user._id;
+  try {
+    let userID = req.session.user._id;
 
   const walletBalance = await primaryUsers.getWalletBalance(userID);
 
@@ -969,9 +979,15 @@ router.route('/primaryWallet').get(async (req, res) => {
 
   return res.render('primarywallet', {title: 'Wallet Balance', name: name,  walletBalance: walletBalance, isBalZero:isBalZero})
   }
+  } catch (error) {
+    return res.status(404).render('error', {title: "Error!!", error: error})
+  }
+
+
 })
 
-router.route('/scoutWallet').get(async (req, res) => {
+//This route is used to access scout user's wallet. Only authorized scout user's are allowed to view this
+router.route('/scoutWallet').get(middlewareMethods.scoutMiddleware, async (req, res) => {
   //code here for GET
   //Added wallet functionality. This functionality allows primary user to fetch his/her wallet balance
 
@@ -995,14 +1011,15 @@ router.route('/scoutWallet').get(async (req, res) => {
   }
 });
 
-router.route('/addmoney').get(async (req, res) =>{
+//This route should only be accessed by primary user to add his money
+router.route('/addmoney').get(middlewareMethods.primaryMiddleware, async (req, res) =>{
   //Adding Add money route functionality to add money to primary user waller
 
   console.log("add money route is hit!!");
 
   return res.status(200).render('payment', {title: 'Payments Page | Add MoneY', });
 
-}).post(async (req, res) =>{
+}).post(middlewareMethods.scoutMiddleware, async (req, res) =>{
   //Payment route funtionality ot post changes
   console.log("Payment route post method is triggred!");
   console.log("Req Body ", req.body);
@@ -1045,7 +1062,8 @@ router.route('/addmoney').get(async (req, res) =>{
 });
 
 //Writing this route to view all the listings of primary subscribers that are subscribed by some scout!
-router.route('/viewScoutSubscribedlistings').get(async (req, res) =>{
+//only primary users are allowed to access this route!
+router.route('/viewScoutSubscribedlistings').get(middlewareMethods.primaryMiddleware, async (req, res) =>{
 
   console.log("viewScoutSubscribedlistings GET route is hit!!");
 
@@ -1079,7 +1097,8 @@ router.route('/viewScoutSubscribedlistings').get(async (req, res) =>{
 
 });
 
-router.route('/trackListing').get(async (req, res) => {
+//This route is for primary users only! This function retrieves additional info of the listing and allows users to post comments and chat
+router.route('/trackListing').get(middlewareMethods.primaryMiddleware, async (req, res) => {
   console.log("Get Method of trackingListing route is triggered!!");
 
   try {
@@ -1133,7 +1152,8 @@ router.route('/trackListing').get(async (req, res) => {
   }
 });
 
-router.route('/viewTask').get(async (req, res) => {
+//This route should only be accessed by scout to see their tasks
+router.route('/viewTask').get(middlewareMethods.scoutMiddleware, async (req, res) => {
   console.log("View Task of subscriber route is triggered!!");
 
   try {
@@ -1189,8 +1209,9 @@ router.route('/viewTask').get(async (req, res) => {
 });
 
 
-//primaryComment
-router.route('/primaryComment').post(async (req, res) => {
+//primaryComment route is used to post comments by primary user on a perticular listing
+//This route will only be accessible to primary user
+router.route('/primaryComment').post(middlewareMethods.scoutMiddleware, async (req, res) => {
   //code here for POST
 
   try {
@@ -1272,8 +1293,9 @@ router.route('/primaryComment').post(async (req, res) => {
 
 });
 
-//scoutComment
-router.route('/scoutComment').post(async (req, res) => {
+//scoutComment route is used to post comments by scout user on a perticular listing that they have subscribed to
+//This route will only be accessible to scout users
+router.route('/scoutComment').post(middlewareMethods.scoutMiddleware, async (req, res) => {
   //code here for POST
 
   try {

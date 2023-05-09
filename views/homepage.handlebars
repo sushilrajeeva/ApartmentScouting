@@ -21,7 +21,11 @@
 <form id="search-form"  method="post">
   <label for="searchInput">Search: </label><br>
     <input class="search-bar" type="text" name="searchInput" id="searchInput" placeholder="Search by postal code | Address | City | State | Country">
-    <input type="submit" value="Search" aria-label="Submit To search" ></input>
+    {{#if reset}}
+      <input type="submit" value="Reset" aria-label="Click here to Reset" >
+    {{else}}
+      <input type="submit" value="Search" aria-label="Click here to Search" >
+    {{/if}}
   </form>
 
 

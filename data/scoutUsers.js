@@ -290,15 +290,22 @@ export const getAllListings = async (scoutID = null) => {
         //This code let's users to search listings based on the following parameters - city, state, country and pincode
         //Reffered -> https://www.mongodb.com/docs/manual/reference/operator/query/or/ to do search using the $or keyword
         //Reffered -> https://www.mongodb.com/docs/manual/reference/operator/query/regex/ to do search using the $regex pattern
+        //HERE ALWAYS THOSE LISTING THAT ARE NOT SUBSCRIBED BY ANY SCOUT ARE DISPLAYED
         const searchedListings = await listingsCollection.find({
-            $or: [
-              { street: { $regex: searchKey, $options: 'i' } },
-              { city: { $regex: searchKey, $options: 'i' } },
-              { state: { $regex: searchKey, $options: 'i' } },
-              { country: { $regex: searchKey, $options: 'i' } },
-              { pincode: { $regex: searchKey, $options: 'i' } }
-            ],
-          }).toArray()
+          $and: [
+            {
+              $or: [
+                { street: { $regex: searchKey, $options: 'i' } },
+                { city: { $regex: searchKey, $options: 'i' } },
+                { state: { $regex: searchKey, $options: 'i' } },
+                { country: { $regex: searchKey, $options: 'i' } },
+                { pincode: { $regex: searchKey, $options: 'i' } },
+              ],
+            },
+            { scoutID: null },
+          ],
+        }).toArray()
+        
 
         return searchedListings;
       
