@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "seed": "node seed.js",
     "start": "node app.js"
   },
   "author": "CS 546 - B Team 21 Sushil Bhandary, Jaswant Bommidi, Jay Bhesania",
