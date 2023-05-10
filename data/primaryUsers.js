@@ -82,8 +82,19 @@ export const createUser = async (
     const usersCollection = await primaryUsers();
     const user = await usersCollection.findOne({emailAddress});
 
+    //this logic is for not allowing users to register with same email with different type of users
+    const scoutCollection = await scoutUsers();
+    const scoutUser = await scoutCollection.findOne({emailAddress});
+
+
+
     if(user){
       throw `The email address - ${emailAddress} that you used to register as primary user, already exist! please recheck your email and try registering, or else try loggin in if you already have an account as a primary user!`
+    }
+
+    if(scoutUser){
+      throw `The email address - ${emailAddress} that you are using to register as primary user, already exists in our system as a scout User. 
+      You can only register once in our system! if you want to use this email, then please update your scout user and replace it with some other email`
     }
 
     //Used professor's lecture code for password hashing
@@ -138,7 +149,7 @@ export const updateUser = async (
   country,
   dob
 ) => {
-  console.log("Update User function is called!!");
+  console.log("Primary user Update User function is called!!");
   console.log({
     userId,
     firstName,
@@ -182,9 +193,25 @@ export const updateUser = async (
     const usersCollection = await primaryUsers();
     const user = await usersCollection.findOne({ _id: new ObjectId(userId) });
 
-    if (!user) {
-      throw `The Primary User with ID ${userId} does not exist!`;
+    //this logic is for not allowing users to register with same email with different type of users
+    const scoutCollection = await scoutUsers();
+    const scoutUser = await scoutCollection.findOne({emailAddress});
+
+    console.log("Before ");
+
+    if (user.emailAddress !== emailAddress) {
+      let checkPrUsr = await usersCollection.findOne({ emailAddress: emailAddress})
+      if(checkPrUsr){
+        throw `can't update with this email ${emailAddress} as it is already taken by some other primary user!`;
+      }
+      let checkScUsr = await scoutCollection.findOne({ emailAddress: emailAddress})
+      if(checkScUsr){
+        throw `can't update with this email ${emailAddress} as it is already taken by some other scout user!`;
+      }
+      
     }
+
+    console.log("After");
 
     const updatedUser = {
       firstName,
