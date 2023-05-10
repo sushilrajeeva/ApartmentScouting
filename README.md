@@ -66,6 +66,18 @@ npm start
 
 5. Open your browser and navigate to `http://localhost:3000` to access the web application.
 
+### Important note regarding Settings.js file
+
+If you are a windows user change the serverURL to 'mongodb://127.0.0.1:27017'
+
+If you are a mac user change the serverURL to 'mongodb://localhost:27017/'
+
+
+### Running seed file
+
+To run seed file run `npm run seed` in your terminal.
+This "" Cs546$Password ""  is the password for the all user to login to application, While using the data provided in the seed.js file.
+
 ## Features
 
 ### Homepage
