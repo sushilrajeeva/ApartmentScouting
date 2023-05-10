@@ -32,7 +32,7 @@ router
     res.render('registeruser', {title: 'New User Register', countryCodes: helpers.countryCodes, countryList: countryList, defaultCountry: helpers.defaultCountry, maxDate: maxDate})
     
   })
-  .post(middlewareMethods.registerMiddleware, async (req, res) => {
+  .post( async (req, res) => {
     //code here for POST
     console.log("Regester POST route is called!!");
 
@@ -187,7 +187,7 @@ router
     //console.log("GET Login Route is called");
     res.render('login', {title: 'Login'})
   })
-  .post(middlewareMethods.loginMiddleware, async (req, res) => {
+  .post( async (req, res) => {
     //code here for POST
     console.log("Post login is called");
 
@@ -309,7 +309,7 @@ router
     const maxDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`
 
     res.render('profile',{title: 'profile',user:user, countryCodes: helpers.countryCodes, countryList: countryList, isPrimary: isPrimary, maxDate: maxDate})
-  }).post(middlewareMethods.commonMiddleware, async (req, res)=>{
+  }).post( async (req, res)=>{
 
     console.log("Post profile route is triggered!!");
         let user = req.session.user;
@@ -520,7 +520,7 @@ router.route('/scoutuser').get(middlewareMethods.scoutMiddleware, async (req, re
   }else{
     res.render('scoutuser', {title: 'scout user', reset: reset, isEmptyListings: isEmptyListings, listings: allListings, firstName: firstName, currentTime: new Date().toUTCString(), role: role})
   }
-}).post(middlewareMethods.scoutMiddleware, async (req,res)=>{
+}).post( async (req,res)=>{
   let firstName = xss(req.session.user.firstName);
   let role = xss(req.session.user.role);
   console.log("Search Listing post route is triggered");
@@ -573,7 +573,7 @@ router.route('/addlisting').get(middlewareMethods.primaryMiddleware, async(req, 
   console.log("Get Method of Add Listing route is triggered!");
   let countryList = helpers.countryCalculator(helpers.countryCodes)
   res.render('addListing', {title: 'Add Listings' ,countryCodes: helpers.countryCodes, countryList: countryList})
-}).post(middlewareMethods.primaryMiddleware, async(req,res)=>{
+}).post( async(req,res)=>{
   console.log("Post Method of Add Listing route is triggered!!");
   
   let listingName = xss(req.body.listingNameInput);
@@ -761,7 +761,7 @@ router.route('/homepage').get(middlewareMethods.homepageAuthentication, async (r
     return res.render('homepage', {title: 'Homepage', isEmptyListings: isEmptyListings, listings: allListings})
   }
   
-}).post(middlewareMethods.homepageAuthentication, async (req,res)=>{
+}).post( async (req,res)=>{
   console.log("Search Listing post route is triggered");
   let searchKey = xss(req.body.searchInput);
   console.log("Search Key -> ", searchKey);
@@ -786,7 +786,7 @@ router.route('/homepage').get(middlewareMethods.homepageAuthentication, async (r
 
 //This route will only be accessed by scout user - takes care of authentication
 //route for scout user to subscribe to a listing
-router.route('/subscribelisting/:listingID').post(middlewareMethods.scoutMiddleware, async (req, res) => {
+router.route('/subscribelisting/:listingID').post( async (req, res) => {
   console.log("Subscribe route event is triggered for scout user");
   let listingID = xss(req.params.listingID);
   console.log("Listing id -> ", listingID);
@@ -809,7 +809,7 @@ router.route('/subscribelisting/:listingID').post(middlewareMethods.scoutMiddlew
 });
 
 //route for scout user to unsubscribe to a listing
-router.route('/unsubscribelisting/:listingID').post(middlewareMethods.scoutMiddleware, async (req, res) => {
+router.route('/unsubscribelisting/:listingID').post(async (req, res) => {
   console.log("Unsubscribe route event is triggered for scout user");
   let listingID = xss(req.params.listingID);
   console.log("Listing id -> ", listingID);
@@ -830,7 +830,7 @@ router.route('/unsubscribelisting/:listingID').post(middlewareMethods.scoutMiddl
 
 
 //This route is to update listing posted by the primary user, only primary user is authorized to access this link
-router.route('/updateListing/:listingID').post(middlewareMethods.primaryMiddleware, async (req, res) => {
+router.route('/updateListing/:listingID').post( async (req, res) => {
   //code here for POST
   console.log("Update Listing post route is triggered");
 
@@ -1047,7 +1047,7 @@ router.route('/addmoney').get(middlewareMethods.primaryMiddleware, async (req, r
 
   return res.status(200).render('payment', {title: 'Payments Page | Add MoneY', });
 
-}).post(middlewareMethods.scoutMiddleware, async (req, res) =>{
+}).post( async (req, res) =>{
   //Payment route funtionality ot post changes
   console.log("Payment route post method is triggred!");
   console.log("Req Body ", req.body);
@@ -1224,7 +1224,7 @@ let userID = xss(req.session.user._id);
 });
 
 //This route should only be accessed by scout to see their tasks
-router.route('/viewTask').get(middlewareMethods.scoutMiddleware, async (req, res) => {
+router.route('/viewTask').get( async (req, res) => {
   console.log("View Task of subscriber route is triggered!!");
 
   try {
@@ -1247,7 +1247,7 @@ router.route('/viewTask').get(middlewareMethods.scoutMiddleware, async (req, res
     console.log("Listing Data -> ", listing);
 
     if(!listing.messageID || listing.messageID === ""){
-      return res.status(200).render('taskListing', {title: 'Task Listing', listing: listing})
+      return res.status(200).render('viewtask', {title: 'Task Listing', listing: listing})
     }
 
     console.log("Is my messageID -> ", listing.messageID);
@@ -1302,6 +1302,8 @@ router.route('/viewTask').get(middlewareMethods.scoutMiddleware, async (req, res
     
 
     console.log("wHAT IS MY COMMENT ARR -> ", commentsList);
+
+    console.log(progress);
 
     return res.status(200).render('viewtask', {title: 'View Task', progress: listing.progressbar, listing: listing, commentsList: commentsList, twentyFive: twentyFive, fifty: fifty, seventy: seventy, hundred: hundred})
 
@@ -1481,10 +1483,11 @@ router.route('/scoutComment').post( async (req, res) => {
 });
 
 //both scout and primary user have access to this route
-router.route('/updateprogressbar').post(middlewareMethods.commonMiddleware, async (req, res)=>{
+router.route('/updateprogressbar').post( async (req, res)=>{
   console.log("update progresbar method is hit");
 
-  const progressValue = xss(req.body.value);
+  try {
+    const progressValue = xss(req.body.value);
   const listingID = xss(req.body.listingID);
   const userID =xss(req.session.user._id)
 
@@ -1496,7 +1499,7 @@ router.route('/updateprogressbar').post(middlewareMethods.commonMiddleware, asyn
   const scoutID = listing.scoutID;
   const reward = parseInt(listing.reward,10);
 
-  const userBalance = await primaryUsers.getWalletBalance(userID);
+  //const userBalance = await primaryUsers.getWalletBalance(userID);
 
   
 
@@ -1510,10 +1513,14 @@ router.route('/updateprogressbar').post(middlewareMethods.commonMiddleware, asyn
     let primaryWalletUpdate = await primaryUsers.subtractRewardMoney(userID, reward)
   }
 
+  console.log("Is this called");
   let newListing = await listings.updateProgress(listingID, progressValue)
 
   
   return res.status(200).json({message: 'successful'})
+  } catch (error) {
+    return res.status(200).render('error', {title: "Unable to update Porgressbar", error: `<div id="error" class="error" > ${error}</div>`})
+  }
 
 })
 

@@ -158,7 +158,6 @@ const finishedTaskBtn = document.querySelector('.finished-task-btn');
 const approvedTaskBtn = document.querySelector('.approve-task-btn');
 
 
-
 function updateProgressBar(value) {
   const url = '/updateprogressbar';
   const listingID = document.getElementById('listingIdInput').value;
@@ -167,6 +166,7 @@ function updateProgressBar(value) {
     listingID: listingID
   };
   
+  console.log("update function!");
 
   fetch(url, {
     method: 'POST',
@@ -187,6 +187,35 @@ function updateProgressBar(value) {
     console.error('Fetch request encountered an error:', error);
   });
 }
+
+// async function updateProgressBar(value) {
+//   const url = '/updateprogressbar';
+//   const listingID = document.getElementById('listingIdInput').value;
+//   const data = { 
+//     value: value,
+//     listingID: listingID
+//   };
+
+//   try {
+//     const response = await fetch(url, {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json'
+//       },
+//       body: JSON.stringify(data)
+//     });
+
+//     if (response.ok) {
+//       // Reload the page when the response is successful
+//       window.location.reload();
+//     } else {
+//       throw new Error(`Fetch request failed with status ${response.status}`);
+//     }
+//   } catch (error) {
+//     console.error('Fetch request encountered an error:', error);
+//   }
+// }
+
 
 if (initialInspectionBtn) {
   initialInspectionBtn.addEventListener('click', () => {
