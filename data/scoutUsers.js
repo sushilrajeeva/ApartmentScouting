@@ -200,11 +200,11 @@ export const updateUser = async (
 
     if (user.emailAddress !== emailAddress) {
       let checkScUsr = await usersCollection.findOne({ emailAddress: emailAddress})
-      if(checkPrUsr){
+      if(checkScUsr){
         throw `can't update with this email ${emailAddress} as it is already taken by some other scout user!`;
       }
       let checkPrUsr = await primaryCollection.findOne({ emailAddress: emailAddress})
-      if(checkScUsr){
+      if(checkPrUsr){
         throw `can't update with this email ${emailAddress} as it is already taken by some other scout user!`;
       }
       
