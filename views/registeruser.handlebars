@@ -15,7 +15,7 @@ registration handelbars
       <a class="nav-link" href="/homepage">Home</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="/registeruser">Register User</a>
+      <a class="nav-link" href="/registeruser">New User Register</a>
     </li>
     <li class="nav-item">
       <a class="nav-link" href="/login">Login</a>
@@ -30,83 +30,75 @@ registration handelbars
     </p>
 </div>
 
-{{!Took reference of this from w3 school link provided in lab8-> https://www.w3schools.com/html/tryit.asp?filename=tryhtml_form_submit}}
-    <form class="registration-form" method="post" id="registration-form">
-        
-        <label for="firstNameInput">First Name <span class="mandatory">*</span>:</label><br>
-        <input type="text" id="firstNameInput" name="firstNameInput" placeholder="Please enter your First Name" required><br>
+<form class="registration-form" method="post" id="registration-form">
+    <label for="firstNameInput">First Name <span class="mandatory">*</span>:</label>
+    <input type="text" id="firstNameInput" name="firstNameInput" placeholder="Please enter your First Name" value="{{user.firstName}}" required><br>
 
-        <label for="middleNameInput">Middle Name :</label><br>
-        <input type="text" id="middleNameInput" name="middleNameInput" placeholder="Please enter your Middle Name"><br>
+    <label for="middleNameInput">Middle Name :</label>
+    <input type="text" id="middleNameInput" name="middleNameInput" placeholder="Please enter your Middle Name" value="{{user.middleName}}"><br>
 
-        <label for="lastNameInput">Last Name <span class="mandatory">*</span>:</label><br>
-        <input type="text" id="lastNameInput" name="lastNameInput" placeholder="Please enter your Last Name"required><br>
+    <label for="lastNameInput">Last Name <span class="mandatory">*</span>:</label>
+    <input type="text" id="lastNameInput" name="lastNameInput" placeholder="Please enter your Last Name" value="{{user.lastName}}" required><br>
 
-        <label for="emailAddressInput">Email Address <span class="mandatory">*</span>:</label><br>
-        <input type="email" id="emailAddressInput" name="emailAddressInput" placeholder="Please enter your email address"required><br>
+    <label for="emailAddressInput">Email Address <span class="mandatory">*</span>:</label>
+    <input type="email" id="emailAddressInput" name="emailAddressInput" placeholder="Please enter your email address" value="{{user.emailAddress}}" required><br>
 
-        <label for="countryCodeInput">Country Code <span class="mandatory">*</span>:</label><br>
-        <input list="countryCodes" id="countryCodeInput" name="countryCodeInput" autocomplete="on" placeholder="{{defaultCountry.flag}} - {{defaultCountry.code}} - ({{defaultCountry.dial_code}}) {{defaultCountry.name}}" value="{{defaultCountry.dial_code}}" "Please Select Your Country Dail Code">
-        <datalist id="countryCodes">
-            {{#each countryCodes}}
-                <option value="{{dial_code}}"> {{flag}} - {{code}} - ({{dial_code}}) {{name}}</option>
-            {{/each}}
-        </datalist><br>
+    <label for="countryCodeInput">Country Code <span class="mandatory">*</span>:</label>
+    <input list="countryCodes" id="countryCodeInput" name="countryCodeInput" autocomplete="on" placeholder="{{defaultCountry.flag}} - {{defaultCountry.code}} - ({{defaultCountry.dial_code}}) {{defaultCountry.name}}" value="{{user.countryCode}}">
+    <datalist id="countryCodes">
+        {{#each countryCodes}}
+            <option value="{{dial_code}}"> {{flag}} - {{code}} - ({{dial_code}}) {{name}}</option>
+        {{/each}}
+    </datalist><br>
 
-        <label for="phoneNumberInput">Phone Number <span class="mandatory">*</span>:</label><br>
-        <input type="tel" id="phoneNumberInput" name="phoneNumberInput" pattern="[0-9]{10}" placeholder="Please enter your Phone Number"required><br>
+    <label for="phoneNumberInput">Phone Number <span class="mandatory">*</span>:</label>
+    <input type="tel" id="phoneNumberInput" name="phoneNumberInput" pattern="[0-9]{10}" placeholder="Please enter your Phone Number" value="{{user.phoneNumber}}" required><br>
 
+    <label for="cityInput">City <span class="mandatory">*</span>:</label>
+    <input type="text" id="cityInput" name="cityInput" placeholder="Please enter your City" value="{{user.city}}" required><br>
 
-        <label for="cityInput">City <span class="mandatory">*</span>:</label><br>
-        <input type="text" id="cityInput" name="cityInput" placeholder="Please enter your City"required><br>
+    <label for="stateInput">State <span class="mandatory">*</span>:</label>
+    <input type="text" id="stateInput" name="stateInput" placeholder="Please enter your State" value="{{user.state}}" required><br>
 
-        <label for="stateInput">State <span class="mandatory">*</span>:</label><br>
-        <input type="text" id="stateInput" name="stateInput" placeholder="Please enter your State"required><br>
+    <label for="countryInput">Country <span class="mandatory">*</span>:</label>
+    <input list="countryList" id="countryInput" name="countryInput" autocomplete="on" placeholder="{{defaultCountry.name}}" value="{{user.country}}">
+    <datalist id="countryList">
+        {{#each countryList}}
+            <option value="{{this}}">{{this}}</option>
+        {{/each}}
+    </datalist><br>
 
-        <label for="countryInput">Country <span class="mandatory">*</span>:</label><br>
-        <input list="countryList" id="countryInput" name="countryInput" autocomplete="on" placeholder="{{defaultCountry.name}}" value="{{defaultCountry.name}}">
-            <datalist id="countryList">
-                {{#each countryList}}
-                    <option value="{{this}}">{{this}}</option>
-                {{/each}}
-            </datalist><br>
+    <label for="dobInput">Date of Birth <span class="mandatory">*</span>:</label>
+    <input type="date" id="dobInput" name="dobInput" max="{{maxDate}}" value="{{user.dob}}" required><br>
 
-        <label for="dobInput">Date of Birth <span class="mandatory">*</span>:</label><br>
-        <input type="date" id="dobInput" name="dobInput" max="{{maxDate}}" >
-        <br>
+    <label for="passwordInput">Password <span class="mandatory">*</span>:</label>
+    <input type="password" id="passwordInput" name="passwordInput" placeholder="Please enter your password" value="{{user.password}}" required><br>
+    <label for="confirmPasswordInput">Confirm Password <span class="mandatory">*</span>:</label>
+    <input type="password" id="confirmPasswordInput" name="confirmPasswordInput" placeholder="Please re-enter your password to confirm" value="{{user.confirmPassword}}" required><br>
+    
+    <label for="userTypeInput">User Type <span class="mandatory">*</span>:</label>
+    <select id="userTypeInput" name="userTypeInput" required>
+        <option value="" {{#unless user.userType}}selected{{/unless}}>Select User Type</option>
+        <option value="primary user" {{#eq user.userType 'primary user'}}selected{{/eq}}>Primary User</option>
+        <option value="scout user" {{#eq user.userType 'scout user'}}selected{{/eq}}>Scout User</option>
+    </select>
+    <br>
 
-        <label for="passwordInput">Password <span class="mandatory">*</span>:</label><br>
-        <input type="password" id="passwordInput" name="passwordInput" placeholder="Please enter your password"required><br>
-        <label for="confirmPasswordInput">Confirm Password <span class="mandatory">*</span>:</label><br>
-        <input type="password" id="confirmPasswordInput" name="confirmPasswordInput" placeholder="Please re-enter your password to confirm"required><br>
-        
-        <label for="userTypeInput">User Type <span class="mandatory">*</span>:</label>
-        <select id="userTypeInput" name="userTypeInput" required>
-            <option value="">Select User Type</option>
-            <option value="primary user">Primary User</option>
-            <option value="scout user">Scout User</option>
-        </select>
-        <br>
-        <br>
+    <input type="checkbox" id="datastoragepermissionInput" name="datastoragepermissionInput" value="yes" required aria-label="By Checking this box, I agree to allow my data to be stored according to US laws." aria-describedby="datastoragepermissionDesc">
+    <label for="datastoragepermissionInput">I agree to allow my data to be stored according to US laws.</label>
+    <span id="datastoragepermissionDesc" class="visually-hidden">By checking this box, you agree to our privacy policy and terms of service.</span><br>
 
-        <input type="checkbox" id="datastoragepermissionInput" name="datastoragepermissionInput" value="yes" required aria-label="By Chechk this box, I agree to allow my data to be stored according to US laws." aria-describedby="datastoragepermissionDesc">
-        <label for="datastoragepermissionInput">I agree to allow my data to be stored according to US laws.</label><br>
-        <span id="datastoragepermissionDesc" class="visually-hidden">By checking this box, you agree to our privacy policy and terms of service.</span><br>
+    <input type="submit" value="Submit" aria-label="Submit To Register">
+    <p>
+       If you already have an account, Please click here to <a href="/login">login</a>
+    </p>
+</form> 
 
-        <input type="submit" value="Register" aria-label="Submit To Register">
-        <p>
-           If you already have an account, Please click here to <a href="/login">login</a>
-        </p>
-    </form> 
+<div id="error" class="error" hidden></div>
+{{{error}}}
 
-    <div id="error" class="error" hidden></div>
-    {{{error}}}
-
-
-<!--From professor's lecture code , modified according to requirement of lab9-->
-<!--Used type="module" to counter error thrown at console for importing helper.js inside lab10.js-->
-    <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
-        crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
-        crossorigin="anonymous"></script>
-    <script src="/public/js/main.js" ></script>
+<script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+    crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
+    crossorigin="anonymous"></script>
+<script src="/public/js/main.js" ></script>

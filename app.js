@@ -25,7 +25,17 @@ app.use(express.urlencoded({extended: true}));
 // app.use(rewriteUnsupportedBrowserMethods);
 
 
-app.engine('handlebars', exphbs.engine({defaultLayout: 'main'}));
+const hbs = exphbs.create({
+  defaultLayout: 'main',
+  helpers: {
+      eq: function (arg1, arg2) {
+          return (arg1 == arg2);
+      }
+  }
+});
+
+app.engine('handlebars', hbs.engine);
+
 app.set('view engine', 'handlebars');
 
 //took reference from lab10 ruberics

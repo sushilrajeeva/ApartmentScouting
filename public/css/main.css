@@ -265,6 +265,8 @@ input[type=url] {
 }
 
 label[for="datastoragepermissionInput"] {
+  display: inline-flex;
+  align-items: center;
   font-size: 16px;
   font-weight: bold;
 }
@@ -275,8 +277,6 @@ input[type="checkbox"] {
   height: 20px;
   width: 20px;
   vertical-align: middle;
-  position: relative;
-  top: 2px;
   border: 2px solid #ccc;
   border-radius: 3px;
 }

@@ -61,19 +61,19 @@
 
     {{{success}}}
 <form class="update-form" method="post" id="update-form">
-  <label for="firstNameInput">First Name <span class="mandatory">*</span>:</label><br>
+  <label for="firstNameInput">First Name <span class="mandatory">*</span>:</label>
   <input type="text" id="firstNameInput" name="firstNameInput" placeholder="Please enter your First Name" value="{{user.firstName}}" required><br>
 
-  <label for="middleNameInput">Middle Name :</label><br>
+  <label for="middleNameInput">Middle Name :</label>
   <input type="text" id="middleNameInput" name="middleNameInput" placeholder="Please enter your Middle Name" value="{{user.middleName}}"><br>
 
-  <label for="lastNameInput">Last Name <span class="mandatory">*</span>:</label><br>
+  <label for="lastNameInput">Last Name <span class="mandatory">*</span>:</label>
   <input type="text" id="lastNameInput" name="lastNameInput" placeholder="Please enter your Last Name" value="{{user.lastName}}" required><br>
 
-  <label for="emailAddressInput">Email Address <span class="mandatory">*</span>:</label><br>
+  <label for="emailAddressInput">Email Address <span class="mandatory">*</span>:</label>
   <input type="email" id="emailAddressInput" name="emailAddressInput" placeholder="Please enter your email address" value="{{user.emailAddress}}" required><br>
 
-  <label for="countryCodeInput">Country Code <span class="mandatory">*</span>:</label><br>
+  <label for="countryCodeInput">Country Code <span class="mandatory">*</span>:</label>
   <input list="countryCodes" id="countryCodeInput" name="countryCodeInput" autocomplete="on" placeholder="{{defaultCountry.flag}} - {{defaultCountry.code}} - ({{defaultCountry.dial_code}}) {{defaultCountry.name}}" value="{{user.countryCode}}" required>
   <datalist id="countryCodes">
     {{#each countryCodes}}
@@ -81,17 +81,17 @@
     {{/each}}
   </datalist><br>
 
-  <label for="phoneNumberInput">Phone Number <span class="mandatory">*</span>:</label><br>
+  <label for="phoneNumberInput">Phone Number <span class="mandatory">*</span>:</label>
   <input type="tel" id="phoneNumberInput" name="phoneNumberInput" pattern="[0-9]{10}" placeholder="Please enter your Phone Number" value="{{user.phoneNumber}}" required><br>
 
 
-  <label for="cityInput">City <span class="mandatory">*</span>:</label><br>
+  <label for="cityInput">City <span class="mandatory">*</span>:</label>
   <input type="text" id="cityInput" name="cityInput" placeholder="Please enter your City" value="{{user.city}}" required><br>
 
-  <label for="stateInput">State <span class="mandatory">*</span>:</label><br>
+  <label for="stateInput">State <span class="mandatory">*</span>:</label>
   <input type="text" id="stateInput" name="stateInput" placeholder="Please enter your State" value="{{user.state}}" required><br>
 
-  <label for="countryInput">Country <span class="mandatory">*</span>:</label><br>
+  <label for="countryInput">Country <span class="mandatory">*</span>:</label>
   <input list="countryList" id="countryInput" name="countryInput" autocomplete="on" placeholder="{{defaultCountry}}" value="{{user.country}}" required>
   <datalist id="countryList">
     {{#each countryList}}
@@ -99,16 +99,16 @@
     {{/each}}
   </datalist><br>
 
-  <label for="dobInput">Date of Birth <span class="mandatory">*</span>:</label><br>
-  <input type="date" id="dobInput" name="dobInput" max="{{maxDate}}" value="{{user.dob}}" required>
-  <br>
+  <label for="dobInput">Date of Birth <span class="mandatory">*</span>:</label>
+  <input type="date" id="dobInput" name="dobInput" max="{{maxDate}}" value="{{user.dob}}" required><br>
   
-  <label for="passwordInput">Password <span class="mandatory">*</span>:</label><br>
+  <label for="passwordInput">Password <span class="mandatory">*</span>:</label>
   <input type="password" id="passwordInput" name="passwordInput" placeholder="Please enter your password" required><br>
 
   <button type="submit" value="Update Profile" aria-label="Submit to Update">Update Profile</button>
-  {{error}}
+  
 </form>
 <div id="error" class="error" hidden></div>
+{{{error}}}
 
 <script src="/public/js/main.js" ></script>
