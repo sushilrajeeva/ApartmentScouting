@@ -1503,15 +1503,12 @@ router.route('/updateprogressbar').post( async (req, res)=>{
 
   
 
-  if(parseInt(progressValue,10)===100){
-    if(userBalance<reward){
-      throw `You don't have enough funds in your account to Pay the scout user`
-    }
+  
     console.log("Primary User has closed the listing");
     let updatedScout = await scoutUsers.listingFinished(listingID, scoutID)
     let scoutWalletUpdate = await scoutUsers.addReward(scoutID, reward)
     let primaryWalletUpdate = await primaryUsers.subtractRewardMoney(userID, reward)
-  }
+  
 
   console.log("Is this called");
   let newListing = await listings.updateProgress(listingID, progressValue)
